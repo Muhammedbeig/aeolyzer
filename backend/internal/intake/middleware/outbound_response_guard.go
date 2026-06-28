@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/contracts"
 )
 
 func GuardOutboundResponse(rawResponse string, intent contracts.Intent) (string, error) {

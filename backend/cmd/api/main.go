@@ -13,8 +13,8 @@ import (
 	"time"
 
 	"aeolyzer/internal/httpapi"
-	"aeolyzer/layer_02_intake"
-	"aeolyzer/layer_03_orchestration"
+	"aeolyzer/internal/intake"
+	"aeolyzer/internal/orchestrator"
 	"aeolyzer/layer_06_runtime"
 	"aeolyzer/layer_07_interop"
 	"aeolyzer/layer_08_observability"
@@ -29,7 +29,7 @@ func main() {
 	signingKey := newSigningKey()
 
 	intakeService := intake.NewService(newTraceID, signingKey, time.Now)
-	orchestrator := orchestration.NewService()
+	orchestrator := orchestrator.NewService()
 	connector := interop.NewSiteClient(8 * time.Second)
 	executor := runtime.NewExecutor(net.DefaultResolver, connector, signingKey, time.Now)
 	// Bounding the channel to 500 limits memory footprint during sudden telemetry bursts.

@@ -3,7 +3,7 @@ package middleware
 import (
 	"strings"
 
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/contracts"
 )
 
 func ClassifyIntent(input contracts.SanitizedInput) (contracts.Intent, float64, error) {

@@ -3,7 +3,7 @@ package tests
 import (
 	"strings"
 	"testing"
-	"aeolyzer/layer_02_intake/middleware"
+	"aeolyzer/internal/intake/middleware"
 )
 
 func TestSelectedTextValidation(t *testing.T) {

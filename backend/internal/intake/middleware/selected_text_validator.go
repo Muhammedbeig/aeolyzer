@@ -6,7 +6,7 @@ import (
 	"errors"
 	"strings"
 
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/contracts"
 )
 
 var (

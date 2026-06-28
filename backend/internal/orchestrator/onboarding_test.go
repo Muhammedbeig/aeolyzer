@@ -1,10 +1,10 @@
-package orchestration
+package orchestrator
 
 import (
 	"strings"
 	"testing"
 
-	"aeolyzer/layer_02_intake"
+	"aeolyzer/internal/intake"
 )
 
 func TestBuildPromptPlanUsesProjectContext(t *testing.T) {

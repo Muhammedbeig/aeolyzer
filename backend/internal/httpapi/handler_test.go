@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"aeolyzer/layer_02_intake"
-	"aeolyzer/layer_03_orchestration"
+	"aeolyzer/internal/intake"
+	"aeolyzer/internal/orchestrator"
 	"aeolyzer/layer_06_runtime"
 	"aeolyzer/layer_08_observability"
 )
@@ -118,7 +118,7 @@ func newTestHandler(t *testing.T) http.Handler {
 	executor := runtime.NewExecutor(testResolver{}, testAdapter{}, key, now)
 	handler := NewHandler(
 		intakeService,
-		orchestration.NewService(),
+		orchestrator.NewService(),
 		executor,
 		observability.NewSink(10),
 		slog.Default(),

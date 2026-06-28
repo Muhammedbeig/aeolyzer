@@ -1,4 +1,4 @@
-package orchestration
+package orchestrator
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"aeolyzer/layer_02_intake"
+	"aeolyzer/internal/intake"
 	"aeolyzer/layer_06_runtime"
 )
 

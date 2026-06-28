@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"aeolyzer/layer_02_intake"
+	"aeolyzer/internal/intake"
 )
 
 type DashboardIntent struct {

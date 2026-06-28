@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"strings"
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/contracts"
 )
 
 func CheckForProtectedDisclosure(input contracts.SanitizedInput) contracts.DisclosureStatus {

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"aeolyzer/layer_02_intake"
-	"aeolyzer/layer_03_orchestration"
+	"aeolyzer/internal/intake"
+	"aeolyzer/internal/orchestrator"
 	"aeolyzer/layer_05_extensions"
 	"aeolyzer/layer_06_runtime"
 	"aeolyzer/layer_08_observability"
@@ -19,7 +19,7 @@ const maxRequestBytes = 64 << 10 // BOUNDS: Hard limit payload memory allocation
 
 type Handler struct {
 	intake        *intake.Service
-	orchestrator  *orchestration.Service
+	orchestrator  *orchestrator.Service
 	executor      *runtime.Executor
 	events        *observability.Sink
 	logger        *slog.Logger
@@ -29,7 +29,7 @@ type Handler struct {
 
 func NewHandler(
 	intakeService *intake.Service,
-	orchestrator *orchestration.Service,
+	orchestrator *orchestrator.Service,
 	executor *runtime.Executor,
 	events *observability.Sink,
 	logger *slog.Logger,

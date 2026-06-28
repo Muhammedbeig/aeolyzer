@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/contracts"
 )
 
 func ValidateToolPolicy(req contracts.ProposedToolRequest, decision contracts.IntakeDecision) error {

@@ -3,8 +3,8 @@ package tests
 import (
 	"testing"
 	"time"
-	"aeolyzer/layer_02_intake/contracts"
-	"aeolyzer/layer_02_intake/middleware"
+	"aeolyzer/internal/intake/contracts"
+	"aeolyzer/internal/intake/middleware"
 )
 
 func TestApprovalValidation(t *testing.T) {

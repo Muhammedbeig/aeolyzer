@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"aeolyzer/layer_02_intake"
+	"aeolyzer/internal/intake"
 )
 
 func TestBuildDashboardFrame(t *testing.T) {

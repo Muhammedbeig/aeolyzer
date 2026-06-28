@@ -3,7 +3,7 @@ package intake_events
 import (
 	"time"
 
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/contracts"
 )
 
 type SafetyEmitter struct {

@@ -2,8 +2,8 @@ package tests
 
 import (
 	"testing"
-	"aeolyzer/layer_02_intake/middleware"
-	"aeolyzer/layer_02_intake/contracts"
+	"aeolyzer/internal/intake/middleware"
+	"aeolyzer/internal/intake/contracts"
 )
 
 // Boundary test checks that no Layer 3+ concepts are returned by Layer 2 functions

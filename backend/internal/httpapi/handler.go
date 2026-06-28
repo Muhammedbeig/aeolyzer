@@ -12,7 +12,7 @@ import (
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/extensions"
 	"aeolyzer/internal/runtime"
-	"aeolyzer/layer_08_observability"
+	"aeolyzer/internal/observability"
 )
 
 const maxRequestBytes = 64 << 10 // BOUNDS: Hard limit payload memory allocation to mitigate DoS vectors.

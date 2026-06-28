@@ -15,7 +15,7 @@ import (
 	"aeolyzer/internal/intake"
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/runtime"
-	"aeolyzer/layer_08_observability"
+	"aeolyzer/internal/observability"
 )
 
 type testResolver struct{}

@@ -17,7 +17,7 @@ import (
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/runtime"
 	"aeolyzer/internal/interop"
-	"aeolyzer/layer_08_observability"
+	"aeolyzer/internal/observability"
 )
 
 func main() {

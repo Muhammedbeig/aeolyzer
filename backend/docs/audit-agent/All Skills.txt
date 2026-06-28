@@ -1,0 +1,58 @@
+auditor agent
+
+Technical SEO
+schema-generator - Generate Schema.org structured data (Article, FAQ, HowTo, Product, Organization, etc.) for rich results and AI citations
+
+robots-txt-generator - Generate robots.txt with proper AI crawler permissions (GPTBot, ClaudeBot, Perplexity, etc.)
+
+sitemap-generator - Generate XML sitemaps with priorities, change frequencies, and last modified dates
+
+llms-txt-generator - Generate llms.txt files to help AI platforms understand your site (based on patterns from Stripe, Framer, Vercel)
+
+core-web-vitals-optimizer - Fix LCP, FID, CLS issues with specific technical recommendations
+
+site-audit-interpreter - Translate audit results into prioritized, plain-language fix recommendations
+
+Content & SEO Writing
+meta-optimizer - Optimized title tags and meta descriptions using proven CTR formulas and character limits
+
+content-creation - Structured content creation workflow with research, briefing, drafting, and refinement
+
+content-refresh-expert - Identify and refresh decaying content to maintain rankings
+
+content-strategy - Build content plans, editorial calendars, and content briefs from keyword and competitive data
+
+content-seo-settings - Generate all SEO metadata for a content piece - FAQs, schema, Open Graph, internal links, slug
+
+long-form-content-expert - Analyze specific pages via competitive research and provide improvement recommendations
+
+Keyword & SERP Research
+keyword-research - Professional keyword research with strategic analysis, not just raw data dumps
+
+serp-analysis - Analyze SERPs for ranking opportunities, featured snippets, and competitive positioning
+
+getContentIdeas - People Also Ask questions and related searches for a topic
+
+Link Building
+backlink-strategy-expert - Find sources AI platforms cite, locate authors, build outreach strategies
+
+link-opportunity-finder - Find specific articles and listicles where your site should be featured
+
+internal-linking-strategist - Plan internal link architecture, anchor text strategy, and fix orphan pages
+
+Competitor & Market Intelligence
+competitor-intelligence - Strategic competitor analysis combining domain metrics, keyword gaps, and content strategies
+
+Local SEO
+local-seo-optimizer - Optimize for Google Maps, local pack, and geo-targeted keywords
+
+google-business-profile-expert - GBP optimization for local pack rankings, reviews, posts, Q&A
+
+Analytics
+ga4-analyst - Interpret GA4 data, traffic sources, conversions, and AI-referred visitors
+
+gsc-insights-expert - Analyze GSC data for query opportunities, CTR gaps, and coverage issues
+
+How activation works: Skills are not pre-loaded. When your request matches a skill's domain, I inject it into my context automatically. You never see the [USE_SKILL:] marker - it happens silently before I respond.
+
+For your site right now, the highest-impact skills to run would be llms-txt-generator (your audit flagged this as missing) and schema-generator (Organization schema is missing - high severity). Want to tackle either of those?

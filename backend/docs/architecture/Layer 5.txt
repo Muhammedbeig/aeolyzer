@@ -1,0 +1,83 @@
+# ============================================================
+# LAYER 5 COMPLETE ARCHITECTURE: EXTENSIONS, AUDIT UI & A2A INTEROP
+# (Go Backend / A2A Extensions & A2UI Translation)
+# ============================================================
+
+/layer_05_extensions
+│
+# ------------------------------------------------------------
+# /a2ui_translator (Agent-to-User Interface)
+# ------------------------------------------------------------
+│   # Generates dynamic, context-aware interactive interfaces safely
+│   # Framework-agnostic: The agent outputs A2UI intent, and the Next.js frontend renders it natively
+│
+├── /a2ui_translator
+│   │
+│   ├── a2ui_schema_manager.go
+│   │   # Injects the strict A2UI v0.9 component catalog schema into the active prompt
+│   │   # Forces the LLM to output <a2ui-json> blocks using a flat adjacency list referenced by id
+│   │
+│   └── a2ui_part_converter.go
+│       # The middleware that intercepts specific tool responses and converts them into UI parts
+│       # action: Parses the LLM's A2UI output, validates the JSON schema, and routes it to the frontend
+│       # fallback: If schema validation fails, it triggers an auto-retry to the LLM to fix the malformed payload
+│
+# ------------------------------------------------------------
+# /interactive_components (Dynamic Tool UI Mappings)
+# ------------------------------------------------------------
+│   # Maps your specific exposed tools directly to A2UI component structures
+│
+├── /interactive_components
+│   │
+│   ├── ask_question.ui.json
+│   │   # Maps to askQuestion() tool
+│   │   # A2UI Components used: Card, Text, ChoicePicker, Button
+│   │   # behavior: Renders the 4 options (A/B/C/D) natively; if multiselect=true, renders CheckBoxes
+│   │
+│   ├── propose_edit.ui.json
+│   │   # Maps to proposeEdit() and proposeMemoryUpdate() tools
+│   │   # A2UI Components used: Card, Text (for inline diff), Row (for buttons)
+│   │   # behavior: Displays the "accept/reject card" directly in the chat feed
+│   │   # action: Captures the user's click and routes the event back to the DAG Orchestrator
+│   │
+│   └── audit_dashboard.ui.json
+│       # Maps to the persistent audit reports and issue lists
+│       # A2UI Components used: Surface, Column, Text, DataGrid
+│       # behavior: Renders the dashboard view where site health and prioritized fixes are displayed
+│       # feature: Updates dynamically as the agent resolves issues
+│
+# ------------------------------------------------------------
+# /a2a_server (External Extensibility)
+# ------------------------------------------------------------
+│   # Exposes your SEO/AEO Agent to the global ecosystem
+│
+└── /a2a_server
+    │
+    ├── agent_card.yaml
+    │   # The machine-readable identity of your SEO/AEO Auditor agent
+    │   # Defines capabilities, interaction schemas, and security requirements
+    │
+    └── a2a_executor.go
+        # The translation layer that allows other external agents to hire your agent
+        # action: Translates incoming A2A requests from remote clients into your internal DAG workflows
+
+
+# ============================================================
+# ACTIVE LAYER 5 SESSION STATE (EXTENSION FRAMEWORK)
+# ============================================================
+
+session.state {
+  
+  # A2UI Presentation State
+  active_surface    : "audit_dashboard_view"
+  pending_ui_cards  : ["audit_recommendation_card", "technical_issue_card"]
+  rendered_catalogs : ["BasicCatalog_v0.9"]
+  
+  # A2A State
+  a2a_connections   : "0_remote_clients"
+
+}
+
+# ============================================================
+# END OF EXTENDED LAYER 5 ARCHITECTURE
+# ============================================================

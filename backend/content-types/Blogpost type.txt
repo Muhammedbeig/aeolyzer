@@ -1,0 +1,95 @@
+# ============================================================
+# FILE: blog-post.type
+# ============================================================
+
+# TYPE DEFINITION
+# ---------------
+type          : blog-post
+id            : blog-post
+category      : long-form
+word_range    : 600-1500 words
+research      : standard
+canvas        : full
+subtypes      : opinion | how-to | listicle | case-study | news-commentary | roundup
+
+# BRIEF FIELDS REQUIRED
+# ---------------------
+brief_fields:
+  - topic
+  - angle
+  - audience
+  - intent
+  - cta
+  - keywords
+
+# TONE RULES
+# ----------
+# - Conversational but credible
+# - First or third person depending on brand voice
+# - Less formal than article.type
+# - Opinionated and direct
+# - Shorter sentences, tighter paragraphs
+# - Speak to the reader directly where appropriate
+
+# STRUCTURE RULES
+# ---------------
+# - H1 : title only (set via generateTitle, never written inside body)
+# - H2 : major sections (2-4 max for this word range)
+# - H3 : subsections where needed, not mandatory
+# - Introduction : hook in first sentence, no slow warm-up
+# - No walls of text. Break early and often.
+
+# DEPTH RULES
+# -----------
+# - One clear thesis, not multiple competing arguments
+# - Support with 1-2 specific examples or data points
+# - Avoid padding to hit word count
+# - Every paragraph must earn its place
+
+# VOICE RULES
+# -----------
+# - Take a clear position
+# - Write like a smart person explaining something to a peer
+# - No corporate hedging
+# - No "in today's fast-paced world" openers
+# - No "in conclusion" closers
+
+# AVOID LIST
+# ----------
+# - Walls of unformatted text
+# - Generic "best practices" padding
+# - Hedging every claim with "potentially" and "might"
+# - Duplicate H2 headings
+# - Em dashes
+# - Emojis or Unicode symbols
+# - Slow introductions that take 2+ paragraphs to get to the point
+# - Summarizing the article in the conclusion instead of advancing it
+
+# FORMATTING REQUIREMENTS
+# -----------------------
+# - Max 2 consecutive plain paragraphs without a structural break
+# - At least one non-paragraph element per H2 section:
+#     bullet list | numbered list | blockquote | bold callout | table
+# - Structural break every 100-150 words minimum
+
+# LINK DENSITY REQUIREMENTS
+# -------------------------
+# - Under 1,000 words  : 3 links minimum
+# - 1,000-1,500 words  : 4 links minimum
+
+# SECTION PACING
+# --------------
+# opening  : hook sentence -> 1-2 sentences of context -> thesis statement
+# body     : H2 -> short intro -> structural element -> analysis
+# closing  : 1 paragraph max -> clear CTA or takeaway
+
+# POST-WRITE OUTPUTS
+# ------------------
+# - meta title suggestion
+# - meta description suggestion
+# - URL slug suggestion
+# - internal link suggestions
+
+# ============================================================
+# END OF FILE: blog-post.type
+# ============================================================

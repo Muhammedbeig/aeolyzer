@@ -1,0 +1,153 @@
+# ============================================================
+# FILE: session-state.context
+# DESCRIPTION: canvas / chat / brief state exposed at runtime
+# ============================================================
+
+# ------------------------------------------------------------
+# 01. CANVAS STATE
+# ------------------------------------------------------------
+
+canvas.state {
+
+  # current word count of all content written to canvas
+  word_count: integer
+
+  # full markdown content currently on canvas
+  content: string (markdown)
+
+  # status of canvas
+  status: empty | has_content
+
+  # position tracking for writeSection
+  last_write_position: append | prepend | replace
+
+  # title currently set on canvas
+  title: string | null
+
+}
+
+# ------------------------------------------------------------
+# 02. CHAT STATE
+# ------------------------------------------------------------
+
+chat.state {
+
+  # full conversation history in current session
+  messages: array [
+    {
+      role: user | assistant
+      content: string
+    }
+  ]
+
+  # current active mode
+  mode: write | plan
+
+  # content type currently active
+  content_type: article | blog-post | linkedin | youtube-desc | product-release
+
+  # whether content type was auto-detected or user-selected
+  type_auto_detected: boolean
+
+  # current datetime injected at session start
+  datetime: ISO 8601 string
+
+  # project info injected at session start
+  project: {
+    name: string
+    domain: string
+  }
+
+}
+
+# ------------------------------------------------------------
+# 03. BRIEF STATE
+# ------------------------------------------------------------
+
+brief.state {
+
+  # writing mode
+  mode: write | plan
+
+  # when session started
+  startedAt: ISO 8601 string
+
+  # content type for this brief
+  contentType: string
+
+  # initial user input that started the session
+  initialInput: string
+
+  # core brief fields (populated via updateBrief)
+  topic: string | null
+  angle: string | null
+  audience: string | null
+  intent: string | null
+  cta: string | null
+  notes: string | null
+
+}
+
+# ------------------------------------------------------------
+# 04. SEO SETTINGS STATE
+# ------------------------------------------------------------
+
+seo.state {
+
+  metaTitle: string | null
+  metaDescription: string | null
+  slug: string | null
+  canonicalUrl: string | null
+  ogTitle: string | null
+  ogDescription: string | null
+  ogImage: string | null
+  twitterCard: string | null
+  faqs: array []
+  schemaMarkup: string | null
+  internalLinks: array []
+  isPillar: boolean
+  pillarTopic: string | null
+  noIndex: boolean
+  noFollow: boolean
+
+}
+
+# ------------------------------------------------------------
+# 05. MEMORY STATE
+# ------------------------------------------------------------
+
+memory.state {
+
+  # loaded from memory.md at session start
+  brand_identity: string
+  positioning: string
+  competitors: array []
+  location: string
+  influence: string
+
+  # loaded from tone.md at session start
+  tone_rules: string | null
+  banned_phrases: array []
+  style_preferences: string | null
+
+}
+
+# ------------------------------------------------------------
+# 06. RUNTIME INJECTION ORDER
+# ------------------------------------------------------------
+
+# the following are injected into context at session start
+# in this order:
+
+step_01: datetime.context        # current date and time
+step_02: project.context         # brand name, domain
+step_03: memory.context          # loaded from memory.md
+step_04: tone.context            # loaded from tone.md
+step_05: content_type.context    # active content type config
+step_06: canvas_state.context    # word count, existing content
+step_07: seo_settings.context    # current SEO field values
+step_08: brief.context           # topic, angle, audience, intent, cta
+
+# ============================================================
+# END OF FILE: session-state.context
+# ============================================================

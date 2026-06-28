@@ -1,0 +1,91 @@
+# ============================================================
+# LAYER 6 COMPLETE ARCHITECTURE: SECURITY & ISOLATED RUNTIME
+# (Go Backend / Zero-Trust Sandboxing & Execution)
+# ============================================================
+
+/layer_06_runtime
+│
+# ------------------------------------------------------------
+# /sandbox_environment (Kernel-Level Isolation)
+# ------------------------------------------------------------
+│   # Sub-agents executing untrusted code or invoking tools must run in hardened environments
+│
+├── /sandbox_environment
+│   │
+│   ├── gvisor_isolation.go
+│   │   # Implements kernel-level sandboxing (e.g., gVisor) to actively block raw host access
+│   │   # Ensures that even if a generated script contains a container escape attempt, the host infrastructure remains untouched
+│   │
+│   └── ephemeral_state_manager.go
+│       # action: Completely resets the sandbox state between individual script runs
+│       # protection: Ensures malicious logic cannot persist in the environment while the agent iteratively self-corrects
+│
+# ------------------------------------------------------------
+# /network_egress (Non-Interactive Access Governance)
+# ------------------------------------------------------------
+│   # Egress in vibe-coded systems is non-deterministic; relying on simple allowlists is insufficient against prompt injections
+│
+├── /network_egress
+│   │
+│   ├── egress_proxy_controller.go
+│   │   # action: Forces the agent to fetch external information exclusively through dedicated, pre-sanitized web-crawling tools
+│   │
+│   └── supply_chain_defender.go
+│       # action: Actively intercepts and blocks dynamic dependency downloads (e.g., npm install) to mitigate "Slopsquatting"
+│       # protection: Ensures only vetted enterprise registries with strict cryptographic version pinning are accessible
+│
+# ------------------------------------------------------------
+# /iam_context (Zero Ambient Authority & JIT Access)
+# ------------------------------------------------------------
+│   # Solves the "Confused Deputy" problem by preventing the agent from operating under the human user's broad permissions
+│
+├── /iam_context
+│   │
+│   ├── jit_token_broker.go
+│   │   # action: Issues hyper-restricted, Just-In-Time (JIT) credentials explicitly scoped to the exact data sources required for the active tool
+│   │   # feature: Tokens mathematically expire the exact moment the DAG task node concludes
+│   │
+│   └── file_tree_enforcer.go
+│       # action: Confines read/write operations to specific project directories (e.g., /output/canvas.output)
+│       # protection: Enforces deny-by-default rules to block access to backend source code, secrets, and production manifests
+│
+# ------------------------------------------------------------
+# /secops_green_team_ops (Automated Incident Response)
+# ------------------------------------------------------------
+│   # Replaces destructive container termination with stateful recovery
+│
+└── /secops_green_team_ops
+    │
+    ├── stateful_quarantine.go
+    │   # trigger: Activated when Layer 8 Blue Team ABA detects intent drift, trust decay, or unsafe tool behavior
+    │   # action: Gracefully revokes the agent's specific tool access and freezes its ability to act upon the world
+    │   # feature: Preserves the agent's short-term memory entirely intact for forensic analysis rather than aggressively killing the container
+    │
+    └── auto_refactoring_loop.go
+        # action: Leverages the system's innate capacity for self-repair to autonomously rewrite insecure, vibe-coded scripts to patch vulnerabilities
+
+
+# ============================================================
+# ACTIVE LAYER 6 SESSION STATE (RUNTIME ISOLATION)
+# ============================================================
+
+session.state {
+  
+  # Sandbox Status
+  execution_environment : "gvisor_ephemeral_container"
+  filesystem_mount      : "restricted_rw_canvas_only"
+  
+  # Network & Identity Constraints
+  network_egress        : "tools_proxy_only"
+  active_jit_token      : "scoped_to_webSearch_tool"
+  ambient_credentials   : "stripped"
+  
+  # Green Team Status
+  quarantine_status     : "inactive"
+  container_health      : "clean_reset_pending"
+
+}
+
+# ============================================================
+# END OF EXTENDED LAYER 6 ARCHITECTURE
+# ============================================================

@@ -1,0 +1,153 @@
+auditor agent
+
+
+AI Visibility Audit
+Goal: Understand how your brand appears across ChatGPT, Claude, Perplexity, Gemini.
+
+Tool chain:
+
+getVisibilityReports - overall visibility score and share of voice
+getPromptStats - per-prompt performance breakdown
+getPromptPerformanceSummary - top and bottom performers
+getCitationTrend - citation volume over time
+getCitationSources - which domains are getting cited
+getSentimentDistribution - how AI platforms feel about your brand
+Meta Title & Description Optimization
+Goal: Improve CTR on key pages.
+
+Tool chain:
+
+quickContext - brand voice and positioning
+gsc_getTopPages - pages with most impressions but low CTR
+scrapePage - read current meta tags on target pages
+webSearch - scan competitor titles/descriptions in SERP
+getSiteIssues - check for flagged content issues
+Skill activated: meta-optimizer
+(This is exactly what ran for your request earlier - 3 of 8 calls succeeded)
+
+Full Site Health Report
+Goal: Prioritize everything that needs fixing.
+
+Tool chain:
+
+getSiteIssues - grouped issues by severity and type
+getOpportunities - actionable opportunities by impact
+getLinkAudits - backlink health
+gsc_getOverview - search performance summary
+gsc_getPositionBuckets - ranking distribution
+gsc_getOpportunities - high-impression, low-CTR quick wins
+Skill activated: site-audit-interpreter
+Keyword Research & Content Planning
+Goal: Find what to target and what to write.
+
+Tool chain:
+
+quickContext - existing brand context
+getKeywords - search volumes and difficulty
+gsc_getTopQueries - what you already rank for
+gsc_getOpportunities - page-2 queries to push to page 1
+getContentIdeas - PAA questions and related searches
+analyzeSERP - competitive landscape for priority keywords
+Skills activated: keyword-research, content-strategy
+Competitor Intelligence
+Goal: Understand where competitors beat you and where you can win.
+
+Tool chain:
+
+quickContext - your stored competitors
+analyzeCompetitors - domain metrics and keyword gaps
+webSearch - recent competitor content and positioning
+getSentimentHeadToHead - sentiment comparison vs competitors
+getCitationSources - which domains AI platforms cite more than yours
+Skill activated: competitor-intelligence
+Link Building & Citation Acquisition
+Goal: Get backlinks from sources AI platforms actually cite.
+
+Tool chain:
+
+getLinkAudits - current backlink profile
+getCitedUrls - domains AI platforms cite in your topic area
+webSearch - find specific articles and listicles to target
+getTrafficData - domain authority of target sites
+Skills activated: backlink-strategy-expert, link-opportunity-finder
+Schema & Structured Data Setup
+Goal: Improve rich results and AI citation-worthiness.
+
+Tool chain:
+
+getSiteIssues - flags missing schema types
+scrapePage - read existing page structure and content
+quickContext - brand details needed for Organization schema
+Skill activated: schema-generator
+llms.txt Generation
+Goal: Help AI crawlers understand your site structure.
+
+Tool chain:
+
+quickContext - brand, domain, positioning
+scrapePage - homepage and key pages for content map
+getSiteIssues - confirms llms.txt is missing
+webSearch - reference patterns from Stripe, Framer, Vercel
+Skill activated: llms-txt-generator
+GSC Performance Deep Dive
+Goal: Find ranking opportunities and diagnose traffic changes.
+
+Tool chain:
+
+gsc_getOverview - overall clicks, impressions, CTR, position
+gsc_getTopMovers - biggest position gains and losses
+gsc_getTopQueries - highest-value queries
+gsc_getOpportunities - page-2 quick wins
+gsc_comparePeriods - period-over-period changes
+gsc_getPositionBuckets - distribution across position ranges
+Skill activated: gsc-insights-expert
+Content Refresh
+Goal: Identify and update decaying content before it loses rankings.
+
+Tool chain:
+
+gsc_getTopPages - pages with declining clicks or impressions
+gsc_getPageTrend - trend line for specific pages
+scrapePage - read current content on target page
+webSearch - what competitors have updated recently
+gsc_getPageQueries - queries driving traffic to that page
+Skills activated: content-refresh-expert, long-form-content-expert
+Sentiment & Brand Perception Analysis
+Goal: Understand how AI models describe and position your brand.
+
+Tool chain:
+
+getSentimentAnalysis - weekly narrative summaries per platform
+getSentimentDistribution - positive/neutral/negative breakdown
+getSentimentTimeSeries - trend over time
+getSentimentHeadToHead - you vs competitors
+getSentimentTopicAnalysis - which topics drive positive vs negative sentiment
+getBrandFacts - unverified or incorrect facts AI models believe about you
+AI Citation Growth
+Goal: Get your pages cited more often in AI responses.
+
+Tool chain:
+
+getCitationTrend - baseline citation volume
+getCitedUrls - your current cited pages
+getBrandCitations - recent brand citation audit
+getCitationSources - competitor citation sources to target
+getPromptStats - which prompts are generating citations
+getSiteIssues - technical barriers to citation (missing schema, llms.txt, etc.)
+Skills activated: schema-generator, llms-txt-generator, backlink-strategy-expert
+Local SEO Setup
+Goal: Rank in local pack and Maps for geo-targeted queries.
+
+Tool chain:
+
+quickContext - brand and location details
+getKeywords - local keyword volumes
+analyzeSERP - local pack competition
+searchPromptLocations - geo-targeting for AI visibility prompts
+setPromptLocations - attach locations to tracked prompts
+Skills activated: local-seo-optimizer, google-business-profile-expert
+The pattern across all of them:
+
+Every workflow follows the same logic - gather context first, pull live data second, run competitive/external research third, then activate the relevant skill to generate the output. The skill only fires after the data is in hand.
+
+Want me to run any of these end-to-end for your site right now?

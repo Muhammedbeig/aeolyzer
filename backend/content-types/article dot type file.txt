@@ -1,0 +1,95 @@
+# ============================================================
+# FILE: article.type
+# ============================================================
+
+# TYPE DEFINITION
+# ---------------
+type          : article
+id            : article
+category      : long-form
+word_range    : 800-3000 words
+research      : full
+canvas        : full
+subtypes      : opinion | comparison | topic-guide | news-analysis | how-to | alternatives
+
+# BRIEF FIELDS REQUIRED
+# ---------------------
+brief_fields:
+  - topic
+  - angle
+  - audience
+  - intent
+  - cta
+  - keywords
+
+# WRITING RULES
+# -------------
+# - Write from a brand/third-person perspective
+# - Authoritative and evidence-backed
+# - Every claim needs a specific source, stat, or example
+
+# STRUCTURE RULES
+# ---------------
+# - H1 : title only (set via generateTitle, never written inside body)
+# - H2 : major sections
+# - H3 : subsections inside any H2 longer than 200 words
+# - Introduction : flows as prose, NO H2 heading
+# - Every H2 section needs at least ONE non-paragraph element:
+#     table | list | blockquote | bold callout | H3 subheading
+
+# DEPTH RULES
+# -----------
+# - Go beyond surface-level coverage
+# - Address counter-arguments
+# - Address competitive context
+# - Address second-order effects
+# - Every major fact needs a "so what" interpretation for the reader
+
+# VOICE RULES
+# -----------
+# - Take editorial positions
+# - Do not just present information, analyze it
+# - Include "so what" interpretation after every major fact
+
+# AVOID LIST
+# ----------
+# - Walls of unformatted text
+# - Restating the same distinction across multiple sections
+# - Generic "best practices" padding
+# - Hedging every claim with "potentially" and "might"
+# - Duplicate H2 headings
+# - Em dashes
+# - Emojis or Unicode symbols
+
+# FORMATTING REQUIREMENTS
+# -----------------------
+# - Max 2 consecutive plain paragraphs without a structural break
+# - Structural break every 100-150 words minimum
+# - Every H2 section: at least TWO non-paragraph elements
+# - Any H2 longer than 200 words: at least one H3
+
+# LINK DENSITY REQUIREMENTS
+# -------------------------
+# - Under 1,000 words  : 3 links minimum
+# - 1,000-2,000 words  : 5 links minimum
+# - 2,000-3,000 words  : 8 links minimum
+# - 3,000+ words       : 10 links minimum
+
+# SECTION PACING
+# --------------
+# opening  : hook paragraph -> bold stat callout -> context -> short list
+# body     : H2 -> 1-2 para intro -> H3 -> content -> H3 -> content
+# closing  : 1-2 paragraphs max -> bold callout -> CTA
+
+# POST-WRITE OUTPUTS
+# ------------------
+# - meta title suggestion
+# - meta description suggestion
+# - URL slug suggestion
+# - FAQ suggestions
+# - schema markup recommendation
+# - internal link suggestions
+
+# ============================================================
+# END OF FILE: article.type
+# ============================================================

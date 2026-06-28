@@ -1,0 +1,310 @@
+# ============================================================
+# FILE: em-dash-ban.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : em-dash-ban
+priority      : critical
+tolerance     : zero
+enforcement   : absolute
+
+# RULE
+# ----
+# NEVER use the em dash character in any content. Not once. Not ever.
+# This means NEVER output the character — or the sequence -- used as a dash.
+
+# INSTEAD USE
+# -----------
+# - commas
+# - semicolons
+# - colons
+# - parentheses
+# - periods (split into two sentences)
+
+# EXAMPLES
+# --------
+# BAD : "the result — a 30% increase — surprised everyone"
+# GOOD: "the result, a 30% increase, surprised everyone"
+# GOOD: "the result (a 30% increase) surprised everyone"
+
+# POST-WRITE CHECK
+# ----------------
+# - Scan entire output for em dash character before finalizing
+# - If found: replace immediately. No exceptions.
+
+# ============================================================
+# END OF FILE: em-dash-ban.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: emoji-ban.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : emoji-ban
+priority      : critical
+tolerance     : zero
+enforcement   : absolute
+
+# RULE
+# ----
+# NEVER use emojis, icons, or Unicode symbols of ANY kind in content output.
+# This applies to ALL content types: articles, blog posts, LinkedIn, YouTube, product releases.
+
+# EXAMPLES OF BANNED CHARACTERS
+# ------------------------------
+# - emoji characters: any face, hand, object, symbol emoji
+# - Unicode arrows: →, ←, ↑, ↓
+# - Unicode bullets: •, ◦, ▸
+# - Unicode checkmarks: ✓, ✗, ✔
+# - Unicode stars: ★, ☆
+# - Any non-ASCII decorative character
+
+# EXCEPTION
+# ---------
+# - Standard markdown syntax is allowed: **, ##, -, >, |
+# - These are formatting, not Unicode symbols
+
+# ============================================================
+# END OF FILE: emoji-ban.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: no-competitor-links.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : no-competitor-links
+priority      : critical
+tolerance     : zero
+enforcement   : absolute
+
+# RULE
+# ----
+# NEVER cite, link to, or reference any domain from the competitor blocklist.
+# Not as a source. Not as a reference. Not as an example. Not in any context.
+
+# WHAT TO DO WITH COMPETITOR DATA
+# --------------------------------
+# - Use the DATA but do NOT link to the competitor URL
+# - Anonymize: "one major platform found..." not "[competitor] found..."
+# - Find an authority source that covers the same data point
+# - Present as industry knowledge without a link
+
+# OUTBOUND LINK STRATEGY
+# ----------------------
+# - Only use domains from the authoritySources list (from getSourcesInsights)
+# - Or use well-known institutional domains: .gov, .edu, major publications
+# - Aim for 3-4 authority site links per article
+
+# ============================================================
+# END OF FILE: no-competitor-links.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: heading-hierarchy.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : heading-hierarchy
+priority      : critical
+tolerance     : zero
+enforcement   : absolute
+
+# RULE
+# ----
+# The title field IS the page H1. NEVER write a # H1 heading inside the body.
+# Use ## H2 for major sections.
+# Use ### H3 for subsections within H2 sections.
+# Introduction flows as prose. No H2 for the intro section.
+
+# HIERARCHY
+# ---------
+# H1 : title only (set via generateTitle tool)
+# H2 : major sections (## in markdown)
+# H3 : subsections inside H2 (### in markdown)
+# H4 : rarely used, only for deep nesting
+
+# WHEN TO USE H3
+# --------------
+# - Any H2 section longer than 200 words SHOULD have at least one H3
+# - Any H2 section longer than 400 words MUST have at least one H3
+# - Use H3 to create extraction points, navigation anchors, and visual breaks
+
+# ============================================================
+# END OF FILE: heading-hierarchy.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: duplicate-h2-prevention.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : duplicate-h2-prevention
+priority      : critical
+tolerance     : zero
+enforcement   : absolute
+
+# RULE
+# ----
+# When writeSection is called with a sectionTitle parameter,
+# the tool AUTOMATICALLY prepends "## sectionTitle" to the markdown.
+# Do NOT also start the markdown content with "## ..." heading.
+# This creates a DUPLICATE H2 that is immediately visible to the user.
+
+# CHECK BEFORE EVERY writeSection CALL
+# -------------------------------------
+# Q: Did I pass a sectionTitle parameter?
+# A: Yes -> my markdown must NOT begin with any ## heading
+# A: No  -> I am responsible for including the ## H2 in my markdown
+
+# EXAMPLES
+# --------
+# BAD (duplicate):
+#   writeSection(sectionTitle="How It Works", markdown="## How It Works\n\nContent...")
+#
+# GOOD (correct):
+#   writeSection(sectionTitle="How It Works", markdown="Content...")
+
+# ============================================================
+# END OF FILE: duplicate-h2-prevention.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: link-density.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : link-density
+priority      : critical
+tolerance     : zero
+enforcement   : mandatory
+
+# RULE
+# ----
+# Every article MUST meet the minimum inline hyperlink threshold.
+# An article with zero links is an automatic failure regardless of word count.
+
+# MINIMUM THRESHOLDS
+# ------------------
+# Under 1,000 words  : 3 links minimum
+# 1,000-2,000 words  : 5 links minimum
+# 2,000-3,000 words  : 8 links minimum
+# 3,000+ words       : 10 links minimum
+
+# LINK PLACEMENT
+# --------------
+# Introduction : 1-2 links to set credibility early
+# Body sections: 1-2 links per H2 section minimum
+# Conclusion   : 0-1 links
+
+# LINK TEXT RULES
+# ---------------
+# BAD : [click here], [this article], [source], [here]
+# GOOD: [HubSpot's 2026 State of Marketing report], [Google's MCP documentation]
+
+# WHAT TO LINK
+# ------------
+# - Statistics and data points -> link to original report or study
+# - Named tools, platforms, products -> link to homepage or relevant page
+# - News events or announcements -> link to original announcement
+# - Quotes -> link to source where quote appeared
+# - Concepts or frameworks -> link to definitive explanation
+# - User's own related content -> link to their published pages
+
+# ============================================================
+# END OF FILE: link-density.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: text-wall-ban.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : text-wall-ban
+priority      : critical
+tolerance     : zero
+enforcement   : absolute
+
+# RULE
+# ----
+# NEVER write more than 2 consecutive plain paragraphs without a structural break.
+# A structural break must appear every 100-150 words minimum.
+# Text walls are the single most common failure mode in AI-generated content.
+
+# STRUCTURAL BREAK OPTIONS
+# ------------------------
+# - bullet list (3+ items)
+# - numbered list
+# - markdown table
+# - blockquote
+# - bold callout line
+# - H3 subheading
+# - key takeaway box (> **Key takeaway:** ...)
+
+# SECTION REQUIREMENTS
+# --------------------
+# - Every H2 section MUST contain at least TWO non-paragraph elements
+# - Any H2 section longer than 200 words SHOULD have at least one H3
+# - Opening section MUST include a structural break within first 150 words
+
+# SCAN RULE
+# ---------
+# After writing: scan entire article top to bottom.
+# If any stretch of 3+ consecutive plain paragraphs exists without a break: FAIL.
+# Fix immediately before reporting completion.
+
+# ============================================================
+# END OF FILE: text-wall-ban.rule
+# ============================================================
+
+
+# ============================================================
+# FILE: word-count-tracking.rule
+# ============================================================
+
+# RULE DEFINITION
+# ---------------
+rule          : word-count-tracking
+priority      : critical
+tolerance     : zero
+enforcement   : mandatory
+
+# RULE
+# ----
+# Each writeSection call returns a "wordCount" field.
+# This is the REAL word count for that section.
+# Keep a RUNNING TOTAL by summing the wordCount from each writeSection result.
+# DO NOT estimate or guess the total. Trust the numbers from writeSection results.
+
+# TRACKING RULES
+# --------------
+# - canvas_state in context provides word count at session start
+# - Add each writeSection wordCount return to the running total
+# - When running total approaches the target word count: STOP writing
+# - Do not overshoot the target by more than 10%
+# - When reporting final word count: add up tool-returned counts. Never fabricate.
+
+# COMPLETION CHECK
+# ----------------
+# - If running total is more than 20% short of target: sections are missing
+# - Go back and write missing sections before reporting completion
+
+# ============================================================
+# END OF FILE: word-count-tracking.rule
+# ============================================================
+
+

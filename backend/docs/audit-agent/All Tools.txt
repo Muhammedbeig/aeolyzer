@@ -1,0 +1,127 @@
+auditor agent
+
+Site‑level data
+
+quickContext – pulls the brand, domain, competitors and any stored project notes.
+Example: “What’s my brand positioning?”
+
+getSiteIssues – returns grouped technical and content issues across the site, with severity and health scores.
+Example: “Show me the top technical problems on my site.”
+
+getOpportunity / getOpportunities – fetches specific or filtered audit opportunities (on‑page, off‑page, impact level, etc.).
+Example: “Give me all high‑impact on‑page opportunities.”
+
+getLinkAudits – provides backlink data and link‑quality analysis.
+Example: “What are my worst backlinks?”
+
+Visibility & AI‑search metrics
+
+getVisibilityReports – brand‑mention visibility percentages, share‑of‑voice and per‑engine breakdown.
+Example: “How often is my brand showing up in ChatGPT?”
+
+getPrompts / addPrompt / editPrompt / deletePrompt – manage the custom prompts you track for AI visibility.
+Example: “Add a new prompt about ‘automated testing tools’.”
+
+getPromptStats – per‑prompt performance (average position, mention rate, citation rate).
+Example: “Which of my prompts has the best average position?”
+
+getPromptPerformanceSummary – quick view of top‑ and bottom‑performing prompts.
+Example: “Show the five worst‑performing prompts.”
+
+getSinglePromptStatsByPromptText – deep dive on a single prompt’s stats.
+Example: “How does the prompt ‘best unit testing framework’ perform?”
+
+Citation & fact data
+
+getCitationTrend – daily citation counts and trends for brand, competitor or other source types.
+Example: “Show citation trends for the last 30 days.”
+
+getCitationSources – ranked list of domains and pages that are being cited.
+Example: “Which domains cite my brand the most?”
+
+getBrandCitations – recent brand‑cited URLs with audit context.
+Example: “Give me the latest brand citations.”
+
+getCitedUrls – all cited URLs across source types, with ranking and platform info.
+Example: “List the top 10 cited URLs overall.”
+
+getUrlCitationDetails – detailed citation data for a specific URL.
+Example: “What prompts cite https://example.com/guide?”
+
+getBrandFacts – facts that AI models believe about your brand, with verification status.
+Example: “What unverified facts does ChatGPT have about my company?”
+
+Search‑console & analytics
+
+gsc_getOverview, gsc_getTopQueries, gsc_getTopPages, gsc_getPerformanceTrend, gsc_getPageTrend, gsc_getPageQueries, gsc_getTopMovers, gsc_getPositionBuckets, gsc_getOpportunities, gsc_getCountries, gsc_getDevices, gsc_getCrawledVsUncrawled, gsc_comparePeriods, gsc_compareQueries, gsc_getLatestDate, gsc_getLinkedSites – all the standard Google Search Console reports and comparisons.
+Example: “What are my top‑moving queries this month?”
+
+getGA4Analytics – GA4 traffic, user, device and behavior metrics.
+Example: “How many new users did I get last week?”
+
+Keyword & content ideas (expensive calls – use when you explicitly need them)
+
+getKeywords – keyword volume, difficulty and related terms.
+Example: “Give me search volume for ‘unit testing tools’.”
+
+analyzeSERP – SERP ranking analysis for a specific keyword.
+Example: “Show the SERP for ‘software testing basics’.”
+
+getContentIdeas – People‑Also‑Ask questions and related searches.
+Example: “What are the PAA questions for ‘continuous integration testing’?”
+
+analyzeCompetitors – competitor discovery and analysis.
+Example: “Find competitors for softwaretestingbasics.io.”
+
+Sentiment & AI‑generated insights
+
+getSentimentDistribution, getSentimentTimeSeries, getSentimentHeadToHead, getSentimentTopicAnalysis, getSentimentAnalysis – sentiment breakdowns across AI platforms, topics and competitors.
+Example: “What’s the overall sentiment toward my brand on Claude?”
+
+getBrandFacts – AI‑perceived facts with verification status.
+Example: “List any unverified claims about my brand.”
+
+Prompt & location helpers
+
+searchPromptLocations – location suggestions for geo‑targeted prompts.
+Example: “Find locations for a prompt targeting ‘software testing in Canada’.”
+
+setPromptLocations – attach or replace locations on a saved prompt.
+Example: “Add ‘Austin, TX’ to the prompt ID 12345.”
+
+generatePrompts – AI‑generated prompt ideas for your brand.
+Example: “Generate 10 new prompts about automated testing.”
+
+enhancePrompts – improve existing prompts for better AI visibility.
+Example: “Make my ‘manual testing guide’ prompt more compelling.”
+
+bulkImportPrompts – import many prompts at once from a list or CSV.
+Example: “Import these 50 prompts from a spreadsheet.”
+
+analyzePrompts – audit of prompt coverage, gaps and optimization opportunities.
+Example: “What prompt topics am I missing?”
+
+File & document handling
+
+scrapePage – fetches page content (HTML, markdown, text, PDF, screenshot).
+Example: “Scrape the homepage of softwaretestingbasics.io.”
+
+detectCurrentPage – returns the page you’re currently viewing inside Searchable.
+Example: “What page am I on right now?”
+
+searchMemories / addMemory / getUserContext / getProjectMemories – search, store and retrieve project‑level or user‑level notes and knowledge.
+Example: “Add a memory that our target audience is QA engineers.”
+
+Miscellaneous helpers
+
+webSearch – general web search via Perplexity for any query you need.
+Example: “Search for recent articles on ‘test automation trends 2024’.”
+
+getDocsIndex / getDocsContent – browse the Searchable documentation and pull specific help pages.
+Example: “Show me the docs for setting up llms.txt.”
+
+searchUserData – search across stored prompts, audits, visibility data, etc.
+Example: “Find all audits that mention ‘structured data’.”
+
+multi_tool_use.parallel
+Runs multiple developer tools in parallel when appropriate.

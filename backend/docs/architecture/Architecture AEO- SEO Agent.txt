@@ -1,0 +1,179 @@
+==================================================================================
+                 LAYER 1: USER / INTENT ORCHESTRATION SURFACE
+==================================================================================
+  [Human Conductor / Orchestrator] ── Expresses Natural Intent ──► [IDE / CLI App]
+         ▲                                                               │
+         │ [Plain-English "Vibe Diff" Summary & Logic Review]            ▼
+  [Hardware MFA Key] ◄── Cryptographic Challenge Gate ─── [Evaluator Quorum Gating]
+==================================================================================
+                 LAYER 2: REQUEST INTAKE, CONTEXT, & SAFETY GATE
+==================================================================================
+                                         │
+                                         ▼
+                   ┌──────────────────────────────────────────┐
+                   │               LLM FIREWALL               │
+                   │   Prompt Injection & Secret Sanitize     │
+                   └─────────────────────┬────────────────────┘
+                                         │
+                                         ▼
+                   ┌──────────────────────────────────────────┐
+                   │          CONTEXT POLICY ENGINE           │
+                   │  Loads Static Profile (AGENTS.md)        │
+                   │  Intercepts calls via Context Resolver   │
+                   └─────────────────────┬────────────────────┘
+                                         │
+                                         ▼
+==================================================================================
+                 LAYER 3: DISTRIBUTED ORCHESTRATION & AGENT FABRIC
+==================================================================================
+                                         │
+                    ┌────────────────────┴────────────────────┐
+                    ▼                                         ▼
+        ┌───────────────────────┐                 ┌───────────────────────┐
+        │ SEO AEO AUDITOR AGENT │                 │ CONTENT WRITER AGENT  │
+        ├───────────────────────┤                 ├───────────────────────┤
+        │  • Cryptographic ID   │                 │  • Cryptographic ID   │
+        │    (SPIFFE ID assigned)│  ◄── A2A ──►   │    (SPIFFE ID assigned)│
+        │  • Persona Definition │   Protocol      │  • Persona Definition │
+        │  • Capability Profile │                 │  • Capability Profile │
+        └───────────┬───────────┘                 └───────────┬───────────┘
+                    │                                         │
+==================================================================================
+                 LAYER 4: PROGRESSIVE DISCLOSURE SKILL DIRECTORY
+==================================================================================
+                    │                                         │
+                    ▼                                         ▼
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                       DYNAMIC SKILL WORKSPACE DIRECTORY                   │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  [Level 1: Metadata Index Cues] ──► Only Name + Description in Context    │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  [Level 2: Active SKILL.md Body] ──► Loaded strictly on Task-Trigger Match │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  [Level 3: Bundled Folder Resources]                                      │
+   │    ├── scripts/    (Deterministic execution: Math, Data parsers)          │
+   │    ├── references/ (Domain principles, edge-case criteria runbooks)       │
+   │    └── assets/     (Output layout configurations & data schemas)          │
+   └─────────────────────────────────────┬─────────────────────────────────────┘
+                                         │
+==================================================================================
+                 LAYER 5: EXTENSIONS, AUDIT UI & A2A INTEROP
+==================================================================================
+                                         │
+                                         ▼
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                           A2A EXTENSIONS FRAMEWORK                        │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  • A2UI (Declares UI layouts natively using Flat Adjacency Lists)         │
+   │  • Agent Card Endpoint (Exposes Audit Capabilities to External Ecosystem) │
+   └─────────────────────────────────────┬─────────────────────────────────────┘
+                                         │
+==================================================================================
+                 LAYER 6: SECURITY CONTROL PLANE & ISOLATED RUNTIME
+==================================================================================
+                                         │
+                                         ▼
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                    RESTRICTED KERNEL SANDBOX (gVisor)                     │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  • Ephemeral Container reset between script runs                          │
+   │  • Non-Interactive internet egress routing proxies                        │
+   │  • Just-In-Time (JIT) downscoped short-lived access credentials           │
+   │  • File-Tree Allowlists (Deny-by-default on root configurations)          │
+   │  • Stateful Quarantine: Activated when Layer 8 Blue Team ABA detects      │
+   │    intent drift, trust decay, or unsafe tool behavior                     │
+   └─────────────────────────────────────┬─────────────────────────────────────┘
+                                         │
+==================================================================================
+                 LAYER 7: GROUNDING INTEROP & RESOURCE PLUMBING
+==================================================================================
+                                         │
+                                         ▼
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                       MCP TRANSPORT SOCKET PLANE                          │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  • Local stdio background subprocesses (JSON-RPC 2.0 piping)              │
+   │  • Remote Streamable HTTP transport, optionally using SSE for streamed    │
+   │    server messages                                                        │ 
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  • Grounding Assets: Product Catalogs, Live Search Console, Vector DBs    │
+   │  • Core Data Defense: Cross-Tenant Partitioning, CMEK, mTLS Encrypted     │
+   └─────────────────────────────────────┬─────────────────────────────────────┘
+                                         │
+==================================================================================
+                 LAYER 8: OBSERVABILITY, SECOPS, & QUALITY LOOPS
+==================================================================================
+                                         │
+                                         ▼
+   ┌───────────────────────────────────────────────────────────────────────────┐
+   │                 CONTINUOUS TELEMETRY & RUNTIME VERIFICATION               │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  • OpenTelemetry tracing (Tree: session span ->                           │
+   │    agent.reasoning_trace_redacted -> tool span)                           │
+   │  • Runtime Agent Bill of Materials (AgBOM) active boundary tracking       │
+   │  • Multi-turn session convergence evaluation (Strict pass^k testing)      │
+   ├───────────────────────────────────────────────────────────────────────────┤
+   │  • SecOps Agent Triad Collaboration Engine:                               │
+   │    ├── Red Team   (Injects adversarial prompts and token stress tests)    │
+   │    ├── Blue Team  (Monitors for intent drift & trust score decay breakers)│
+   │    └── Green Team (Executes stateful quarantines & code auto-refactoring) │
+   └────────────────===========================================================┘
+
+
+# ==============================================================================
+# UNIFIED ACTIVE SESSION STATE
+# ==============================================================================
+
+session.state {
+
+  # Layer 1 & 2: Intent & Safety
+  intent_classified     : "audit_seo"
+  ambient_authority     : "stripped"
+  jit_token_expiry      : "2026-06-25T00:30:00+05:00"
+  
+  # Layer 3 & 4: Orchestration & Skills
+  assigned_agent        : "seo_aeo_auditor"
+  active_workflow       : "website-audit.bp"
+  mode                  : "audit"
+  metadata_loaded       : "all_22_skills"
+  loaded_skills         : [
+    "keyword-research",
+    "serp-analysis",
+    "competitor-intelligence",
+    "content-strategy",
+    "content-creation",
+    "content-seo-settings",
+    "meta-optimization",
+    "schema-generation",
+    "llms-txt-generation",
+    "robots-txt-generation",
+    "sitemap-generation",
+    "site-audit-interpretation",
+    "core-web-vitals-optimization",
+    "internal-linking-strategy",
+    "long-form-content-audit",
+    "content-refresh-strategy",
+    "link-opportunity-discovery",
+    "backlink-strategy",
+    "gsc-insights-analysis",
+    "ga4-analysis",
+    "local-seo-optimization",
+    "gbp-optimization"
+  ]
+  token_budget          : "Context Rot Prevented"
+  
+  # Layer 5: UI & Extensions
+  a2ui_surface          : "audit_dashboard_view"
+  a2a_connections       : "0_remote_clients"
+  
+  # Layer 6 & 7: Runtime & Plumbing
+  execution_sandbox     : "gvisor_ephemeral_container"
+  mcp_connections       : ["stdio://internal_tools", "https://remote_mcp_servers"]
+  quarantine_trigger    : "Activated when Layer 8 Blue Team ABA detects intent drift, trust decay, or unsafe tool behavior"
+  
+  # Layer 8: Observability
+  vibe_trajectory       : "trace_id_99a8b"
+  agbom_status          : "monitored_clean"
+  circuit_breaker       : "closed"
+
+}

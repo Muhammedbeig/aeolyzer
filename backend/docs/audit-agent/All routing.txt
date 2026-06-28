@@ -1,0 +1,233 @@
+auditor agent
+
+
+1️⃣ Visibility / Citation Routes
+Route	Trigger	Steps (in order)	Skill (if any)
+V‑01	“How visible am I in ChatGPT?”	quickContext → getVisibilityReports → getPromptStats → getCitationTrend → getCitationSources → getSentimentDistribution	none (just data)
+V‑02	“Show me my top‑performing prompts”	quickContext → getPromptPerformanceSummary	none
+V‑03	“Which prompts are getting cited?”	quickContext → getPromptStats → getCitationTrend (filter by source = brand)	none
+V‑04	“What’s the sentiment on Claude vs Gemini?”	quickContext → getSentimentAnalysis (platform filter)	none
+V‑05	“Give me a head‑to‑head sentiment vs competitors”	quickContext → getSentimentHeadToHead	none
+
+
+
+2️⃣ Meta / Content Optimization Routes
+Route	Trigger	Steps	Skill
+M‑01	“Optimize my title tags”	quickContext → gsc_getTopPages (high‑impression, low‑CTR) → scrapePage (read current meta) → webSearch (competitor SERP) → getSiteIssues (content flags) → meta-optimizer	
+M‑02	“Refresh the description for my homepage”	quickContext → scrapePage (homepage) → webSearch (competitor titles) → meta-optimizer	
+M‑03	“Find pages with missing schema”	quickContext → getSiteIssues (filter type = content, title = “schema missing”) → schema-generator	
+M‑04	“Create a new meta tag for a blog post”	quickContext → meta-optimizer (no external data needed)	
+
+
+3️⃣ Site‑Health / Audit Routes
+Route	Trigger	Steps	Skill
+A‑01	“Run a full site audit”	quickContext → getSiteIssues → getOpportunities (all) → getLinkAudits → site-audit-interpreter	
+A‑02	“Show me only critical issues”	quickContext → getSiteIssues (filter severity = high/critical) → site-audit-interpreter	
+A‑03	“What’s my AEO score?”	quickContext → getSiteIssues (extract healthScores) → site-audit-interpreter	
+A‑04	“Give me a quick win for page X”	quickContext → getSiteIssues (filter page = X) → site-audit-interpreter
+
+
+4️⃣ Keyword & SERP Research Routes
+Route	Trigger	Steps	Skill
+K‑01	“Do keyword research for ‘unit testing’”	quickContext → getKeywords (explicit) → gsc_getTopQueries (existing traffic) → keyword-research	
+K‑02	“Analyze SERP for ‘software testing basics’”	quickContext → analyzeSERP → webSearch (competitor pages) → serp-analysis	
+K‑03	“Give me People‑Also‑Ask questions”	quickContext → getContentIdeas → content-creation	
+K‑04	“What topics should I target next?”	quickContext → gsc_getTopMovers → getSentimentTopicAnalysis → content-strategy
+
+
+5️⃣ Competitor & Market Intelligence Routes
+Route	Trigger	Steps	Skill
+C‑01	“Show me my competitors”	quickContext (already stores competitors) → competitor-intelligence	
+C‑02	“Do a competitor gap analysis”	quickContext → analyzeCompetitors → gsc_getTopQueries (compare) → competitor-intelligence	
+C‑03	“What facts does AI have wrong about me?”	quickContext → getBrandFacts (verification = unverified) → brand-fact‑audit (internal skill)
+
+
+6️⃣ Link‑Building & Citation Growth Routes
+Route	Trigger	Steps	Skill
+L‑01	“Find citation opportunities”	quickContext → getCitedUrls (source = brand) → getCitationSources (competitor) → webSearch (target articles) → backlink-strategy-expert	
+L‑02	“Audit my backlinks”	quickContext → getLinkAudits → link-audit‑interpreter	
+L‑03	“Generate a list of outreach emails”	quickContext → getCitedUrls → backlink-strategy-expert (email template generation)
+
+
+7️⃣ Local SEO Routes
+Route	Trigger	Steps	Skill
+L‑04	“Optimize for ‘software testing in Austin’”	quickContext → searchPromptLocations (Austin) → setPromptLocations → local-seo-optimizer	
+L‑05	“Show my Google Business Profile health”	quickContext → google-business-profile-expert (no external tool needed)	
+
+
+8️⃣ Analytics & Reporting Routes
+Route	Trigger	Steps	Skill
+R‑01	“Give me a GA4 traffic summary”	quickContext → getGA4Analytics (date range) → ga4-analyst	
+R‑02	“What are my top GSC queries?”	quickContext → gsc_getTopQueries → gsc-insights-expert	
+R‑03	“Show me a performance trend for the last 30 days”	quickContext → gsc_getPerformanceTrend → gsc-insights-expert	
+R‑04	“Export a CSV of all citation sources”	quickContext → getCitedUrls → export‑csv‑helper (internal)	
+
+
+9️⃣ Prompt Management Routes
+Route	Trigger	Steps	Skill
+P‑01	“Add a new prompt”	quickContext → addPrompt (text) → prompt‑manager	
+P‑02	“Generate new prompts for my brand”	quickContext → generatePrompts (count = 10) → prompt‑generator	
+P‑03	“Enhance my existing prompts”	quickContext → enhancePrompts (modificationInstruction) → prompt‑enhancer	
+P‑04	“Show me prompt performance”	quickContext → getPromptStats → prompt‑reporter
+
+
+10️⃣ Schema & Structured‑Data Routes
+Route	Trigger	Steps	Skill
+S‑01	“Generate Organization schema”	quickContext → schema-generator	
+S‑02	“Add BreadcrumbList schema to page X”	quickContext → scrapePage (page X) → schema-generator	
+S‑03	“Check which schema types are missing”	quickContext → getSiteIssues (filter title = “schema missing”) → site-audit-interpreter	
+
+
+11️⃣ LLM Crawler File Routes
+Route	Trigger	Steps	Skill
+L‑06	“Create an llms.txt file”	quickContext → webSearch (reference Stripe/Framer/Vercel) → llms-txt-generator	
+L‑07	“Validate my existing llms.txt”	quickContext → scrapePage (llms.txt) → llms‑validator (internal)	
+
+
+12️⃣ Documentation & Knowledge‑Base Routes
+Route	Trigger	Steps	Skill
+D‑01	“Show me the docs for schema-generator”	getDocsIndex → getDocsContent (slug = “using-searchable/schema-generator”) → doc‑viewer	
+D‑02	“Search my project memories for ‘AI visibility’”	searchMemories (query = “AI visibility”) → memory‑search‑helper	
+D‑03	“Add a memory that our target audience is QA engineers”	addMemory (type = project_detail) → memory‑adder	
+
+
+
+Intent detection – the NLU layer maps the user utterance to one of the high‑level request categories above (Visibility, Meta, Audit, etc.).
+Pre‑flight check – if the request needs a specific project ID, the router pulls it from the session; if missing, it returns a “please connect your project” error.
+Tool‑selection matrix – each category has a predefined ordered list of tools (the tables above). The router builds a pipeline of calls.
+Parallel vs. sequential – most routes run tools sequentially because later steps depend on earlier data. A few low‑cost calls (quickContext, searchMemories) are fired in parallel to reduce latency.
+Skill activation – once the required data is gathered, the router injects the appropriate skill (meta-optimizer, schema-generator, etc.) into the LLM context and asks it to produce the final answer.
+Response formatting – the final output is passed through the response‑formatter that enforces the conversational style rules (no all‑caps headers, double line breaks, etc.).
+ROOT
+├─ VISIBILITY
+│   ├─ quickContext
+│   ├─ getVisibilityReports
+│   ├─ getPromptStats
+│   ├─ getPromptPerformanceSummary
+│   ├─ getCitationTrend
+│   ├─ getCitationSources
+│   ├─ getSentimentDistribution
+│   └─ (no skill – raw data returned)
+│
+├─ META_OPTIMIZATION
+│   ├─ quickContext
+│   ├─ gsc_getTopPages          # high‑impression, low‑CTR pages
+│   ├─ scrapePage               # read current <title> & <meta name="description">
+│   ├─ webSearch                # competitor SERP titles & descriptions
+│   ├─ getSiteIssues            # content flags (e.g., missing differentiators)
+│   └─ meta-optimizer           # skill that writes new title/description
+│
+├─ SITE_HEALTH
+│   ├─ quickContext
+│   ├─ getSiteIssues
+│   ├─ getOpportunities
+│   ├─ getLinkAudits
+│   └─ site-audit-interpreter   # skill that formats a health report
+│
+├─ KEYWORD_RESEARCH
+│   ├─ quickContext
+│   ├─ getKeywords
+│   ├─ gsc_getTopQueries
+│   ├─ gsc_getOpportunities
+│   └─ keyword-research          # skill that builds a keyword plan
+│
+├─ SERP_ANALYSIS
+│   ├─ quickContext
+│   ├─ analyzeSERP
+│   ├─ webSearch
+│   └─ serp-analysis            # skill that produces SERP insights
+│
+├─ COMPETITOR_INTELLIGENCE
+│   ├─ quickContext
+│   ├─ analyzeCompetitors
+│   ├─ webSearch
+│   ├─ getSentimentHeadToHead
+│   └─ competitor-intelligence   # skill that creates a competitor report
+│
+├─ LINK_BUILDING
+│   ├─ quickContext
+│   ├─ getLinkAudits
+│   ├─ getCitedUrls
+│   ├─ getCitationSources
+│   ├─ webSearch
+│   └─ backlink-strategy-expert  # skill that suggests outreach targets
+│
+├─ SCHEMA_GENERATION
+│   ├─ quickContext
+│   ├─ getSiteIssues            # detect missing schema types
+│   ├─ scrapePage               # optional, read page structure
+│   └─ schema-generator         # skill that outputs JSON‑LD / Microdata
+│
+├─ LLMS_TXT_GENERATION
+│   ├─ quickContext
+│   ├─ getSiteIssues            # confirm llms.txt is missing
+│   ├─ webSearch                # reference patterns from Stripe, Framer, Vercel
+│   └─ llms-txt-generator       # skill that writes the file content
+│
+├─ GSC_PERFORMANCE
+│   ├─ quickContext
+│   ├─ gsc_getOverview
+│   ├─ gsc_getTopMovers
+│   ├─ gsc_getTopQueries
+│   ├─ gsc_getOpportunities
+│   ├─ gsc_comparePeriods
+│   └─ gsc-insights-expert      # skill that formats a performance summary
+│
+├─ GA4_ANALYTICS
+│   ├─ quickContext
+│   └─ getGA4Analytics
+│   └─ ga4-analyst              # skill that interprets GA4 data
+│
+├─ PROMPT_MANAGEMENT
+│   ├─ quickContext
+│   ├─ getPrompts
+│   ├─ addPrompt / editPrompt / deletePrompt / generatePrompts / enhancePrompts
+│   └─ prompt‑manager / prompt‑generator / prompt‑enhancer (skill)
+│
+├─ SENTIMENT_ANALYSIS
+│   ├─ quickContext
+│   ├─ getSentimentAnalysis
+│   ├─ getSentimentDistribution
+│   ├─ getSentimentTimeSeries
+│   ├─ getSentimentHeadToHead
+│   ├─ getSentimentTopicAnalysis
+│   └─ (no skill – raw sentiment data returned)
+│
+├─ CONTENT_REFRESH
+│   ├─ quickContext
+│   ├─ gsc_getTopPages
+│   ├─ gsc_getPageTrend
+│   ├─ scrapePage
+│   ├─ webSearch
+│   └─ content-refresh-expert   # skill that suggests updates
+│
+├─ LOCAL_SEO
+│   ├─ quickContext
+│   ├─ getKeywords
+│   ├─ analyzeSERP
+│   ├─ searchPromptLocations
+│   ├─ setPromptLocations
+│   └─ local-seo-optimizer       # skill that creates a local‑SEO plan
+│
+├─ DOCUMENTATION
+│   ├─ getDocsIndex
+│   ├─ getDocsContent
+│   └─ doc‑viewer                # skill that formats docs for the user
+│
+└─ MEMORY
+    ├─ searchMemories
+    ├─ addMemory
+    └─ memory‑search‑helper      # skill that surfaces stored notes
+
+Intent → Category – the NLU layer maps the user’s natural‑language request to one of the top‑level categories (e.g., META_OPTIMIZATION).
+
+Build pipeline – the router reads the list of tool calls under that category, in the exact order shown. Calls are executed sequentially unless marked “parallel” (only quickContext and searchMemories are ever run in parallel).
+
+Collect results – each tool’s JSON response is stored in a temporary context object. If a call fails, the router logs the error and continues with the remaining steps (so the workflow is resilient).
+
+Inject skill – once the final tool in the list finishes, the router adds the associated skill (e.g., meta-optimizer) to the LLM prompt. The skill contains the domain‑specific instructions that turn raw data into a human‑readable answer.
+
+Render response – the LLM produces the answer, which then passes through the response‑formatter (enforces no all‑caps headers, double line breaks, etc.) before being sent back to you.
+
+if everything above routing rules go against our "whitepapers" we will not follow them instead we will follow whitepapers..
+

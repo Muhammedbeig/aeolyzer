@@ -1,0 +1,92 @@
+# ============================================================
+# LAYER 3 COMPLETE ARCHITECTURE: ORCHESTRATION & AGENT FABRIC
+# (Go Backend / Google ADK Implementation)
+# ============================================================
+
+/layer_03_fabric
+│
+# ------------------------------------------------------------
+# /orchestrator (DAG Controller & State Management)
+# ------------------------------------------------------------
+│
+├── /orchestrator
+│   │   # The central hub that receives validated intents from Layer 2
+│   │   # Prevents the "Single Agent Monolith" ceiling by delegating to specialists
+│   │
+│   ├── dag_controller.go
+│   │   # Graph-based execution router (No prompt-chaining)
+│   │   # action 01: Reads incoming JSON intent (e.g., {"intent": "audit_seo"})
+│   │   # action 02: Selects the correct remote or local A2A agent
+│   │   # action 03: Passes structured schema references via file message bus (decoupled state)
+│   │
+│   └── state_manager.go
+│       # Maintains session isolation to protect token attention
+│       # action: Injects context variables step-by-step (datetime, project, audit_state)
+│
+# ------------------------------------------------------------
+# /capability_profiles (Dynamic Swappable Personas)
+# ------------------------------------------------------------
+│
+├── /capability_profiles
+│   │   # Modular bundles that define what an agent can do at runtime
+│   │   # Swapped into memory to prevent Context Rot
+│   │
+│   ├── content_collaborator.yaml
+│   │   # mode: write.mode, role: content strategist
+│   │
+│   └── seo_aeo_auditor.yaml
+│       # mode: audit.mode, role: technical SEO and AEO specialist
+│       # loaded_skills: [site-audit-interpretation, gsc-insights-analysis, ga4-analysis, core-web-vitals-optimization, schema-generation, internal-linking-strategy]
+│
+# ------------------------------------------------------------
+# /storage_plane (Decoupled Handoffs)
+# ------------------------------------------------------------
+│
+└── /output
+    │   # The DAG orchestrator monitors these files to coordinate agents
+    │
+    ├── canvas.output
+    │   # Target of writeSection(); current state of the document or audit report
+    │
+    ├── brief.output
+    │   # The active contract (topic, scope, target URLs, constraints)
+    │
+    └── chat.output
+        # Short coordination messages for the human conductor (1-2 sentences max)
+
+
+# ============================================================
+# ACTIVE LAYER 3 SESSION STATE (DAG CONTROLLER)
+# ============================================================
+
+session.state {
+  
+  # DAG Routing Context
+  active_intent     : "audit_seo"
+  assigned_agent    : "seo_aeo_auditor"
+  active_workflow   : "website-audit.bp"
+  
+  # Agent Capability Profile State
+  mode              : "audit"
+  target_domain     : "example.com"
+  brand             : "example"
+  audit_status      : "analyzing_gsc_data"
+  issues_flagged    : "issues"
+  
+  # A2A / Tool Access Controls
+  tool_access {
+    contracts        : "exposed_to_agent"
+    implementation   : "hidden_in_layer_7_mcp"
+  }
+
+  internet_access {
+    available        : "yes"
+    method           : "through tools only (webSearch, scrapePage, getSiteIssues)"
+    direct_shell     : "no (blocked by Layer 6 Sandbox)"
+  }
+
+}
+
+# ============================================================
+# END OF EXTENDED LAYER 3 ARCHITECTURE
+# ============================================================

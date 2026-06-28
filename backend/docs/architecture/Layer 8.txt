@@ -1,0 +1,100 @@
+# ============================================================
+# LAYER 8 COMPLETE ARCHITECTURE: OBSERVABILITY & QUALITY LOOPS
+# (Go Backend / OpenTelemetry & Agentic Evaluation)
+# ============================================================
+
+/layer_08_observability
+│
+# ------------------------------------------------------------
+# /telemetry_tracing (The "Glass Box" Lens)
+# ------------------------------------------------------------
+│   # Aggregates diverse signals into a complete Vibe Trajectory
+│
+├── /telemetry_tracing
+│   │
+│   ├── opentelemetry_tracker.go
+│   │   # Implements standard OpenTelemetry to capture non-deterministic flows and policy outcomes
+│   │   # span 01: agent.session (captures the entire task duration and overall policy outcomes)
+│   │   # span 02: agent.reasoning_trace_redacted (records redacted reasoning summaries and decision points, strictly avoiding raw hidden chain-of-thought)
+│   │   # span 03: agent.tool (logs specific tool calls, arguments, inferences, and latencies)
+│   │
+│   └── cost_latency_meter.go
+│       # action: Aggregates span attributes to precisely measure token consumption and inference latency
+│       # optimization: Uses tail-based dynamic sampling to drop routine successes but retain traces with errors or excessive loops
+│
+# ------------------------------------------------------------
+# /secops_triad (Autonomous Active Defense)
+# ------------------------------------------------------------
+│   # Operates at the exact speed of the agentic workflow to detect invisible payloads
+│
+├── /secops_triad
+│   │
+│   ├── blue_team_aba.go
+│   │   # Agent Defender using Agent Behavioural Analytics (ABA)
+│   │   # action 01: Maintains real-time tracking of the Runtime Agent Bill of Materials (AgBOM) mapping the active blast radius
+│   │   # action 02: Evaluates conversational turns against the intent baseline to stop target drift
+│   │
+│   ├── red_team_simulator.go
+│   │   # Agent Attacker injecting "Adversarial Vibes"
+│   │   # action: Proactively tests the agent by burying hidden malicious instructions inside RAG context to ensure the agent doesn't get distracted
+│   │
+│   └── green_team_recovery.go
+│       # Agent Fixer executing Stateful Quarantines
+│       # action: Deploys stateful quarantines to cleanly isolate compromised runtime processes and revokes tool access without destroying user canvas state
+│
+# ------------------------------------------------------------
+# /evaluation_engine (Trajectory & Output Scoring)
+# ------------------------------------------------------------
+│   # Replaces binary unit tests with scored judgments and tolerance bands
+│
+├── /evaluation_engine
+│   │
+│   ├── trajectory_evaluator.go
+│   │   # Validates not just the output, but HOW the agent got there
+│   │   # mode EXACT: requires exact order of tool calls
+│   │   # mode IN_ORDER: requires ordered subset (required for action-allowed skills)
+│   │   # mode ANY_ORDER: requires unordered subset (acceptable for read-only skills)
+│   │
+│   ├── llm_as_judge.go
+│   │   # Uses a secondary model to score outputs against derived rubrics (1-5 score)
+│   │   # action: Swaps the positions of reference and actual outputs during eval to eliminate ordering bias
+│   │
+│   └── convergence_tracker.go
+│       # Evaluates multi-turn session success rather than turn-level accuracy
+│       # metrics: tracks turns_to_converge, total_token_cost, and abandoned sessions
+│       # rule: Enforces pass^k metrics (running an evaluation k times and requiring success on every run to prove reliability)
+│
+# ------------------------------------------------------------
+# /feedback_improvement_loop (Continuous Learning)
+# ------------------------------------------------------------
+│   # Mines failures to improve the prompt and skill architecture
+│
+└── /feedback_improvement_loop
+    │
+    └── correction_miner.go
+        # action: Clusters user corrections (every time the user says "no, not like that")
+        # output: Generates a prioritized list of failure modes, acting as labeled failure data to improve future SKILL.md rules
+
+
+# ============================================================
+# ACTIVE LAYER 8 SESSION STATE (TELEMETRY & EVALS)
+# ============================================================
+
+session.state {
+  
+  # Observability Context
+  vibe_trajectory   : "trace_id_8847f_active"
+  current_agbom     : ["scrapePage", "gsc_getTopQueries", "ga4_runReport", "schema_validate", "gemini-3-flash"]
+  token_burn        : 1450_tokens_consumed
+  
+  # SecOps & Eval Status
+  intent_drift      : "none_detected"
+  trajectory_score  : "IN_ORDER_match"
+  session_outcome   : "converging"
+  quarantine_status : "inactive"
+
+}
+
+# ============================================================
+# END OF EXTENDED LAYER 8 ARCHITECTURE
+# ============================================================

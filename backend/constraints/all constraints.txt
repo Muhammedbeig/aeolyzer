@@ -1,0 +1,125 @@
+# ============================================================
+# FILE: active-session-constraints.context
+# DESCRIPTION: all active constraints injected in this session
+# ============================================================
+
+# ------------------------------------------------------------
+# 01. DATE / TIME CONSTRAINT
+# ------------------------------------------------------------
+
+datetime.constraint {
+
+  current_datetime : "2026-03-20T22:28:41.614Z"
+  current_year     : 2026
+  format           : ISO 8601
+  usage            : injected at session start, used for timeliness checks
+
+}
+
+# ------------------------------------------------------------
+# 02. TARGET LANGUAGE ENFORCEMENT
+# ------------------------------------------------------------
+
+language.constraint {
+
+  target_language  : "English (United States)"
+  language_code    : "en-US"
+
+  enforcement_rules {
+
+    # ALL content MUST be generated in English (United States)
+    rule_01 : use en-US spelling, terminology, and phrasing conventions
+    rule_02 : ensure output sounds natural to native en-US speakers
+    rule_03 : do NOT mix languages
+    rule_04 : do NOT use English if target language is not English
+
+  }
+
+}
+
+# ------------------------------------------------------------
+# 03. GEOGRAPHIC CONTEXT
+# ------------------------------------------------------------
+
+geographic.constraint {
+
+  location     : "Pakistan, PB PK"
+  country_code : "PK"
+  city         : "Pakistan"
+  region       : "Punjab"
+
+  market_relevance {
+
+    # ensure all content is relevant to Pakistan, PB PK market
+    # reflect local search behavior where applicable
+
+  }
+
+}
+
+# ------------------------------------------------------------
+# 04. CURRENT CANVAS CONTENT
+# ------------------------------------------------------------
+
+canvas.constraint {
+
+  status     : has_content
+  word_count : 442       # words currently on canvas at session start
+  content    : markdown  # format of canvas content
+
+  position_options {
+    append   : adds new section to end of canvas
+    prepend  : adds new section to beginning of canvas
+    replace  : replaces entire canvas content
+  }
+
+  title      : null      # no title set on canvas yet this session
+
+}
+
+# ------------------------------------------------------------
+# 05. SELECTED TEXT CONSTRAINT
+# ------------------------------------------------------------
+
+selected_text.constraint {
+
+  # selected text is text the user highlights in the canvas
+  # it is passed into context when a user selects content
+  # used for targeted edits via proposeEdit()
+
+  current_selection : null    # no text selected at this moment
+  usage             : proposeEdit() targets originalText from selection
+  rule              : must match EXACT text in canvas to apply edit
+
+}
+
+# ------------------------------------------------------------
+# 06. CURRENT SEO SETTINGS
+# ------------------------------------------------------------
+
+seo.constraint {
+
+  metaTitle       : null
+  metaDescription : null
+  slug            : null
+  canonicalUrl    : null
+  ogTitle         : null
+  ogDescription   : null
+  ogImage         : null
+  twitterCard     : null
+  faqs            : []
+  schemaMarkup    : null
+  internalLinks   : []
+  isPillar        : false
+  pillarTopic     : null
+  noIndex         : false
+  noFollow        : false
+
+  # all fields are null / empty at session start
+  # populated after writing via SEO settings workflow
+
+}
+
+# ============================================================
+# END OF FILE: active-session-constraints.context
+# ============================================================

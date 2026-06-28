@@ -1,0 +1,103 @@
+# ============================================================
+# FILE: product-release.type
+# ============================================================
+
+# TYPE DEFINITION
+# ---------------
+type          : product-release
+id            : product-release
+category      : long-form
+word_range    : 400-800 words
+research      : standard
+canvas        : full
+subtypes      : feature-launch | new-product | update | beta-announcement | partnership
+
+# BRIEF FIELDS REQUIRED
+# ---------------------
+brief_fields:
+  - product_name
+  - what_is_new
+  - audience
+  - key_benefit
+  - cta
+  - launch_date (optional)
+  - pricing (optional)
+
+# TONE RULES
+# ----------
+# - Confident and clear
+# - Benefit-first, not feature-first
+# - No hype language: "revolutionary", "game-changing", "unprecedented"
+# - No passive voice
+# - Speak to the reader's problem, not the company's achievement
+# - Celebratory but grounded
+
+# STRUCTURE RULES
+# ---------------
+# - H1  : product or feature name as title (set via generateTitle)
+# - Intro: 1-2 sentences. What launched. Why it matters. No fluff.
+# - H2  : What It Does (core functionality, benefit-led)
+# - H2  : Who It's For (specific audience, use case)
+# - H2  : How to Get Started (or: Availability / Pricing)
+# - CTA : single clear action at the end
+
+# DEPTH RULES
+# -----------
+# - Lead with the user benefit, not the engineering feat
+# - Include one concrete use case or example
+# - Address the "so what" immediately after the announcement
+# - If pricing exists, state it clearly. Do not bury it.
+
+# VOICE RULES
+# -----------
+# - Write from the brand perspective (third person or "we")
+# - Active voice throughout
+# - Short declarative sentences for key announcements
+# - Do not over-explain. Trust the reader.
+
+# AVOID LIST
+# ----------
+# - "We are excited to announce..."
+# - "We are proud to introduce..."
+# - "This is a game-changer..."
+# - "Revolutionary new..."
+# - Em dashes
+# - Emojis or Unicode symbols
+# - Walls of unformatted text
+# - Burying the CTA at the bottom without emphasis
+# - Vague benefit statements: "improves your workflow" without specifics
+
+# FORMATTING REQUIREMENTS
+# -----------------------
+# - Max 2 consecutive plain paragraphs without a structural break
+# - At least one non-paragraph element per H2 section:
+#     bullet list | numbered list | bold callout | table
+# - Key benefit or key stat called out in bold early in the piece
+# - CTA on its own line, clearly separated from body text
+
+# LINK DENSITY REQUIREMENTS
+# -------------------------
+# - 2-4 links minimum
+# - Always link to the product page or signup page
+# - Link to relevant documentation or changelog if available
+# - Never link to competitor domains
+
+# SECTION PACING
+# --------------
+# opening    : what launched + why it matters (2-3 sentences, no H2)
+# section 1  : H2 -> what it does -> bullet list of key capabilities
+# section 2  : H2 -> who it is for -> use case or example
+# section 3  : H2 -> how to get started -> pricing or availability
+# closing    : bold CTA -> link
+
+# POST-WRITE OUTPUTS
+# ------------------
+# - meta title suggestion
+# - meta description suggestion
+# - URL slug suggestion
+# - social post variants (Twitter/X and LinkedIn)
+# - email subject line suggestion
+
+# ============================================================
+# END OF FILE: product-release.type
+# ============================================================

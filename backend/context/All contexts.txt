@@ -1,0 +1,219 @@
+# ============================================================
+# FILE: project.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : project
+injected      : per session
+source        : project settings
+
+# FIELDS
+# ------
+# brand_name   : name of the user's brand
+# domain       : user's website domain
+# industry     : industry or niche the brand operates in
+# location     : geographic location of the brand
+# influence    : geographic reach (e.g. worldwide)
+
+# USAGE
+# -----
+# - Used to personalize topic suggestions
+# - Used to scope competitor research
+# - Used to set internal link base domain
+# - Used to avoid referencing the user's own brand as a competitor
+
+# ============================================================
+# END OF FILE: project.context
+# ============================================================
+
+
+# ============================================================
+# FILE: memory.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : memory
+injected      : per session
+source        : memory.md
+
+# FIELDS
+# ------
+# brand_identity    : brand name, domain, location, influence
+# positioning       : what the brand does and how it is positioned
+# competitors       : list of known competitor domains and names
+# proof_points      : stats, awards, or claims that support brand authority
+# press_mentions    : notable media coverage
+# brand_category    : category or niche classification
+# learned_prefs     : preferences learned from past sessions
+
+# USAGE
+# -----
+# - Read at session start via quickContext
+# - Used to inform topic suggestions, angle selection, and brand safety
+# - Used to avoid suggesting topics already covered
+# - Updated via proposeMemoryUpdate when new preferences are learned
+
+# ============================================================
+# END OF FILE: memory.context
+# ============================================================
+
+
+# ============================================================
+# FILE: tone.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : tone
+injected      : per session
+source        : tone.md
+
+# FIELDS
+# ------
+# writing_voice     : overall voice description
+# style_rules       : specific formatting or phrasing rules
+# banned_phrases    : words or phrases never to use
+# word_preferences  : preferred word choices or sentence patterns
+# formatting_prefs  : heading style, list style, paragraph length preferences
+
+# USAGE
+# -----
+# - Read at session start
+# - Applied to all content written in the session
+# - Updated via proposeMemoryUpdate when user corrects tone or style
+# - If tone.md is empty: infer from brand context and content type defaults
+
+# ============================================================
+# END OF FILE: tone.context
+# ============================================================
+
+
+# ============================================================
+# FILE: canvas_state.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : canvas_state
+injected      : per session
+source        : live canvas state
+
+# FIELDS
+# ------
+# has_content  : boolean - whether canvas already has content
+# word_count   : current word count of canvas at session start
+
+# USAGE
+# -----
+# - Used to set the baseline word count before writing begins
+# - If canvas has content: do not overwrite unless user requests replace
+# - Running word total = canvas_state word_count + sum of writeSection returns
+# - Used to detect if article is near completion or just started
+
+# ============================================================
+# END OF FILE: canvas_state.context
+# ============================================================
+
+
+# ============================================================
+# FILE: datetime.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : datetime
+injected      : per session
+source        : system clock
+
+# FIELDS
+# ------
+# datetime     : current ISO 8601 datetime string
+# year         : current year (used for search queries and date references)
+
+# USAGE
+# -----
+# - Used to make search queries time-aware (e.g. "news 2026")
+# - Used to date-stamp content references accurately
+# - Used to avoid citing outdated statistics as current
+
+# ============================================================
+# END OF FILE: datetime.context
+# ============================================================
+
+
+# ============================================================
+# FILE: content_type.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : content_type
+injected      : per session
+source        : active content type selection
+
+# FIELDS
+# ------
+# type              : active content type id
+#                     article | blog-post | linkedin | youtube-desc | product-release
+# category          : long-form | short-form
+# word_range        : target word count range
+# research_default  : full | standard | light
+# canvas            : full
+# brief_fields      : required brief fields for this type
+# subtypes          : available subtypes for this content type
+# type_guidance     : behavioral notes specific to this content type
+# auto_detected     : boolean - whether type was auto-detected or user-selected
+
+# USAGE
+# -----
+# - Determines word count target
+# - Determines research depth default
+# - Determines which brief fields to ask for
+# - Determines formatting and structure rules to apply
+# - If auto_detected is true: infer better type from user's first message
+
+# ============================================================
+# END OF FILE: content_type.context
+# ============================================================
+
+
+# ============================================================
+# FILE: seo_settings.context
+# ============================================================
+
+# CONTEXT DEFINITION
+# ------------------
+context       : seo_settings
+injected      : per session
+source        : project SEO settings
+
+# FIELDS
+# ------
+# metaTitle         : SEO title tag
+# metaDescription   : SEO meta description
+# slug              : URL slug
+# canonicalUrl      : canonical URL if different from slug
+# ogTitle           : Open Graph title
+# ogDescription     : Open Graph description
+# ogImage           : Open Graph image URL
+# twitterCard       : Twitter card type
+# faqs              : list of FAQ items (question + answer pairs)
+# schemaMarkup      : JSON-LD schema markup
+# internalLinks     : list of suggested internal links
+# isPillar          : boolean - whether this is a pillar page
+# pillarTopic       : topic cluster this page belongs to
+# noIndex           : boolean - whether to noindex this page
+# noFollow          : boolean - whether to nofollow links on this page
+
+# USAGE
+# -----
+# - Read at session start to check existing SEO settings
+# - Populated after writing is complete
+# - Suggested to user after post-write quality checklist passes
+# - Never auto-populate without user confirmation
+
+# ============================================================
+# END OF FILE: seo_settings.context
+# ============================================================

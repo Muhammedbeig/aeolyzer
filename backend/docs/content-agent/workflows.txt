@@ -1,0 +1,58 @@
+Topic discovery
+quickContext - get brand, positioning, competitors
+getSourcesInsights - competitor blocklist, authority sources, format trends
+webSearch - competitor coverage, industry news, audience questions, site: searches
+scrapePage - read specific competitor or first-party pages when a result matters
+getSitePages - find existing pages on your site
+getCannibalizationReport - check overlap if we’re close to an existing topic
+askQuestion - only in Plan mode, to lock audience/angle/length after research
+updateBrief - save the chosen topic and angle
+Content brief
+quickContext - pull defaults from brand context
+readMemoryDoc - check saved brand/tone preferences
+askQuestion - gather missing inputs in batches
+updateBrief - save topic, angle, audience, intent, CTA, notes
+proposeMemoryUpdate - if you reveal a reusable preference
+Research
+webSearch - fast stats, quotes, current developments
+deepResearch - full evidence gathering when the piece needs real depth
+scrapePage - extract clean content from important URLs
+getSourcesInsights - filter out competitor domains and prefer safe authorities
+SEO planning
+webSearch - search intent and SERP landscape checks
+getSitePages - internal link opportunities
+scrapePage - read candidate internal pages before linking
+getCannibalizationReport - overlap and risk analysis
+updateBrief - store keyword/intent direction in notes
+Page analysis
+scrapePage - primary tool
+webSearch - backup if scraping is thin or fails
+quickContext - frame the page against brand positioning
+getCannibalizationReport - if the page overlaps with the piece we’re planning
+Article planning
+quickContext - strategic context
+getSourcesInsights - safe source list and competitor blocklist
+webSearch or deepResearch - evidence before planning
+askQuestion - audience, angle, length, CTA, screenshots
+updateBrief - save the brief before plan finalization
+proposePlan - build the detailed section-by-section blueprint
+Drafting
+In this mode, I should not draft. In Write mode the drafting stack would usually be:
+readMemoryDoc - tone and brand rules
+quickContext - positioning refresh if needed
+scrapePage - if I need to quote or reflect a page
+getSitePages - internal linking targets
+writeSection or equivalent drafting tools if available in that mode
+Optimization
+scrapePage - analyze the current page if live
+webSearch - compare against current SERP or newer sources
+getSitePages - improve internal linking
+getCannibalizationReport - reduce overlap
+proposeMemoryUpdate - if style corrections become recurring rules
+Repurposing
+setContentType - switch article to LinkedIn, YouTube description, product release, etc.
+readMemoryDoc - adapt to stored tone rules
+updateBrief - save the new format intent
+Memory and tone management
+readMemoryDoc - inspect current memory/tone
+proposeMemoryUpdate - suggest permanent updates, never silent

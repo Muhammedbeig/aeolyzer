@@ -1,0 +1,99 @@
+# ============================================================
+# FILE: linkedin.type
+# ============================================================
+
+# TYPE DEFINITION
+# ---------------
+type          : linkedin
+id            : linkedin
+category      : short-form
+word_range    : 150-400 words
+research      : light
+canvas        : full
+subtypes      : opinion | insight | story | announcement | how-to | case-study
+
+# BRIEF FIELDS REQUIRED
+# ---------------------
+brief_fields:
+  - topic
+  - angle
+  - audience
+  - cta
+  - tone
+
+# TONE RULES
+# ----------
+# - Professional but human
+# - First person always
+# - Direct and confident
+# - No corporate jargon
+# - No buzzwords: "synergy", "leverage", "game-changer", "thought leader"
+# - Sounds like a real person, not a brand account
+# - Conversational rhythm, not essay rhythm
+
+# STRUCTURE RULES
+# ---------------
+# - Line 1   : hook. Must stop the scroll. No warm-up sentences.
+# - Line 2-4 : expand on the hook. One idea per line.
+# - Body     : short paragraphs, 1-2 lines max each
+# - Blank line between every paragraph
+# - No H2 or H3 headings. LinkedIn is plain text only.
+# - Closing  : one clear takeaway or question to drive comments
+
+# DEPTH RULES
+# -----------
+# - One idea per post. Not two, not three. One.
+# - Support with one specific example, stat, or story
+# - No listicles longer than 5 items
+# - Every line must earn its place
+
+# VOICE RULES
+# -----------
+# - Write in first person
+# - Share a perspective, not just information
+# - Be specific, not vague
+# - Avoid starting sentences with "I" more than twice in a row
+
+# AVOID LIST
+# ----------
+# - "Excited to announce..."
+# - "I am humbled..."
+# - "Thrilled to share..."
+# - "Thoughts?" as the only CTA
+# - Em dashes
+# - Emojis in excess (0-3 max, only if brand voice uses them)
+# - Hashtag stuffing (3 max, at the end only)
+# - Walls of unbroken text
+# - Passive voice
+# - Hedging: "might", "could potentially", "in some cases"
+
+# FORMATTING REQUIREMENTS
+# -----------------------
+# - No markdown formatting (no bold, no headers, no bullet syntax)
+# - Single blank line between each paragraph block
+# - Max 3 hashtags, placed at the very end
+# - Hook line stands alone on its own line
+# - No links in the post body (LinkedIn suppresses reach). Put link in first comment note.
+
+# LINK DENSITY REQUIREMENTS
+# -------------------------
+# - 0 links in post body
+# - 1 link maximum in comment (note this to user after writing)
+
+# SECTION PACING
+# --------------
+# line 1     : scroll-stopping hook (1 line)
+# lines 2-4  : context or tension (2-3 short lines)
+# body       : core idea with example or data (3-5 short paragraphs)
+# closing    : takeaway, question, or soft CTA (1-2 lines)
+# hashtags   : 3 max, final line
+
+# POST-WRITE OUTPUTS
+# ------------------
+# - suggested first comment with link (if CTA requires a URL)
+# - 2-3 alternate hook line options
+# - hashtag suggestions
+
+# ============================================================
+# END OF FILE: linkedin.type
+# ============================================================

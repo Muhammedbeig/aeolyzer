@@ -1,0 +1,133 @@
+# ============================================================
+# LAYER 4 COMPLETE ARCHITECTURE: PROGRESSIVE DISCLOSURE SKILLS
+# (Go Backend / Standardized Skill Directory)
+# ============================================================
+
+/layer_04_skills
+│
+# ------------------------------------------------------------
+# LEVEL 1: METADATA CUES (Always Loaded)
+# ------------------------------------------------------------
+│
+├── skill-registry.yaml
+│   # The only file from Layer 4 loaded into the active token window
+│   # Contains names and descriptions for all 22 specific SEO/AEO skills
+│   # action: Acts as the routing algorithm for the Orchestrator to load the bodies below
+│
+# ------------------------------------------------------------
+# LEVEL 2 & 3: DYNAMIC SKILL FOLDERS (Loaded strictly on-demand)
+# ------------------------------------------------------------
+│
+├── /keyword-research
+│   ├── SKILL.md                   # SOP for finding keyword ideas, search volume, difficulty, and mapping search intent layers (Surface, Emotional, Business).
+│   └── /scripts
+│       └── volume_parser.go       # Deterministic Go script to parse and format raw volume data payloads natively.
+│
+├── /serp-analysis
+│   └── SKILL.md                   # SOP for inspecting SERPs, identifying ranking patterns, featured snippet opportunities, and competitor page types.
+│
+├── /competitor-intelligence
+│   ├── SKILL.md                   # SOP for structured competitor breakdown (keywords, content gaps). Defines the competitor domain blocklist rules.
+│   └── /scripts
+│       └── outbound_link_scan.go  # Validates that no outbound links match the competitor blocklist.
+│
+├── /content-strategy
+│   └── SKILL.md                   # SOP for topic clusters, editorial planning, and building a content roadmap based on search demand.
+│
+├── /content-creation
+│   ├── SKILL.md                   # SOP for full content brief, outline, draft workflow. Enforces formatting rules (e.g., em-dash ban, no emojis, heading hierarchy).
+│   └── /assets
+│       └── brief_template.json    # Data schema for saving the strategic content brief output.
+│
+├── /content-seo-settings
+│   └── SKILL.md                   # SOP for generating metadata, FAQs, and internal link suggestions without overwriting existing CMS fields.
+│
+├── /meta-optimization
+│   ├── SKILL.md                   # SOP for optimizing title tags and meta descriptions specifically for CTR and Answer Engine visibility.
+│   └── /scripts
+│       └── length_checker.go      # Natively calculates pixel/character limits for generated metadata.
+│
+├── /schema-generation
+│   ├── SKILL.md                   # SOP for generating valid JSON-LD structured data.
+│   └── /assets
+│       ├── schema_article.json
+│       ├── schema_faq.json
+│       └── schema_howto.json      # Structural templates passed to the LLM to prevent schema hallucination.
+│
+├── /llms-txt-generation
+│   ├── SKILL.md                   # SOP for generating llms.txt files to help AI crawlers understand site architecture.
+│   └── /assets
+│       └── llms_txt_template.md
+│
+├── /robots-txt-generation
+│   └── SKILL.md                   # SOP for generating safe crawler directives for standard search bots and AI bots.
+│
+├── /sitemap-generation
+│   ├── SKILL.md                   # SOP for XML sitemap generation, ensuring indexability and crawl prioritization.
+│   └── /scripts
+│       └── xml_validator.go       # Deterministic script to validate XML formatting before deployment.
+│
+├── /site-audit-interpretation
+│   ├── SKILL.md                   # SOP for translating raw technical audit data into prioritized, human-readable fixes.
+│   └── /references
+│       └── prioritization.md      # Matrix loaded on-demand to weight errors (e.g., 404s vs. missing alt text).
+│
+├── /core-web-vitals-optimization
+│   └── SKILL.md                   # SOP for translating CWV metrics (LCP, CLS, INP) into frontend improvement tickets.
+│
+├── /internal-linking-strategy
+│   ├── SKILL.md                   # SOP for site architecture, PageRank flow, anchor text planning, and orphan page fixes.
+│   └── /scripts
+│       └── orphan_scanner.go      # Go script to map URL nodes and mathematically flag unlinked pages.
+│
+├── /long-form-content-audit
+│   ├── SKILL.md                   # SOP for deep page reviews. Enforces post-write checklists (e.g., minimum link counts, text wall bans).
+│   └── /scripts
+│       └── qa_evaluator.go        # Mathematically counts links, H2s/H3s, and paragraphs to verify formatting compliance.
+│
+├── /content-refresh-strategy
+│   └── SKILL.md                   # SOP for updating old/decayed content based on query loss and SERP shifts.
+│
+├── /link-opportunity-discovery
+│   └── SKILL.md                   # SOP for identifying backlink or citation opportunities from AI-trusted sources.
+│
+├── /backlink-strategy
+│   └── SKILL.md                   # SOP for broader link acquisition planning and outreach targeting.
+│
+├── /gsc-insights-analysis
+│   └── SKILL.md                   # SOP for interpreting Google Search Console data (CTR analysis, query opportunity detection, top movers).
+│
+├── /ga4-analysis
+│   └── SKILL.md                   # SOP for traffic source analysis, user behavior analysis, and AI referral tracking.
+│
+├── /local-seo-optimization
+│   └── SKILL.md                   # SOP for local pack, Google Maps, and location-based ranking optimizations.
+│
+└── /gbp-optimization
+    └── SKILL.md                   # SOP for Google Business Profile optimization and review response strategy.
+
+
+# ============================================================
+# ACTIVE LAYER 4 SESSION STATE (PROGRESSIVE DISCLOSURE)
+# ============================================================
+
+session.state {
+  
+  # Active Tokens in Window
+  metadata_loaded   : "all_22_skills" (approx 1,200 tokens)
+  bodies_loaded     : ["keyword-research", "content-strategy", "content-creation"] (approx 3,500 tokens)
+  bodies_dormant    : ["schema-generation", "site-audit-interpretation", "...17 others"]
+  
+  # Resource Access
+  active_references : ["intent_examples.md"]
+  active_scripts    : ["outbound_link_scan.go"]
+
+  # Token Budget Optimization
+  context_rot_status: "prevented"
+  active_context    : "highly_focused_signal"
+
+}
+
+# ============================================================
+# END OF EXTENDED LAYER 4 ARCHITECTURE
+# ============================================================

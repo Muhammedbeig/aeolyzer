@@ -1,0 +1,231 @@
+# ==============================================================================
+# CANONICAL ENTERPRISE AGENT PLATFORM: UNIFIED 8-LAYER ARCHITECTURE
+# (Go Backend / Google ADK / Progressive Disclosure / Zero-Trust)
+# ==============================================================================
+
+/enterprise_agent_platform
+│
+# ==============================================================================
+# LAYER 1: USER / INTENT ORCHESTRATION SURFACE
+# ==============================================================================
+│
+├── /frontend_client
+│   │   # The Orchestrator's control deck (e.g., Next.js or CLI App)
+│   │
+│   ├── /components
+│   │   └── a2ui_renderer.tsx          # Renders A2UI JSON payloads natively into interactive UI cards
+│   │
+│   └── /auth
+│       └── mfa_hardware_gate.ts       # Cryptographic challenge gate for "Vibe Diff" approvals on high-stakes actions
+│
+# ==============================================================================
+# LAYER 2 & 3: DECLARATIVE POLICIES & CAPABILITY PROFILES
+# ==============================================================================
+│
+├── /config
+│   │
+│   ├── AGENTS.md                      # Shared multi-tool profile defining universal project DNA; always loaded
+│   ├── policies.yaml                  # Deterministic structural gating (roles, blocked environments)
+│   ├── routing-schema.json            # Enforces allowed Intent Enums (e.g., "audit_seo", "out_of_bounds")
+│   │
+│   └── /capability_profiles           # Swappable modular tool/skill bundles
+│       ├── content_collaborator.yaml  # mode: write.mode, role: content strategist
+│       └── seo_aeo_auditor.yaml       # mode: audit.mode, role: technical SEO and AEO specialist
+│
+# ==============================================================================
+# CORE GO BACKEND (LAYERS 2, 3, 5, 6, 7, 8)
+# ==============================================================================
+│
+├── /internal
+│   │
+│   # ------------------------------------------------------------
+│   # LAYER 2: REQUEST INTAKE & SAFETY GATE
+│   # ------------------------------------------------------------
+│   ├── /intake
+│   │   ├── llm_firewall.go            # Blocks prompt injections, zero-width payloads, and raw system prompt requests
+│   │   ├── context_resolver.go        # Translates [[VARIABLE]] placeholders securely without hardcoding PII
+│   │   ├── intent_classifier.go       # Fast Gemini Flash node mapping natural language to strict Enums
+│   │   ├── tool_policy_engine.go      # Intercepts arguments before execution for semantic safety checks
+│   │   └── safety_emitter.go          # Emits safety decisions, firewall events, and intake metrics directly to Layer 8
+│   │
+│   # ------------------------------------------------------------
+│   # LAYER 3: DISTRIBUTED ORCHESTRATION & AGENT FABRIC
+│   # ------------------------------------------------------------
+│   ├── /orchestrator
+│   │   ├── dag_controller.go          # Graph-based router assigning tasks to remote or local agents
+│   │   └── state_manager.go           # Flushes stale variables during persona swaps to prevent Context Rot
+│   │
+│   # ------------------------------------------------------------
+│   # LAYER 6: SECURITY CONTROL PLANE & ISOLATED RUNTIME
+│   # ------------------------------------------------------------
+│   ├── /runtime
+│   │   ├── gvisor_sandbox.go          # Ephemeral kernel-level isolation for executing untrusted scripts
+│   │   ├── egress_proxy.go            # Enforces non-interactive web access; mitigates slopsquatting
+│   │   ├── jit_token_broker.go        # Issues Just-In-Time short-lived credentials scoped per task
+│   │   └── file_tree_enforcer.go      # Deny-by-default root access; tool implementations remain hidden
+│   │
+│   # ------------------------------------------------------------
+│   # LAYER 7: GROUNDING INTEROP & RESOURCE PLUMBING
+│   # ------------------------------------------------------------
+│   ├── /interop
+│   │   ├── /mcp_transport
+│   │   │   ├── stdio_client.go            # Local transport for high-speed execution without network overhead
+│   │   │   └── streamable_http_client.go  # Streamable HTTP transport, optionally using SSE for streamed server messages
+│   │   ├── /enterprise_mcp_servers    # Standalone API connectors
+│   │   │   ├── github_mcp.go          # github_readFile, github_searchCode
+│   │   │   ├── gsc_mcp.go             # gsc_getTopQueries, gsc_compareQueries
+│   │   │   └── ga4_mcp.go             # ga4_runReport, ga4_getTopPages
+│   │   └── /data_mesh
+│   │       ├── transit_encryption.go  # mTLS enforcement for Agent-to-Agent (A2A) and MCP traffic
+│   │       └── tenant_partitioning.go # Prevents cross-tenant vector RAG poisoning
+│   │
+│   # ------------------------------------------------------------
+│   # LAYER 5: EXTENSIONS, AUDIT UI & A2A INTEROP
+│   # ------------------------------------------------------------
+│   ├── /extensions
+│   │   ├── a2ui_converter.go          # Translates agent intent into declarative UI JSON arrays for the frontend
+│   │   └── a2a_executor.go            # Agent Card endpoint allowing external orchestrators to hire your agent
+│   │
+│   # ------------------------------------------------------------
+│   # LAYER 8: OBSERVABILITY, SECOPS, & QUALITY LOOPS
+│   # ------------------------------------------------------------
+│   └── /observability
+│       ├── opentelemetry_tracker.go   # Traces session span ➔ agent.reasoning_trace_redacted ➔ tool span
+│       ├── trajectory_evaluator.go    # Validates logical step order (EXACT, IN_ORDER) via pass^k testing
+│       ├── secops_triad.go            # Runs Blue Team (Intent Drift monitoring) and Green Team (Stateful Quarantines)
+│       └── correction_miner.go        # Clusters user corrections to output labeled failure data for skill improvement
+│
+# ==============================================================================
+# LAYER 4: PROGRESSIVE DISCLOSURE SKILL DIRECTORY
+# ==============================================================================
+│
+├── /skills
+│   │   # Procedural memory loaded strictly on-demand to protect token limits
+│   │
+│   ├── skill-registry.yaml            # Level 1: Flat list of names + descriptions for all 22 skills (always loaded)
+│   │
+│   # ---------------- Level 2 & 3: Modular Skills -----------------
+│   ├── /keyword-research
+│   │   └── SKILL.md
+│   ├── /serp-analysis
+│   │   └── SKILL.md
+│   ├── /competitor-intelligence
+│   │   ├── SKILL.md
+│   │   └── /scripts/outbound_link_scan.go
+│   ├── /content-strategy
+│   │   └── SKILL.md
+│   ├── /content-creation
+│   │   ├── SKILL.md
+│   │   └── /assets/brief_template.json
+│   ├── /content-seo-settings
+│   │   └── SKILL.md
+│   ├── /meta-optimization
+│   │   ├── SKILL.md
+│   │   └── /scripts/length_checker.go
+│   ├── /schema-generation
+│   │   ├── SKILL.md
+│   │   └── /assets/schema_article.json
+│   ├── /llms-txt-generation
+│   │   ├── SKILL.md
+│   │   └── /assets/llms_txt_template.md
+│   ├── /robots-txt-generation
+│   │   └── SKILL.md
+│   ├── /sitemap-generation
+│   │   ├── SKILL.md
+│   │   └── /scripts/xml_validator.go
+│   ├── /site-audit-interpretation
+│   │   └── SKILL.md
+│   ├── /core-web-vitals-optimization
+│   │   └── SKILL.md
+│   ├── /internal-linking-strategy
+│   │   ├── SKILL.md
+│   │   └── /scripts/orphan_scanner.go
+│   ├── /long-form-content-audit
+│   │   ├── SKILL.md
+│   │   └── /scripts/qa_evaluator.go
+│   ├── /content-refresh-strategy
+│   │   └── SKILL.md
+│   ├── /link-opportunity-discovery
+│   │   └── SKILL.md
+│   ├── /backlink-strategy
+│   │   └── SKILL.md
+│   ├── /gsc-insights-analysis
+│   │   └── SKILL.md
+│   ├── /ga4-analysis
+│   │   └── SKILL.md
+│   ├── /local-seo-optimization
+│   │   └── SKILL.md
+│   └── /gbp-optimization
+│       └── SKILL.md
+│
+# ==============================================================================
+# CROSS-AGENT STORAGE & STATE
+# ==============================================================================
+│
+├── /memory
+│   ├── memory.md                      # Persistent brand identity and competitor positioning
+│   └── tone.md                        # Persistent writing voice and learned style rules
+│
+└── /output
+    ├── canvas.output                  # Primary audit dashboard and reporting surface
+    ├── brief.output                   # Saved strategic contract (scope, target URLs, constraints)
+    └── audit.log                      # Immutable trail of all intercepted intent classifications
+
+
+# ==============================================================================
+# UNIFIED ACTIVE SESSION STATE
+# ==============================================================================
+
+session.state {
+
+  # Layer 1 & 2: Intent & Safety
+  intent_classified     : "audit_seo" (firewall: passed)
+  ambient_authority     : "stripped"
+  jit_token_expiry      : "2026-06-25T00:30:00+05:00"
+  
+  # Layer 3 & 4: Orchestration & Skills
+  active_profile        : "seo_aeo_auditor"
+  active_skills_loaded  : [
+    "keyword-research",
+    "serp-analysis",
+    "competitor-intelligence",
+    "content-strategy",
+    "content-creation",
+    "content-seo-settings",
+    "meta-optimization",
+    "schema-generation",
+    "llms-txt-generation",
+    "robots-txt-generation",
+    "sitemap-generation",
+    "site-audit-interpretation",
+    "core-web-vitals-optimization",
+    "internal-linking-strategy",
+    "long-form-content-audit",
+    "content-refresh-strategy",
+    "link-opportunity-discovery",
+    "backlink-strategy",
+    "gsc-insights-analysis",
+    "ga4-analysis",
+    "local-seo-optimization",
+    "gbp-optimization"
+  ]
+  token_budget          : "3400_tokens_active (Context Rot Prevented)"
+  
+  # Layer 5: UI & Extensions
+  a2ui_surface          : "audit_dashboard_view"
+  a2a_connections       : "0_remote_clients"
+  
+  # Layer 6 & 7: Runtime & Plumbing
+  execution_sandbox     : "gvisor_ephemeral_container"
+  mcp_connections       : ["stdio://github_mcp", "https://ga4_mcp"]
+  
+  # Layer 8: Observability
+  vibe_trajectory       : "trace_id_99a8b"
+  agbom_status          : "monitored_clean"
+  circuit_breaker       : "closed"
+
+}
+
+# ==============================================================================
+# END OF UNIFIED ENTERPRISE ARCHITECTURE
+# ==============================================================================

@@ -2173,6 +2173,110 @@ dashboard exports are data contracts only
 all zero-overlap boundary tests pass
 ```
 
+### 29.1 Executable evaluation, SecOps, and governance baseline
+
+The repository implementation must retain:
+
+```text
+all telemetry, redaction, eval, SecOps, drift, trust, retention, and governance policies strictly decode and semantically validate at startup
+event_redactor drops protected fields recursively, HMACs configured correlation fields, detects credential patterns, and enforces depth and key limits
+opentelemetry_tracker uses an injected provider, allowlisted span names and attributes, and linked root/child spans without changing global provider state
+trajectory_evaluator supports EXACT, IN_ORDER, and ANY_ORDER plus forbidden-action and multiplicity checks
+pass_k_runner bounds runs, honors cancellation, computes flake rate, and treats any safety failure as blocking
+llm_as_judge validates a versioned rubric, closed JSON, dimension bounds, confidence, fixed temperature, bounded retries, deterministic local weighted scoring, and pairwise position swaps
+skill_trigger_evaluator uses opaque aliases, 5 to 15 candidates, candidate-order rotation, pass^k, confidence gates, safety-case blocking, and flake detection
+skill eval reports contain hashes and aggregate results but no raw test prompts or provider summaries
+intent drift, trust decay, and loop detection consume categorical or hashed evidence only
+Red Team runs only in CI, shadow, or staging; Blue Team detects bounded anomalies; Green Team emits recommendations only
+immutable_audit_ledger uses an Ed25519-signed append-only hash chain and hashed evidence references
+correction_miner requires occurrence and k-anonymous tenant thresholds and emits recommendations only
+```
+
+The live skill evaluation command is:
+
+```text
+go run ./cmd/skilleval
+```
+
+It must:
+
+```text
+load and validate the embedded Layer 4 corpus
+construct a bounded candidate set for each target skill
+keep expected answers local
+use the injected Layer 7 provider adapter
+apply read, draft, and guarded-write pass^k values from eval-policy.yaml
+exit non-zero on provider error, malformed output, low confidence, wrong routing, safety failure, or instability
+emit only sanitized JSON evidence
+never change registry status or promote a skill
+```
+
+`GEMINI_API_KEY` must be set by the execution environment. Keys pasted into
+chat, source, command lines, reports, or logs are compromised and must not be
+used. The default all-skill run is a real billable external evaluation and
+must be executed in an approved CI environment with budget, retention, and
+egress controls.
+
+Static fixture validation and mocked provider tests do not count as a live
+eval pass. Every production skill remains non-production until the exact
+corpus checksum and pinned model/prompt version have passing live evidence,
+applicable output and trajectory suites also pass, the evidence is recorded in
+the governance ledger, and the required human approval is recorded.
+
+### 29.2 Repository production-gate aggregation
+
+The canonical repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+Its implementation is:
+
+```text
+cmd/readiness
+internal/releasegate
+```
+
+This is read-only platform CI tooling, not Layer 8 runtime behavior and not a
+ninth layer. It aggregates repository evidence contributed by Layers 2 through
+8 and exits non-zero while any known blocker remains.
+
+For Layer 8, the check must fail when required telemetry, redaction, eval,
+SecOps, or drift policy artifacts are missing, unreadable, or
+placeholder-only. It must also report absent executable source controls
+explicitly required by this spec, including OpenTelemetry tracking, drift and
+trust analysis, loop detection, Red/Blue/Green Team components, trajectory
+evaluation, LLM-as-judge evaluation, pass^k execution, immutable governance
+audit, and correction mining.
+
+The repository gate must obey these rules:
+
+```text
+read repository artifacts only
+never read or print secrets or protected payload bodies
+never execute agent tools, skills, workflows, connectors, or sandboxes
+never score an eval by inferring success from file presence
+never promote a skill, connector, workflow, or release
+never mutate policies, manifests, source files, or deployment state
+return failure for missing, unreadable, placeholder, or incomplete required evidence
+return machine-readable findings for CI
+```
+
+A repository-gate pass is necessary but not sufficient for production. Platform
+CI must also run the required formatting, build, unit, race, vet,
+vulnerability, schema, boundary, integration, chaos, eval, canary, and rollout
+checks from the owning specs. Infrastructure and human-review attestations
+cannot be inferred from repository files.
+
+The backend README must document the readiness command and must not describe
+the complete backend as production-ready unless this gate passes and all
+external deployment attestations are satisfied.
+
+`cmd/readiness` and `internal/releasegate` must not ingest telemetry, calculate
+production trust, decide quarantine, score runtime evals, write governance
+records, or perform any Layer 8 runtime behavior.
+
 ---
 
 ## 30. Acceptance Criteria

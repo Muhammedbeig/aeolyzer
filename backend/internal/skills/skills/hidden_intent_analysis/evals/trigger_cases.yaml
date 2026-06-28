@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: hidden_intent_analysis
+      expected_skill: seo_search_intent
+      id: adjacent_skill
+      input: Use seo search intent for this request.
+negative:
+    - expected_not_skill: hidden_intent_analysis
+      expected_skill: seo_search_intent
+      id: negative_neighbor
+      input: This request belongs to seo search intent.
+    - expected_intent: capability_explanation
+      expected_not_skill: hidden_intent_analysis
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: hidden_intent_analysis
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: hidden_intent_analysis
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: article_planning
+      expected_skill: hidden_intent_analysis
+      id: positive_1
+      input: Please identify the reader concern beneath the literal search query.
+    - expected_intent: article_planning
+      expected_skill: hidden_intent_analysis
+      id: positive_2
+      input: For this project, I need you to identify the reader concern beneath the literal search query.
+    - expected_intent: article_planning
+      expected_skill: hidden_intent_analysis
+      id: positive_3
+      input: Review the available context and identify the reader concern beneath the literal search query.
+rephrasing_stability:
+    - expected_skill: hidden_intent_analysis
+      input: Can you help me identify the reader concern beneath the literal search query?
+      source_case: positive_1
+    - expected_skill: hidden_intent_analysis
+      input: The outcome I need is to identify the reader concern beneath the literal search query.
+      source_case: positive_2
+    - expected_skill: hidden_intent_analysis
+      input: Using the supplied evidence, identify the reader concern beneath the literal search query.
+      source_case: positive_3
+skill_id: hidden_intent_analysis
+version: 1

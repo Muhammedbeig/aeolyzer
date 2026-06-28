@@ -1,18 +1,18 @@
-package mcp_transport_plane_test
+package mcptransportplane
 
 import (
-	"aeolyzer/internal/interop"
-	"aeolyzer/internal/interop/mcp_transport_plane"
+	"errors"
 	"testing"
+
+	"aeolyzer/internal/interop"
 )
 
 func TestValidateEnvelope(t *testing.T) {
-	req := interop.InteropRequest{
-		RequestID: "req-1",
+	request := interop.InteropRequest{
+		RequestID: "request-1",
 		TenantID:  "tenant-1",
-		// Missing ConnectorID and PolicyDecisionID
 	}
-	if err := mcp_transport_plane.ValidateEnvelope(req); err == nil {
-		t.Fatal("expected missing context error")
+	if err := ValidateEnvelope(request); !errors.Is(err, ErrMissingContext) {
+		t.Fatalf("ValidateEnvelope() error = %v, want %v", err, ErrMissingContext)
 	}
 }

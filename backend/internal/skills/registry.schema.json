@@ -1,1 +1,198 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer4/skill-registry-v2.json",
+  "title": "AEOlyzer skill registry v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "policy_mode",
+    "registry_owner_layer",
+    "default_status",
+    "metadata_token_budget",
+    "skills"
+  ],
+  "properties": {
+    "version": {
+      "const": 2
+    },
+    "policy_mode": {
+      "const": "fail_closed"
+    },
+    "registry_owner_layer": {
+      "const": "layer_4_skills"
+    },
+    "default_status": {
+      "enum": ["draft", "experimental", "active", "deprecated", "blocked", "retired"]
+    },
+    "metadata_token_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_total_registry_tokens",
+        "max_description_tokens_per_skill",
+        "max_antitrigger_tokens_per_skill"
+      ],
+      "properties": {
+        "max_total_registry_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2500
+        },
+        "max_description_tokens_per_skill": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 90
+        },
+        "max_antitrigger_tokens_per_skill": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/$defs/skill"
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "identifierList": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "skill": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skill_id",
+        "name",
+        "directory",
+        "status",
+        "version",
+        "owner_team",
+        "tier",
+        "risk_class",
+        "description",
+        "anti_triggers",
+        "compatible_profiles",
+        "compatible_intents",
+        "allowed_modes",
+        "capability_tags",
+        "declared_action_classes",
+        "output_contracts",
+        "body_token_estimate",
+        "resource_token_estimate",
+        "eval_manifest",
+        "resource_manifest",
+        "checksum"
+      ],
+      "properties": {
+        "skill_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,63}$"
+        },
+        "directory": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9_]{1,63}$"
+        },
+        "status": {
+          "enum": ["draft", "experimental", "active", "deprecated", "blocked", "retired"]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "owner_team": {
+          "$ref": "#/$defs/identifier"
+        },
+        "tier": {
+          "enum": ["read", "draft", "act"]
+        },
+        "risk_class": {
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 720
+        },
+        "anti_triggers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "compatible_profiles": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "compatible_intents": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "allowed_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["plan", "read", "write", "edit", "optimize", "audit"]
+          }
+        },
+        "capability_tags": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "declared_action_classes": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "output_contracts": {
+          "$ref": "#/$defs/identifierList"
+        },
+        "body_token_estimate": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3000
+        },
+        "resource_token_estimate": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6500
+        },
+        "eval_manifest": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9_]{1,63}/eval-manifest\\.yaml$"
+        },
+        "resource_manifest": {
+          "type": "string",
+          "pattern": "^skills/[a-z][a-z0-9_]{1,63}/resource-manifest\\.yaml$"
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

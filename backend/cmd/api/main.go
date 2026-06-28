@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"log/slog"
 	"net"
 	"net/http"
@@ -12,16 +13,25 @@ import (
 	"syscall"
 	"time"
 
+	backendconfig "aeolyzer/config"
+	"aeolyzer/internal/extensions"
 	"aeolyzer/internal/httpapi"
 	"aeolyzer/internal/intake"
 	"aeolyzer/internal/interop"
+	interopconfig "aeolyzer/internal/interop/config"
 	"aeolyzer/internal/observability"
+	observabilityconfig "aeolyzer/internal/observability/config"
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/runtime"
+	"aeolyzer/internal/skills"
 )
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	if err := validateStartupContracts(); err != nil {
+		logger.Error("startup contract validation failed", "error", err)
+		os.Exit(1)
+	}
 	address := envOrDefault("AEOLYZER_ADDRESS", "127.0.0.1:8080")
 	frontendOrigin := envOrDefault("AEOLYZER_FRONTEND_ORIGIN", "http://localhost:3000")
 	// Process-bound ephemeral key avoids persisted credential management.
@@ -78,6 +88,28 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+func validateStartupContracts() error {
+	if _, err := backendconfig.LoadEmbedded(); err != nil {
+		return fmt.Errorf("validate Layer 2 and Layer 3 config: %w", err)
+	}
+	if _, err := skills.ValidateEmbeddedLibrary(); err != nil {
+		return fmt.Errorf("validate Layer 4 skill library: %w", err)
+	}
+	if _, err := extensions.NewSchemas(); err != nil {
+		return fmt.Errorf("validate Layer 5 schemas: %w", err)
+	}
+	if err := runtime.CompileSchemas(); err != nil {
+		return fmt.Errorf("validate Layer 6 schemas: %w", err)
+	}
+	if _, err := interopconfig.Load(); err != nil {
+		return fmt.Errorf("validate Layer 7 config: %w", err)
+	}
+	if _, err := observabilityconfig.LoadEmbeddedPolicies(); err != nil {
+		return fmt.Errorf("validate Layer 8 policies: %w", err)
+	}
+	return nil
 }
 
 func newSigningKey() []byte {

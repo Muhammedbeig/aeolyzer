@@ -2224,6 +2224,53 @@ human-approved production rollout
 continuous drift and runtime policy monitoring
 ```
 
+### 25.4 Executable runtime-security baseline
+
+The repository implementation must retain:
+
+```text
+all runtime, result, lease, JIT, quarantine, dependency, filesystem, and egress schemas compile at startup
+ambient_credential_stripper removes inherited credential variables and rejects protected names and malformed environments
+jit_token_broker binds opaque credentials to tenant, trace, connector, audience, exact scopes, expiry, and revocation state
+dynamic_install_blocker rejects package managers, shell indirection, download-to-shell patterns, unpinned dependencies, and digest mismatches
+egress_proxy_controller permits only exact policy domains, methods, and headers; resolves and checks every address; pins the checked address; rejects redirects; and bounds request and response sizes
+gvisor_isolation accepts a sandbox only after a driver returns complete kernel, rootless, seccomp, namespace, cgroup, credential, and image-digest attestation
+ephemeral_state_manager creates marked state below a configured root and refuses unsafe cleanup targets
+quarantine commands are authenticated, scoped, expiring, replay-safe, and idempotent
+stateful_quarantine invokes only injected Layer 6 freeze, revoke, egress, tool, and forensics controls
+cmd/api compiles all embedded Layer 6 schemas before opening a listener
+```
+
+Repository code does not constitute a gVisor, container runtime, KMS, network
+policy, or secret-store deployment. Production requires a concrete sandbox
+driver and issuer/revoker implementations plus independent infrastructure
+attestations and escape, SSRF, DNS-rebinding, revocation, and failure-injection
+tests.
+
+### 25.5 Repository readiness evidence
+
+The repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+For Layer 6, the check must fail when required runtime schemas are missing,
+unreadable, or placeholder-only. It must also report absent executable source
+controls explicitly required by this spec, including sandbox isolation,
+ephemeral state, egress enforcement, dynamic dependency blocking, JIT
+credentials, and stateful quarantine execution.
+
+Schema or source-file presence is not runtime attestation. Production still
+requires the infrastructure, CI/CD gates, rollout stages, sandbox-escape
+testing, egress testing, credential lifecycle testing, load testing, and
+human-approved production rollout defined above.
+
+`cmd/readiness` and `internal/releasegate` are read-only platform CI tooling.
+They must not start sandboxes, execute tools or scripts, access the filesystem
+on behalf of an agent, open network routes, mint credentials, execute
+quarantine, or perform any Layer 6 runtime behavior.
+
 ---
 
 ## 26. Acceptance Criteria

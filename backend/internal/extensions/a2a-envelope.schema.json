@@ -1,1 +1,21 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer5/a2a-envelope-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["message_id", "sender_id", "recipient_id", "task_type", "payload", "issued_at", "expires_at", "nonce", "signature"],
+  "properties": {
+    "message_id": {"$ref": "#/$defs/id"},
+    "sender_id": {"$ref": "#/$defs/id"},
+    "recipient_id": {"$ref": "#/$defs/id"},
+    "task_type": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+    "payload": {"type": "object", "maxProperties": 64},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "nonce": {"type": "string", "minLength": 16, "maxLength": 128},
+    "signature": {"type": "string", "minLength": 43, "maxLength": 256}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 128}
+  }
+}

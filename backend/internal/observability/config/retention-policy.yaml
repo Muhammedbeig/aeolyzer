@@ -1,0 +1,22 @@
+version: 2
+policy_mode: fail_closed
+
+classes:
+  routine_success:
+    retention_days: 30
+  policy_block:
+    retention_days: 180
+  eval_failure:
+    retention_days: 180
+  security_incident:
+    retention_days: 365
+  governance_decision:
+    retention_days: 2555
+
+controls:
+  legal_hold_supported: true
+  tenant_deletion_supported: true
+  encryption_at_rest_required: true
+  immutable_governance_records: true
+  raw_protected_payload_retention_days: 0
+  deletion_audit_required: true

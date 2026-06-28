@@ -1,1 +1,38 @@
 version: 2
+policy_mode: fail_closed
+
+intent_drift:
+  compare_against:
+    - layer2_intent
+    - layer3_workflow_goal
+    - user_approved_goal_summary
+    - active_mode
+  thresholds:
+    warn: 0.25
+    block_recommendation: 0.45
+    quarantine_decision: 0.70
+
+trust_decay:
+  starting_score: 1.0
+  minimum_safe_score: 0.60
+  quarantine_score: 0.35
+  decay_factors:
+    tool_policy_block: 0.08
+    semantic_policy_block: 0.12
+    connector_schema_error: 0.06
+    repeated_tool_failure: 0.08
+    approval_mismatch: 0.20
+    cross_tenant_signal: 0.35
+    hidden_instruction_detected_in_context: 0.25
+    output_grounding_failure: 0.10
+    user_correction: 0.05
+    loop_detected: 0.15
+  recovery_factors:
+    successful_policy_clean_step: 0.03
+    user_confirms_goal: 0.05
+    eval_pass_after_repair: 0.10
+
+loops:
+  max_repeated_node: 3
+  max_repeated_tool_same_params: 2
+  max_replan_count: 4

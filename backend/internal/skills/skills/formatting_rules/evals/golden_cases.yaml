@@ -1,0 +1,18 @@
+cases:
+    - forbidden_qualities:
+        - fabricated_metrics
+        - unapproved_side_effect
+        - raw_secret
+        - internal_identifier_disclosure
+      id: golden_contract_1
+      input: Use the approved context to apply readable headings, paragraphs, lists, and emphasis.
+      required_outputs:
+        - formatting_rules_draft
+        - quality_summary
+      required_qualities:
+        - intent_aligned
+        - evidence_bounded
+        - safe_summary
+        - no_protected_metadata
+skill_id: formatting_rules
+version: 1

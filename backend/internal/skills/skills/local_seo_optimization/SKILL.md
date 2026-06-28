@@ -1,7 +1,31 @@
 ---
 name: local-seo-optimization
-description: |
-  Plans local search improvements across Maps, business profiles, citations, NAP consistency, reviews, local pages, schema, and geo-targeted keywords. Use when the user wants visibility in a city or service area. Do NOT use for nonlocal SEO, generic content strategy, or unsupported location claims.
+description: Plans local search improvements across Maps, business profiles, citations, NAP consistency, reviews, local pages, schema, and geo-targeted keywords. Use when the user wants visibility in a city or service area. Do NOT use for nonlocal SEO, generic content strategy, or unsupported location claims.
+version: 1.0.0
+owner_team: audit_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - seo_aeo_auditor
+compatible_intents:
+    - site_audit
+allowed_modes:
+    - audit
+    - read
+capability_tags:
+    - local_seo_optimization
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - local_seo_optimization_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Local SEO Optimizer
@@ -167,3 +191,59 @@ Present as:
 - Never skip citation and directory analysis
 - Always consider Maps and organic local pages separately
 - Always prioritize business location relevance over broad keyword volume
+
+## Purpose
+
+Provide procedural guidance to review local SEO consistency, relevance, and location signals.
+
+## When to use
+
+- Use when the authorized intent is `site_audit` and the request is to review local SEO consistency, relevance, and location signals.
+
+## When NOT to use
+
+- Do not use when the request belongs to `google_business_profile_optimization`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `local_seo_optimization_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

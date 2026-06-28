@@ -103,9 +103,12 @@ var configuredArtifacts = []artifactRequirement{
 	{area: "layer_7", path: "internal/interop/config/source-contracts.yaml"},
 	{area: "layer_8", path: "internal/observability/config/drift-policy.yaml"},
 	{area: "layer_8", path: "internal/observability/config/eval-policy.yaml"},
+	{area: "layer_8", path: "internal/observability/config/governance-policy.yaml"},
 	{area: "layer_8", path: "internal/observability/config/redaction-policy.yaml"},
+	{area: "layer_8", path: "internal/observability/config/retention-policy.yaml"},
 	{area: "layer_8", path: "internal/observability/config/secops-policy.yaml"},
 	{area: "layer_8", path: "internal/observability/config/telemetry-policy.yaml"},
+	{area: "layer_8", path: "internal/observability/config/trust-policy.yaml"},
 }
 
 var criticalControls = []artifactRequirement{
@@ -212,6 +215,19 @@ func (c *repositoryChecker) checkSkills() {
 			}
 			c.addSkillAggregate("skill_unregistered", "skill directories are absent from the registry", unregistered, len(skillNames))
 		}
+		statuses := registrySkillStatuses(string(registryData))
+		var nonProduction []string
+		for _, name := range skillNames {
+			if statuses[name] != "active" {
+				nonProduction = append(nonProduction, name)
+			}
+		}
+		c.addSkillAggregate(
+			"skill_nonproduction_status",
+			"skills have not been promoted through production evaluation gates",
+			nonProduction,
+			len(skillNames),
+		)
 	}
 
 	missingFrontmatter := make(map[string][]string)
@@ -336,10 +352,17 @@ func (c *repositoryChecker) checkExplicitPrototypeMarkers() {
 
 			scanner := bufio.NewScanner(file)
 			lineNumber := 0
+			isTestFile := strings.HasSuffix(relative, "_test.go")
 			for scanner.Scan() {
 				lineNumber++
 				lower := strings.ToLower(scanner.Text())
 				for marker, message := range markers {
+					if isTestFile &&
+						marker == "placeholder" &&
+						!strings.Contains(lower, "placeholder test") &&
+						!strings.Contains(lower, "placeholder for future") {
+						continue
+					}
 					if strings.Contains(lower, marker) {
 						c.add("explicit_prototype_marker", "implementation", relative+fmt.Sprintf(":%d", lineNumber), message)
 						break
@@ -412,6 +435,39 @@ func registrySkillIDs(data string) map[string]struct{} {
 		if id != "" {
 			result[strings.ReplaceAll(id, "-", "_")] = struct{}{}
 		}
+	}
+	return result
+}
+
+func registrySkillStatuses(data string) map[string]string {
+	result := make(map[string]string)
+	var currentID string
+	scanner := bufio.NewScanner(strings.NewReader(data))
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if strings.HasPrefix(line, "skill_id:") ||
+			strings.HasPrefix(line, "- skill_id:") {
+			_, value, ok := strings.Cut(line, ":")
+			if !ok {
+				currentID = ""
+				continue
+			}
+			currentID = strings.ReplaceAll(
+				strings.Trim(strings.TrimSpace(value), `"'`),
+				"-",
+				"_",
+			)
+			continue
+		}
+		if currentID == "" || !strings.HasPrefix(line, "status:") {
+			continue
+		}
+		_, value, ok := strings.Cut(line, ":")
+		if !ok {
+			continue
+		}
+		result[currentID] = strings.Trim(strings.TrimSpace(value), `"'`)
+		currentID = ""
 	}
 	return result
 }

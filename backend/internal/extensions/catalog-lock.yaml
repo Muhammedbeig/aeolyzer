@@ -1,1 +1,36 @@
-version: 1
+version: 2
+policy_mode: fail_closed
+catalog_id: aeolyzer_app
+catalog_version: 1.0.0
+schema_version: "2.0"
+components:
+  - type: Container
+    allowed_props: [layout, gap, ariaLabel]
+    required_props: [layout]
+    allows_children: true
+    max_children: 100
+  - type: Text
+    allowed_props: [text, variant, ariaLabel]
+    required_props: [text]
+    allows_children: false
+    max_children: 0
+  - type: Metric
+    allowed_props: [label, value, trend, status, ariaLabel]
+    required_props: [label, value]
+    allows_children: false
+    max_children: 0
+  - type: Finding
+    allowed_props: [title, summary, severity, evidenceRefs, ariaLabel]
+    required_props: [title, summary, severity]
+    allows_children: true
+    max_children: 20
+  - type: Action
+    allowed_props: [label, actionId, disabled, riskLevel, ariaLabel]
+    required_props: [label, actionId]
+    allows_children: false
+    max_children: 0
+  - type: Approval
+    allowed_props: [approvalId, summary, changeType, riskNotes, requiresMfa, ariaLabel]
+    required_props: [approvalId, summary, changeType, riskNotes]
+    allows_children: true
+    max_children: 20

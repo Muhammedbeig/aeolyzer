@@ -1,0 +1,20 @@
+eval_files:
+    golden_cases: evals/golden_cases.yaml
+    regression_cases: evals/regression_cases.yaml
+    rubric: evals/rubric.yaml
+    trajectory_cases: evals/trajectory_cases.yaml
+    trigger_cases: evals/trigger_cases.yaml
+eval_owner_layer: layer_8_observability
+minimum_gate:
+    negative_trigger_precision: 0.9
+    output_rubric_min_score: 4
+    regression_pass_required: true
+    token_budget_pass_required: true
+    trajectory_mode:
+        act: EXACT
+        draft: IN_ORDER
+        read: ANY_ORDER
+    trigger_accuracy: 0.9
+skill_id: seo_outputs
+stored_by_layer: layer_4_skills
+version: 1

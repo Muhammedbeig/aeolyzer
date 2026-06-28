@@ -1,1 +1,50 @@
 version: 2
+policy_mode: fail_closed
+
+never_store:
+  - hidden_chain_of_thought
+  - raw_system_prompt
+  - raw_developer_prompt
+  - raw_user_prompt
+  - raw_tool_payload_with_secrets
+  - raw_selected_text
+  - raw_canvas_body
+  - raw_brief_body
+  - raw_memory_doc_body
+  - raw_tone_doc_body
+  - raw_api_key
+  - raw_oauth_token
+  - cookie
+  - password
+  - private_key
+  - exact_mcp_url_with_secret
+  - raw_pii
+  - payment_card
+  - health_data
+  - government_id
+
+store_as_hash:
+  - selected_text_hash
+  - canvas_revision_hash
+  - brief_revision_hash
+  - memory_update_proposal_hash
+  - approval_event_hash
+  - file_artifact_hash
+
+store_as_redacted_summary:
+  - user_goal
+  - reasoning_summary
+  - connector_result_summary
+  - tool_result_summary
+  - output_summary
+  - correction_summary
+
+protected_internal_metadata:
+  - workflow_id
+  - profile_id
+  - exact_tool_id
+  - skill_file_path
+  - mcp_server_endpoint
+  - policy_file_path
+  - trace_internal_payload
+  - raw_agbom

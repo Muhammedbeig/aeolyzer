@@ -1,0 +1,25 @@
+dimensions:
+    - id: intent_satisfaction
+      maximum: 5
+      minimum: 1
+      weight: 0.25
+    - id: skill_specific_accuracy
+      maximum: 5
+      minimum: 1
+      weight: 0.25
+    - id: factual_grounding
+      maximum: 5
+      minimum: 1
+      weight: 0.2
+    - id: policy_compliance
+      maximum: 5
+      minimum: 1
+      weight: 0.2
+    - id: conciseness
+      maximum: 5
+      minimum: 1
+      weight: 0.1
+pass_score: 4
+rubric_id: meta_optimization_v1
+skill_id: meta_optimization
+version: 1

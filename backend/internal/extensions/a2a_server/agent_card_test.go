@@ -1,15 +1,23 @@
-package a2a_server_test
+package a2aserver
 
-import (
-	"aeolyzer/internal/extensions/a2a_server"
-	"testing"
-)
+import "testing"
 
 func TestAgentCardDisclosure(t *testing.T) {
-	card := a2a_server.AgentCard{
-		PublicCapabilities: []string{"internal_sql_executor"},
+	card := AgentCard{
+		AgentID:         "aeolyzer",
+		DisplayName:     "AEOlyzer",
+		Description:     "Audits websites and prepares safe content recommendations.",
+		ProtocolVersion: "1.0",
+		Endpoint:        "https://api.aeolyzer.example/a2a",
+		PublicCapabilities: []string{
+			"internal_sql_executor",
+		},
 	}
-	if err := a2a_server.ValidateAgentCard(card); err == nil {
-		t.Fatal("expected internal capability disclosure to be blocked")
+	if err := ValidateAgentCard(card); err == nil {
+		t.Fatal("ValidateAgentCard() accepted internal capability disclosure")
+	}
+	card.PublicCapabilities = []string{"website_audit"}
+	if err := ValidateAgentCard(card); err != nil {
+		t.Fatalf("ValidateAgentCard(safe) failed: %v", err)
 	}
 }

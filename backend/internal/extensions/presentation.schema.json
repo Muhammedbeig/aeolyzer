@@ -1,1 +1,35 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer5/presentation-intent-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["trace_id", "surface", "event_kind", "payload"],
+  "properties": {
+    "trace_id": {"$ref": "#/$defs/id"},
+    "workflow_id": {"$ref": "#/$defs/id"},
+    "node_id": {"$ref": "#/$defs/id"},
+    "surface": {
+      "enum": ["chat", "canvas", "brief", "seo_settings", "audit_dashboard", "source_evidence", "approval_stream", "a2a_external"]
+    },
+    "event_kind": {"type": "string", "pattern": "^[a-z][a-z0-9_.]{1,63}$"},
+    "mode": {"enum": ["plan", "read", "write", "edit", "optimize", "audit"]},
+    "priority": {"enum": ["low", "normal", "high", "blocking"]},
+    "payload": {"type": "object", "maxProperties": 100},
+    "output_contracts": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"}
+    },
+    "approval_required": {"type": "boolean"},
+    "fallback_text": {"type": "string", "maxLength": 8000},
+    "metadata": {
+      "type": "object",
+      "maxProperties": 32,
+      "additionalProperties": {"type": "string", "maxLength": 256}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 128}
+  }
+}

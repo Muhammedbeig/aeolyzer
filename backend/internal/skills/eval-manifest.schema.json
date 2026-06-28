@@ -1,1 +1,114 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer4/eval-manifest-v1.json",
+  "title": "AEOlyzer skill evaluation manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "skill_id",
+    "eval_owner_layer",
+    "stored_by_layer",
+    "minimum_gate",
+    "eval_files"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "skill_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "eval_owner_layer": {
+      "const": "layer_8_observability"
+    },
+    "stored_by_layer": {
+      "const": "layer_4_skills"
+    },
+    "minimum_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger_accuracy",
+        "negative_trigger_precision",
+        "output_rubric_min_score",
+        "trajectory_mode",
+        "regression_pass_required",
+        "token_budget_pass_required"
+      ],
+      "properties": {
+        "trigger_accuracy": {
+          "type": "number",
+          "minimum": 0.9,
+          "maximum": 1
+        },
+        "negative_trigger_precision": {
+          "type": "number",
+          "minimum": 0.9,
+          "maximum": 1
+        },
+        "output_rubric_min_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "trajectory_mode": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["read", "draft", "act"],
+          "properties": {
+            "read": {
+              "const": "ANY_ORDER"
+            },
+            "draft": {
+              "const": "IN_ORDER"
+            },
+            "act": {
+              "const": "EXACT"
+            }
+          }
+        },
+        "regression_pass_required": {
+          "const": true
+        },
+        "token_budget_pass_required": {
+          "const": true
+        }
+      }
+    },
+    "eval_files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger_cases",
+        "golden_cases",
+        "trajectory_cases",
+        "rubric",
+        "regression_cases"
+      ],
+      "properties": {
+        "trigger_cases": {
+          "const": "evals/trigger_cases.yaml"
+        },
+        "golden_cases": {
+          "const": "evals/golden_cases.yaml"
+        },
+        "trajectory_cases": {
+          "const": "evals/trajectory_cases.yaml"
+        },
+        "rubric": {
+          "const": "evals/rubric.yaml"
+        },
+        "regression_cases": {
+          "const": "evals/regression_cases.yaml"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{1,63}$"
+    }
+  }
+}

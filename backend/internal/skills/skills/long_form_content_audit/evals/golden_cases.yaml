@@ -1,0 +1,17 @@
+cases:
+    - forbidden_qualities:
+        - fabricated_metrics
+        - unapproved_side_effect
+        - raw_secret
+        - internal_identifier_disclosure
+      id: golden_contract_1
+      input: Use the approved context to audit a long-form page for structure, evidence, search fit, and gaps.
+      required_outputs:
+        - long_form_content_audit_report
+      required_qualities:
+        - intent_aligned
+        - evidence_bounded
+        - safe_summary
+        - no_protected_metadata
+skill_id: long_form_content_audit
+version: 1

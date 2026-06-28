@@ -1,7 +1,33 @@
 ---
 name: writing
-description: |
-  Guidelines for editorial voice, evidence depth, word count tracking, and anti-redundancy in article and blog post writing. Use when writing any article, blog post, or long-form content piece — even if the user doesn't say "skill" or mention structure explicitly. Do NOT use for research-only tasks, metadata-only work, or short coordination messages.
+description: Guidelines for editorial voice, evidence depth, word count tracking, and anti-redundancy in article and blog post writing. Use when writing any article, blog post, or long-form content piece — even if the user doesn't say "skill" or mention structure explicitly. Do NOT use for research-only tasks, metadata-only work, or short coordination messages.
+version: 1.0.0
+owner_team: content_platform
+tier: draft
+risk_class: medium
+compatible_profiles:
+    - content_execution_guard
+compatible_intents:
+    - draft_article
+allowed_modes:
+    - write
+    - edit
+    - optimize
+capability_tags:
+    - writing
+declared_action_classes:
+    - read_brand_context
+    - canvas_write
+output_contracts:
+    - writing_draft
+    - quality_summary
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Writing
@@ -106,3 +132,60 @@ Padding a 500-word idea into 1500 words.
   3. Use as contrast/cautionary: frame competitor data as evidence of what not to do
 - For outbound links, ONLY use domains from the authoritySources list or well-known
   institutional sources (.gov, .edu, major publications).
+
+## Purpose
+
+Provide procedural guidance to write approved article sections with evidence, voice, and word-count controls.
+
+## When to use
+
+- Use when the authorized intent is `draft_article` and the request is to write approved article sections with evidence, voice, and word-count controls.
+
+## When NOT to use
+
+- Do not use when the request belongs to `content_craft`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `writing_draft`
+- `quality_summary`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

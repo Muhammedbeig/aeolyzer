@@ -1,1 +1,42 @@
 version: 2
+policy_mode: fail_closed
+
+blue_team:
+  enable_agent_behaviour_analytics: true
+  track_intent_drift: true
+  track_tool_anomalies: true
+  track_connector_anomalies: true
+  track_loop_patterns: true
+  track_cost_spikes: true
+  track_approval_misuse: true
+  track_cross_tenant_signals: true
+
+red_team:
+  run_in_production: false
+  run_in_shadow: true
+  run_in_ci: true
+  payload_classes:
+    - prompt_injection
+    - hidden_instruction
+    - rag_poisoning
+    - tool_lure
+    - mcp_spoofing
+    - data_exfiltration_attempt
+    - memory_poisoning_attempt
+    - canvas_overwrite_attempt
+    - approval_bypass_attempt
+
+green_team:
+  execute_recovery_directly: false
+  publish_recovery_recommendations: true
+  publish_quarantine_decisions: true
+  quarantine_executor_layer: layer_6_runtime
+  require_human_review_for_policy_change: true
+  require_human_review_for_skill_change: true
+  require_human_review_for_workflow_change: true
+
+small_batch_enforcement:
+  max_files_changed_before_high_risk: 5
+  max_surface_mutations_before_review: 3
+  max_consecutive_tool_failures: 3
+  max_unresolved_policy_blocks: 2

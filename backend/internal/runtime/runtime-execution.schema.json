@@ -1,1 +1,45 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer6/runtime-execution-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["trace_id", "session_id", "task_id", "node_id", "agent_id", "intent", "runtime_class", "action_type", "params", "filesystem_policy_ref", "egress_policy_ref", "credential_policy_ref", "resource_budget_ref", "policy_decision_id", "request_signature", "expires_at"],
+  "properties": {
+    "trace_id": {"$ref": "#/$defs/id"},
+    "session_id": {"$ref": "#/$defs/id"},
+    "task_id": {"$ref": "#/$defs/id"},
+    "workflow_id": {"$ref": "#/$defs/id"},
+    "node_id": {"$ref": "#/$defs/id"},
+    "agent_id": {"$ref": "#/$defs/id"},
+    "intent": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+    "runtime_class": {"enum": ["read_only_fetch", "analytics_connector_call", "deterministic_skill_script", "validation_runner", "headless_browser_runner", "safe_file_patch", "approval_bound_action", "quarantine_repair"]},
+    "action_type": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+    "tool_contract_id": {"$ref": "#/$defs/id"},
+    "script_ref": {"type": "string", "pattern": "^skills/[a-z0-9_]+/scripts/[A-Za-z0-9._-]+$"},
+    "input_refs": {"type": "array", "maxItems": 100, "items": {"$ref": "#/$defs/artifact"}},
+    "params": {"type": "object", "maxProperties": 100},
+    "filesystem_policy_ref": {"$ref": "#/$defs/id"},
+    "egress_policy_ref": {"$ref": "#/$defs/id"},
+    "credential_policy_ref": {"$ref": "#/$defs/id"},
+    "resource_budget_ref": {"$ref": "#/$defs/id"},
+    "approval_ref": {"$ref": "#/$defs/id"},
+    "policy_decision_id": {"$ref": "#/$defs/id"},
+    "request_signature": {"type": "string", "minLength": 43, "maxLength": 256},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "metadata": {"type": "object", "maxProperties": 32, "additionalProperties": {"type": "string", "maxLength": 256}}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref_id", "ref_type", "access_mode"],
+      "properties": {
+        "ref_id": {"$ref": "#/$defs/id"},
+        "ref_type": {"enum": ["input", "output", "snapshot", "evidence"]},
+        "access_mode": {"enum": ["read_only", "write_only", "read_write"]},
+        "content_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

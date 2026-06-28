@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: sources_intelligence
+      expected_skill: research
+      id: adjacent_skill
+      input: Use research for this request.
+negative:
+    - expected_not_skill: sources_intelligence
+      expected_skill: research
+      id: negative_neighbor
+      input: This request belongs to research.
+    - expected_intent: capability_explanation
+      expected_not_skill: sources_intelligence
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: sources_intelligence
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: sources_intelligence
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: content_research
+      expected_skill: sources_intelligence
+      id: positive_1
+      input: Please assess source authority, recency, conflicts, and citation suitability.
+    - expected_intent: content_research
+      expected_skill: sources_intelligence
+      id: positive_2
+      input: For this project, I need you to assess source authority, recency, conflicts, and citation suitability.
+    - expected_intent: content_research
+      expected_skill: sources_intelligence
+      id: positive_3
+      input: Review the available context and assess source authority, recency, conflicts, and citation suitability.
+rephrasing_stability:
+    - expected_skill: sources_intelligence
+      input: Can you help me assess source authority, recency, conflicts, and citation suitability?
+      source_case: positive_1
+    - expected_skill: sources_intelligence
+      input: The outcome I need is to assess source authority, recency, conflicts, and citation suitability.
+      source_case: positive_2
+    - expected_skill: sources_intelligence
+      input: Using the supplied evidence, assess source authority, recency, conflicts, and citation suitability.
+      source_case: positive_3
+skill_id: sources_intelligence
+version: 1

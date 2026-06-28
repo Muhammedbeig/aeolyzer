@@ -1,0 +1,72 @@
+version: 2
+policy_mode: fail_closed
+
+action_classes:
+  read_brand_context:
+    risk: low
+    allowed_intents: [topic_discovery, content_brief, article_planning, draft_article, page_analysis]
+  read_source_intelligence:
+    risk: low
+    allowed_intents: [topic_discovery, content_research, seo_planning, article_planning, optimize_content]
+  web_research:
+    risk: medium
+    allowed_intents: [topic_discovery, content_research, seo_planning, article_planning, optimize_content]
+    requires_current_source_safety: true
+  deep_research:
+    risk: high
+    allowed_intents: [content_research, article_planning]
+    requires_approval_for: deep_research
+  page_scrape:
+    risk: medium
+    allowed_intents: [page_analysis, topic_discovery, content_research, seo_planning, article_planning, optimize_content]
+    requires_http_or_https: true
+  site_page_discovery:
+    risk: medium
+    allowed_intents: [topic_discovery, seo_planning, draft_article, optimize_content]
+  cannibalization_check:
+    risk: medium
+    allowed_intents: [topic_discovery, seo_planning, page_analysis, optimize_content]
+  ask_user_question:
+    risk: low
+    allowed_intents: [fallback_clarification, topic_discovery, content_brief, article_planning, memory_tone_management]
+  update_brief:
+    risk: medium
+    allowed_intents: [topic_discovery, content_brief, seo_planning, article_planning, repurpose_content]
+    deny_overwrite_without_approval: true
+  read_memory_or_tone:
+    risk: medium
+    allowed_intents: [content_brief, article_planning, draft_article, repurpose_content, memory_tone_management]
+    return_summary_only: true
+  propose_memory_update:
+    risk: high
+    allowed_intents: [content_brief, optimize_content, memory_tone_management, update_memory]
+    requires_approval_for: memory_update
+  set_content_type:
+    risk: medium
+    allowed_intents: [repurpose_content, switch_content_type]
+    require_allowed_content_type: true
+  canvas_write:
+    risk: high
+    allowed_intents: [draft_article, repurpose_content]
+    requires_mode: write
+    deny_direct_output_path: true
+  canvas_edit:
+    risk: high
+    allowed_intents: [edit_existing, optimize_content, repurpose_content]
+    requires_selected_text: true
+    requires_approval_for: canvas_edit
+    require_exact_match_patch: true
+  seo_support_update:
+    risk: medium
+    allowed_intents: [optimize_content, seo_planning]
+    deny_overwrite_existing_fields_without_approval: true
+
+semantic_denials:
+  prompt_injection: true
+  system_or_developer_prompt: true
+  secrets_or_credentials: true
+  raw_memory_or_tone_body: true
+  user_supplied_internal_route: true
+  arbitrary_output_path: true
+  direct_network_or_mcp: true
+  undeclared_filesystem_access: true

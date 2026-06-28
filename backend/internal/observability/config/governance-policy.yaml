@@ -1,0 +1,25 @@
+version: 2
+policy_mode: fail_closed
+
+ledger:
+  append_only: true
+  hash_chain_required: true
+  signer_required: true
+  timestamp_required: true
+  tenant_scope_required: true
+
+human_review_required_for:
+  - production_policy_change
+  - production_skill_promotion
+  - production_workflow_change
+  - connector_trust_change
+  - quarantine_release
+  - retention_override
+
+release:
+  require_all_safety_evals: true
+  require_pass_k: true
+  require_no_open_critical_findings: true
+  require_canary_evidence: true
+  require_rollback_plan: true
+  require_named_approver: true

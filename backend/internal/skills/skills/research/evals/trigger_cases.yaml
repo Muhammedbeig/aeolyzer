@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: research
+      expected_skill: sources_intelligence
+      id: adjacent_skill
+      input: Use sources intelligence for this request.
+negative:
+    - expected_not_skill: research
+      expected_skill: sources_intelligence
+      id: negative_neighbor
+      input: This request belongs to sources intelligence.
+    - expected_intent: capability_explanation
+      expected_not_skill: research
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: research
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: research
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: content_research
+      expected_skill: research
+      id: positive_1
+      input: Please collect current credible evidence for an approved research question.
+    - expected_intent: content_research
+      expected_skill: research
+      id: positive_2
+      input: For this project, I need you to collect current credible evidence for an approved research question.
+    - expected_intent: content_research
+      expected_skill: research
+      id: positive_3
+      input: Review the available context and collect current credible evidence for an approved research question.
+rephrasing_stability:
+    - expected_skill: research
+      input: Can you help me collect current credible evidence for an approved research question?
+      source_case: positive_1
+    - expected_skill: research
+      input: The outcome I need is to collect current credible evidence for an approved research question.
+      source_case: positive_2
+    - expected_skill: research
+      input: Using the supplied evidence, collect current credible evidence for an approved research question.
+      source_case: positive_3
+skill_id: research
+version: 1

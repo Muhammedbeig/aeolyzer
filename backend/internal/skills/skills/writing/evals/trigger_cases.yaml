@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: writing
+      expected_skill: content_craft
+      id: adjacent_skill
+      input: Use content craft for this request.
+negative:
+    - expected_not_skill: writing
+      expected_skill: content_craft
+      id: negative_neighbor
+      input: This request belongs to content craft.
+    - expected_intent: capability_explanation
+      expected_not_skill: writing
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: writing
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: writing
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: draft_article
+      expected_skill: writing
+      id: positive_1
+      input: Please write approved article sections with evidence, voice, and word-count controls.
+    - expected_intent: draft_article
+      expected_skill: writing
+      id: positive_2
+      input: For this project, I need you to write approved article sections with evidence, voice, and word-count controls.
+    - expected_intent: draft_article
+      expected_skill: writing
+      id: positive_3
+      input: Review the available context and write approved article sections with evidence, voice, and word-count controls.
+rephrasing_stability:
+    - expected_skill: writing
+      input: Can you help me write approved article sections with evidence, voice, and word-count controls?
+      source_case: positive_1
+    - expected_skill: writing
+      input: The outcome I need is to write approved article sections with evidence, voice, and word-count controls.
+      source_case: positive_2
+    - expected_skill: writing
+      input: Using the supplied evidence, write approved article sections with evidence, voice, and word-count controls.
+      source_case: positive_3
+skill_id: writing
+version: 1

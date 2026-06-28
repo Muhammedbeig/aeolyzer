@@ -1,7 +1,31 @@
 ---
 name: hidden-intent-analysis
-description: |
-  Use when creating content that needs to match what searchers FEEL but didn't type. Covers the three intent layers (surface, emotional, business), the golden thread narrative, hidden intent identification during research, and title generation with hidden intent hooks. Trigger during PLAN mode, WRITE mode, TOPIC DISCOVERY, and TITLE GENERATION. Do NOT use for technical audits, raw analytics, or metadata-only tasks.
+description: Use when creating content that needs to match what searchers FEEL but didn't type. Covers the three intent layers (surface, emotional, business), the golden thread narrative, hidden intent identification during research, and title generation with hidden intent hooks. Trigger during PLAN mode, WRITE mode, TOPIC DISCOVERY, and TITLE GENERATION. Do NOT use for technical audits, raw analytics, or metadata-only tasks.
+version: 1.0.0
+owner_team: content_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - content_collaborator
+compatible_intents:
+    - article_planning
+allowed_modes:
+    - plan
+    - read
+capability_tags:
+    - hidden_intent_analysis
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - hidden_intent_analysis_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Hidden Intent Analysis
@@ -77,3 +101,59 @@ When proposing titles (in proposePlan or generateTitle):
 - During **TITLE GENERATION**: always check whether the title captures the hidden intent.
 
 The PayPal case study: an article titled "What are PayPal's International Fees and How to Avoid Them" outranked PayPal's own fees page and became the highest-performing article on the entire site - because it was the first to address what searchers actually wanted (to avoid fees) rather than just answering the literal question (what are the fees).
+
+## Purpose
+
+Provide procedural guidance to identify the reader concern beneath the literal search query.
+
+## When to use
+
+- Use when the authorized intent is `article_planning` and the request is to identify the reader concern beneath the literal search query.
+
+## When NOT to use
+
+- Do not use when the request belongs to `seo_search_intent`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `hidden_intent_analysis_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

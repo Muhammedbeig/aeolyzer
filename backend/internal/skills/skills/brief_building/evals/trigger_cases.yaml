@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: brief_building
+      expected_skill: outline_structure
+      id: adjacent_skill
+      input: Use outline structure for this request.
+negative:
+    - expected_not_skill: brief_building
+      expected_skill: outline_structure
+      id: negative_neighbor
+      input: This request belongs to outline structure.
+    - expected_intent: capability_explanation
+      expected_not_skill: brief_building
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: brief_building
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: brief_building
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: content_brief
+      expected_skill: brief_building
+      id: positive_1
+      input: Please build a structured content brief from an approved topic.
+    - expected_intent: content_brief
+      expected_skill: brief_building
+      id: positive_2
+      input: For this project, I need you to build a structured content brief from an approved topic.
+    - expected_intent: content_brief
+      expected_skill: brief_building
+      id: positive_3
+      input: Review the available context and build a structured content brief from an approved topic.
+rephrasing_stability:
+    - expected_skill: brief_building
+      input: Can you help me build a structured content brief from an approved topic?
+      source_case: positive_1
+    - expected_skill: brief_building
+      input: The outcome I need is to build a structured content brief from an approved topic.
+      source_case: positive_2
+    - expected_skill: brief_building
+      input: Using the supplied evidence, build a structured content brief from an approved topic.
+      source_case: positive_3
+skill_id: brief_building
+version: 1

@@ -2236,6 +2236,50 @@ content workflow red-team tests pass
 boundary tests still prove no overlap with Layers 1, 2, 4, 5, 6, 7, or 8
 ```
 
+### 14.1 Executable orchestration baseline
+
+The repository implementation must retain:
+
+```text
+orchestrator.ValidateDAGPlan validates version, entry node, node identifiers, action classes, and dependency references
+the DAG validator rejects duplicate nodes, self-dependencies, cycles, missing entry nodes, and unreachable nodes
+the DAG validator never authorizes or executes an action
+orchestrator wire types preserve explicit action-class and dependency contracts
+```
+
+Required tests:
+
+```text
+valid multi-node DAG
+duplicate node rejection
+unknown dependency rejection
+cycle rejection
+unreachable node rejection
+missing entry rejection
+```
+
+This baseline does not prove the complete audit-agent and content-agent workflow
+catalog, profile selection, resumability, or every cross-layer handoff. Those
+remain subject to the workflow and integration requirements in this spec.
+
+### 14.2 Repository readiness evidence
+
+The repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+For Layer 3, the check must report explicit placeholder or deferred-production
+markers in orchestration sources. A clean result is evidence that no known
+prototype marker remains; it is not proof that workflow routing, profile
+selection, DAG loading, state handling, or cross-layer handoffs are correct.
+Those behaviors still require the validation and production tests above.
+
+`cmd/readiness` and `internal/releasegate` are read-only platform CI tooling.
+They must not choose workflows, load workflow bodies, create plans, mutate
+orchestration state, propose actions, or perform any Layer 3 runtime behavior.
+
 ---
 
 ## 15. Acceptance Criteria

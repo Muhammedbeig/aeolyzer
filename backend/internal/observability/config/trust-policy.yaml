@@ -1,0 +1,24 @@
+version: 2
+policy_mode: fail_closed
+
+score:
+  minimum: 0.0
+  maximum: 1.0
+  initial: 1.0
+  warning: 0.60
+  quarantine_decision: 0.35
+  recovery_cap_per_trace: 0.15
+
+critical_signals:
+  - cross_tenant_signal
+  - approval_bypass
+  - credential_misuse
+  - sandbox_escape_signal
+  - protected_payload_exfiltration
+
+rules:
+  critical_signal_requires_quarantine_decision: true
+  score_below_quarantine_requires_decision: true
+  layer8_must_not_execute_quarantine: true
+  require_policy_version_in_decision: true
+  require_evidence_refs_in_decision: true

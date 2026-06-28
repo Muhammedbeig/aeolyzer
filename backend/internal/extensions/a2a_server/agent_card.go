@@ -1,22 +1,53 @@
-package a2a_server
+// Package a2aserver validates public A2A application contracts.
+package a2aserver
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+	"strings"
 
-// AgentCard schema (Section 13.1) allows external agent discovery without exposing internals.
+	"aeolyzer/internal/extensions"
+)
+
+// AgentCard exposes only public product-level capabilities.
 type AgentCard struct {
 	AgentID            string   `json:"agent_id"`
 	DisplayName        string   `json:"display_name"`
+	Description        string   `json:"description"`
+	ProtocolVersion    string   `json:"protocol_version"`
+	Endpoint           string   `json:"endpoint"`
 	PublicCapabilities []string `json:"public_capabilities"`
 }
 
-// ValidateAgentCard guarantees that internal mechanisms (like DAGs or specific skills)
-// are masked from the public A2A endpoint.
-// This acts as an API gateway firewall against topology disclosure.
+// ValidateAgentCard validates schema and blocks protected topology disclosure.
 func ValidateAgentCard(card AgentCard) error {
-	for _, cap := range card.PublicCapabilities {
-		// Example check: block anything referencing internal tool nomenclature
-		if cap == "internal_sql_executor" || cap == "skill_registry" {
-			return errors.New("UNAUTHORIZED_CAPABILITY_DISCLOSURE")
+	schemas, err := extensions.NewSchemas()
+	if err != nil {
+		return err
+	}
+	data, err := json.Marshal(card)
+	if err != nil {
+		return errors.New("agent card cannot be encoded")
+	}
+	if err := schemas.ValidateJSON(extensions.ContractA2AAgentCard, data); err != nil {
+		return err
+	}
+	for _, capability := range card.PublicCapabilities {
+		lower := strings.ToLower(capability)
+		for _, forbidden := range []string{
+			"internal",
+			"sql",
+			"tool",
+			"skill",
+			"workflow",
+			"profile",
+			"mcp",
+			"trace",
+			"sandbox",
+		} {
+			if strings.Contains(lower, forbidden) {
+				return errors.New("agent card discloses protected capability metadata")
+			}
 		}
 	}
 	return nil

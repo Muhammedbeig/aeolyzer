@@ -1,7 +1,31 @@
 ---
 name: backlink-strategy
-description: |
-  Develops backlink and citation acquisition strategies from current link profiles, cited sources, competitors, and outreach targets. Use when the user wants links, mentions, listicle inclusion, or outreach planning. Do NOT use for internal linking, technical audits, or content drafting.
+description: Develops backlink and citation acquisition strategies from current link profiles, cited sources, competitors, and outreach targets. Use when the user wants links, mentions, listicle inclusion, or outreach planning. Do NOT use for internal linking, technical audits, or content drafting.
+version: 1.0.0
+owner_team: content_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - content_collaborator
+compatible_intents:
+    - seo_planning
+allowed_modes:
+    - plan
+    - read
+capability_tags:
+    - backlink_strategy
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - backlink_strategy_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Backlink Strategy Expert
@@ -184,3 +208,59 @@ Present as:
 - Always separate AI citation strategy from traditional link building
 - Never recommend outreach without identifying what content to pitch
 - Always prioritize Tier 1 (AI citation sources) above all else
+
+## Purpose
+
+Provide procedural guidance to plan relevant, credible backlink acquisition priorities.
+
+## When to use
+
+- Use when the authorized intent is `seo_planning` and the request is to plan relevant, credible backlink acquisition priorities.
+
+## When NOT to use
+
+- Do not use when the request belongs to `link_opportunity_discovery`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `backlink_strategy_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

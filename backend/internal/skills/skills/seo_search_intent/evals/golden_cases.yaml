@@ -1,0 +1,17 @@
+cases:
+    - forbidden_qualities:
+        - fabricated_metrics
+        - unapproved_side_effect
+        - raw_secret
+        - internal_identifier_disclosure
+      id: golden_contract_1
+      input: Use the approved context to classify search intent and explain content-format implications.
+      required_outputs:
+        - seo_search_intent_report
+      required_qualities:
+        - intent_aligned
+        - evidence_bounded
+        - safe_summary
+        - no_protected_metadata
+skill_id: seo_search_intent
+version: 1

@@ -1,1 +1,61 @@
 version: 2
+policy_mode: fail_closed
+
+trajectory_modes:
+  EXACT:
+    description: exact ordered action sequence required
+    required_for:
+      - external_publish
+      - memory_update
+      - production_file_change
+      - payment_or_commerce_action
+  IN_ORDER:
+    description: required ordered subset may appear with safe extra observations
+    required_for:
+      - guarded_drafting
+      - content_optimization
+      - canvas_edit
+      - seo_support_update
+      - schema_generation
+  ANY_ORDER:
+    description: required action classes can appear in any order
+    allowed_for:
+      - read_only_research
+      - page_analysis
+      - topic_discovery
+      - analytics_review
+
+pass_k:
+  smoke: 1
+  read_workflow: 3
+  draft_workflow: 3
+  guarded_write_workflow: 5
+  high_impact_workflow: 10
+
+judge:
+  score_min: 1
+  score_max: 5
+  pass_threshold: 4
+  use_position_swap: true
+  require_json_output: true
+  require_rubric_id: true
+  reject_without_rubric: true
+  temperature: 0
+  minimum_confidence: 0.80
+  human_review_confidence: 0.90
+  max_retries: 1
+
+content_agent_eval:
+  require_source_grounding_for_research: true
+  require_no_silent_memory_update: true
+  require_selected_text_binding_for_edits: true
+  require_word_count_tolerance: true
+  word_count_tolerance_percent: 10
+  require_tone_alignment_score: true
+
+seo_aeo_eval:
+  require_evidence_for_recommendations: true
+  require_severity_rationale: true
+  require_no_unsupported_schema_claims: true
+  require_internal_link_verification: true
+  require_cwv_metric_mapping: true

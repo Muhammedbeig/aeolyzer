@@ -1,7 +1,33 @@
 ---
 name: schema-generation
-description: |
-  Generates page-appropriate JSON-LD from verified content and business facts. Use when the user requests schema markup, rich-result support, or structured data for a known page. Do NOT use when required facts are missing, for crawler directives, or for unsupported schema types.
+description: Generates page-appropriate JSON-LD from verified content and business facts. Use when the user requests schema markup, rich-result support, or structured data for a known page. Do NOT use when required facts are missing, for crawler directives, or for unsupported schema types.
+version: 1.0.0
+owner_team: content_platform
+tier: draft
+risk_class: medium
+compatible_profiles:
+    - content_execution_guard
+compatible_intents:
+    - seo_planning
+allowed_modes:
+    - write
+    - edit
+    - optimize
+capability_tags:
+    - schema_generation
+declared_action_classes:
+    - read_brand_context
+    - canvas_write
+output_contracts:
+    - schema_generation_draft
+    - quality_summary
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Schema Markup Expert
@@ -98,3 +124,60 @@ Present as:
 - Never use schema as a substitute for missing content
 - Never overcomplicate simple pages
 - Always keep markup aligned with visible page content
+
+## Purpose
+
+Provide procedural guidance to prepare evidence-backed structured-data JSON-LD for review.
+
+## When to use
+
+- Use when the authorized intent is `seo_planning` and the request is to prepare evidence-backed structured-data JSON-LD for review.
+
+## When NOT to use
+
+- Do not use when the request belongs to `meta_optimization`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `schema_generation_draft`
+- `quality_summary`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

@@ -1,7 +1,31 @@
 ---
 name: ga4-analysis
-description: |
-  Analyzes GA4 acquisition, landing pages, engagement, conversions, attribution, and AI referral traffic to produce business-focused recommendations. Use when the user asks about traffic sources, behavior, channel quality, or conversions. Do NOT use for search-query rankings, technical audits, or unsupported analytics advice.
+description: Analyzes GA4 acquisition, landing pages, engagement, conversions, attribution, and AI referral traffic to produce business-focused recommendations. Use when the user asks about traffic sources, behavior, channel quality, or conversions. Do NOT use for search-query rankings, technical audits, or unsupported analytics advice.
+version: 1.0.0
+owner_team: audit_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - seo_aeo_auditor
+compatible_intents:
+    - traffic_analysis
+allowed_modes:
+    - audit
+    - read
+capability_tags:
+    - ga4_analysis
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - ga4_analysis_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # GA4 Analyst
@@ -164,3 +188,59 @@ Present as:
 - Never recommend changes without tying them to GA4 behavior
 - Always separate traffic source quality from traffic volume
 - Always think in terms of business outcomes, not just vanity metrics
+
+## Purpose
+
+Provide procedural guidance to interpret GA4 traffic and engagement metrics with limitations.
+
+## When to use
+
+- Use when the authorized intent is `traffic_analysis` and the request is to interpret GA4 traffic and engagement metrics with limitations.
+
+## When NOT to use
+
+- Do not use when the request belongs to `gsc_insights_analysis`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `ga4_analysis_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

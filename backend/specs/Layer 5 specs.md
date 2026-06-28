@@ -1920,6 +1920,50 @@ accessibility tests pass
 snapshot golden surface tests pass
 ```
 
+### 19.1 Executable presentation-security baseline
+
+The repository implementation must retain:
+
+```text
+all presentation, A2UI, UI-event, approval, surface-patch, Agent Card, and A2A envelope schemas compile at startup
+catalog-lock.yaml validates against the A2UI catalog schema at startup
+a2ui_schema_manager enforces unique nodes, valid references, one root, acyclic reachability, and depth bounds
+a2ui_part_converter allows only catalogued components, properties, required properties, child rules, and non-executable content
+hidden_payload_scanner rejects hidden keys, active HTML, event handlers, CSS hiding, instruction overrides, invisible controls, bidi controls, and encoded hidden payloads
+markdown_sanitizer rejects raw HTML, comments, controls, and unsafe links
+ui_payload_signer signs canonical frames with a bounded expiry
+a2a_envelope_validator verifies schema, Ed25519 sender identity, timestamps, payload safety, and bounded nonce replay protection
+URL sanitization rejects userinfo, localhost, private literals, and unsupported schemes
+cmd/api compiles and validates embedded Layer 5 contracts before opening a listener
+```
+
+Required tests include graph cycles and unreachable nodes, unknown component
+and property rejection, active-content and hidden-payload attacks, signature
+tampering and expiry, A2A replay and sender mismatch, and unsafe URL cases.
+
+### 19.2 Repository readiness evidence
+
+The repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+For Layer 5, the check must fail when required presentation, A2UI, A2A,
+approval, event, surface-patch, or catalog artifacts are missing, unreadable,
+or placeholder-only. It must also report absent executable source controls
+explicitly required by this spec and explicit prototype markers in Layer 5
+production sources.
+
+Source-file presence is not proof that the control works. Schema tests,
+security tests, A2UI tests, interaction tests, A2A tests, accessibility tests,
+snapshot tests, and boundary tests remain mandatory.
+
+`cmd/readiness` and `internal/releasegate` are read-only platform CI tooling.
+They must not render UI, generate presentation payloads, normalize live user
+events, authorize actions, execute tools, or perform any Layer 5 runtime
+behavior.
+
 ---
 
 ## 20. Acceptance Criteria

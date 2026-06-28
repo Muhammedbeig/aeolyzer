@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: keyword_research
+      expected_skill: serp_analysis
+      id: adjacent_skill
+      input: Use serp analysis for this request.
+negative:
+    - expected_not_skill: keyword_research
+      expected_skill: serp_analysis
+      id: negative_neighbor
+      input: This request belongs to serp analysis.
+    - expected_intent: capability_explanation
+      expected_not_skill: keyword_research
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: keyword_research
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: keyword_research
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: seo_planning
+      expected_skill: keyword_research
+      id: positive_1
+      input: Please find and prioritize keyword clusters by intent and available evidence.
+    - expected_intent: seo_planning
+      expected_skill: keyword_research
+      id: positive_2
+      input: For this project, I need you to find and prioritize keyword clusters by intent and available evidence.
+    - expected_intent: seo_planning
+      expected_skill: keyword_research
+      id: positive_3
+      input: Review the available context and find and prioritize keyword clusters by intent and available evidence.
+rephrasing_stability:
+    - expected_skill: keyword_research
+      input: Can you help me find and prioritize keyword clusters by intent and available evidence?
+      source_case: positive_1
+    - expected_skill: keyword_research
+      input: The outcome I need is to find and prioritize keyword clusters by intent and available evidence.
+      source_case: positive_2
+    - expected_skill: keyword_research
+      input: Using the supplied evidence, find and prioritize keyword clusters by intent and available evidence.
+      source_case: positive_3
+skill_id: keyword_research
+version: 1

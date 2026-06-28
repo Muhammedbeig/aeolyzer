@@ -1,1 +1,30 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer6/filesystem-policy-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "policy_mode", "default_access", "mounts", "max_files_changed", "max_total_write_bytes"],
+  "properties": {
+    "version": {"const": 2},
+    "policy_mode": {"const": "fail_closed"},
+    "default_access": {"const": "deny"},
+    "mounts": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["logical_name", "root", "mode", "follow_symlinks", "allow_hardlinks"],
+        "properties": {
+          "logical_name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+          "root": {"type": "string", "minLength": 1, "maxLength": 512},
+          "mode": {"enum": ["read_only", "write_only", "read_write"]},
+          "follow_symlinks": {"const": false},
+          "allow_hardlinks": {"const": false}
+        }
+      }
+    },
+    "max_files_changed": {"type": "integer", "minimum": 1, "maximum": 100},
+    "max_total_write_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824}
+  }
+}

@@ -1,1 +1,27 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer6/runtime-result-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["trace_id", "session_id", "task_id", "node_id", "runtime_class", "status", "summary", "retryable", "redaction_applied"],
+  "properties": {
+    "trace_id": {"$ref": "#/$defs/id"},
+    "session_id": {"$ref": "#/$defs/id"},
+    "task_id": {"$ref": "#/$defs/id"},
+    "node_id": {"$ref": "#/$defs/id"},
+    "runtime_class": {"type": "string", "minLength": 1, "maxLength": 64},
+    "status": {"enum": ["success", "blocked_by_runtime_policy", "blocked_by_filesystem_policy", "blocked_by_egress_policy", "blocked_by_supply_chain_policy", "blocked_by_credential_policy", "blocked_by_resource_budget", "failed_execution", "failed_validation", "timeout", "quarantined", "redacted_output"]},
+    "exit_code": {"type": "integer", "minimum": -1, "maximum": 255},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "sanitized_stdout_ref": {"$ref": "#/$defs/id"},
+    "sanitized_stderr_ref": {"$ref": "#/$defs/id"},
+    "output_artifacts": {"type": "array", "maxItems": 100, "items": {"type": "object"}},
+    "resource_usage": {"type": "object", "maxProperties": 32},
+    "policy_outcomes": {"type": "array", "maxItems": 64, "items": {"type": "string", "maxLength": 128}},
+    "retryable": {"type": "boolean"},
+    "error_class": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+    "redaction_applied": {"type": "boolean"},
+    "metadata": {"type": "object", "maxProperties": 32, "additionalProperties": {"type": "string", "maxLength": 256}}
+  },
+  "$defs": {"id": {"type": "string", "minLength": 1, "maxLength": 128}}
+}

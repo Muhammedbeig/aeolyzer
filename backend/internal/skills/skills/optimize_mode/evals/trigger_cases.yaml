@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: optimize_mode
+      expected_skill: post_write_checklist
+      id: adjacent_skill
+      input: Use post write checklist for this request.
+negative:
+    - expected_not_skill: optimize_mode
+      expected_skill: post_write_checklist
+      id: negative_neighbor
+      input: This request belongs to post write checklist.
+    - expected_intent: capability_explanation
+      expected_not_skill: optimize_mode
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: optimize_mode
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: optimize_mode
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: optimize_content
+      expected_skill: optimize_mode
+      id: positive_1
+      input: Please coordinate bounded improvements to existing selected content.
+    - expected_intent: optimize_content
+      expected_skill: optimize_mode
+      id: positive_2
+      input: For this project, I need you to coordinate bounded improvements to existing selected content.
+    - expected_intent: optimize_content
+      expected_skill: optimize_mode
+      id: positive_3
+      input: Review the available context and coordinate bounded improvements to existing selected content.
+rephrasing_stability:
+    - expected_skill: optimize_mode
+      input: Can you help me coordinate bounded improvements to existing selected content?
+      source_case: positive_1
+    - expected_skill: optimize_mode
+      input: The outcome I need is to coordinate bounded improvements to existing selected content.
+      source_case: positive_2
+    - expected_skill: optimize_mode
+      input: Using the supplied evidence, coordinate bounded improvements to existing selected content.
+      source_case: positive_3
+skill_id: optimize_mode
+version: 1

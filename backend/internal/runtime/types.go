@@ -16,8 +16,15 @@ type RuntimeExecutionRequest struct {
 
 // QuarantineCommand instructs Layer 6 to freeze or alter state.
 type QuarantineCommand struct {
-	TraceID       string `json:"trace_id"`
-	TargetScope   string `json:"target_scope"`
-	TriggerReason string `json:"trigger_reason"`
-	Signature     string `json:"signature"`
+	TraceID          string            `json:"trace_id"`
+	SessionID        string            `json:"session_id"`
+	TargetScope      string            `json:"target_scope"`
+	TriggerReason    string            `json:"trigger_reason"`
+	Severity         string            `json:"severity"`
+	RequestedActions []string          `json:"requested_actions"`
+	PreserveState    bool              `json:"preserve_state"`
+	DecisionRef      string            `json:"decision_ref"`
+	ExpiresAt        string            `json:"expires_at"`
+	Signature        string            `json:"signature"`
+	Metadata         map[string]string `json:"metadata,omitempty"`
 }

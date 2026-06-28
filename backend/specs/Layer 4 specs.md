@@ -2530,6 +2530,77 @@ Layer 7 boundary tests pass
 Layer 8 boundary tests pass
 ```
 
+### 25.1 Executable skill-library and eval-definition baseline
+
+The repository implementation must retain:
+
+```text
+registry.schema.json, skill.schema.json, resource-manifest.schema.json, and eval-manifest.schema.json compile as JSON Schema draft 2020-12
+skills.ValidateLibrary validates the mutable repository tree for CI
+skills.ValidateEmbeddedLibrary validates the immutable library shipped in the API binary
+registry entries have unique skill_id values and exact SHA-256 SKILL.md checksums
+every SKILL.md frontmatter and required body section validates
+every skill has non-empty OWNERS, CHANGELOG.md, resource-manifest.yaml, and eval-manifest.yaml
+every skill has positive, negative, rephrasing, collision, out-of-scope, golden, trajectory, rubric, and regression definitions
+skills.LoadEmbeddedTriggerEvalCorpus returns provider-safe metadata, exact expectations, and a corpus checksum without exposing file paths or resource bodies
+cmd/api rejects startup when the embedded library fails validation
+```
+
+Minimum trigger corpus:
+
+```text
+at least 3 positive cases per skill
+at least 3 negative cases per skill
+at least one rephrase for each positive case
+at least one collision case per skill
+at least one out-of-scope case per skill
+globally unique runtime case identifiers after skill and group qualification
+```
+
+Layer 4 validates and supplies definitions only. Layer 8 scores the corpus, and
+Layer 7 owns any external model connection. Generated or templated cases are
+not automatically accepted as sufficient coverage; collision quality and
+domain realism require human review.
+
+No skill may move from `experimental` to `active` merely because schema,
+checksum, or static-corpus validation passes. Promotion requires completed live
+trigger runs, applicable golden and trajectory evaluation, regression and
+safety success, signed governance evidence, and the named human approval
+required by Layer 8.
+
+### 25.2 Repository readiness evidence
+
+The repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+For Layer 4, the check must:
+
+```text
+enumerate skill directories
+verify every skill is represented in skill-registry.yaml
+reject an empty or placeholder registry
+verify required SKILL.md frontmatter fields are present
+verify required SKILL.md sections are present
+enforce the hard SKILL.md body-size limit
+verify required ownership, changelog, resource-manifest, eval-manifest, and eval fixture files are present and non-empty
+reject missing, unreadable, or placeholder Layer 4 schemas
+report explicit prototype markers in Layer 4 production sources
+```
+
+File presence is not an eval pass. A production skill still requires schema
+validation, checksum validation, positive and negative trigger execution,
+rephrasing stability, collision tests, golden output checks where applicable,
+trajectory checks where applicable, regression tests, token-budget tests, and
+Layer 8 scoring.
+
+`cmd/readiness` and `internal/releasegate` are read-only platform CI tooling.
+They must not activate skills, load skill bodies into runtime context, execute
+scripts, score evals, change skill status, or perform any Layer 4 runtime
+behavior.
+
 ---
 
 ## 26. Acceptance Criteria

@@ -1867,6 +1867,69 @@ owner
 runbook
 ```
 
+### 20.1 Executable interop and provider baseline
+
+The repository implementation must retain:
+
+```text
+connector registry and source contracts decode strictly and fail closed at startup
+the MCP manifest schema compiles at startup
+tenant context comparison rejects empty or mismatched tenant identifiers
+mTLS identity validation verifies the full certificate chain and exact expected SPIFFE identity
+credential validation binds audience, tenant, connector, exact scopes, and validity window
+field projection returns only allowlisted fields and deep-copies returned values
+provenance attestation verifies an Ed25519 signature over the canonical payload hash
+taint handling marks untrusted evidence without returning raw protected source bodies
+vector namespaces are tenant-HMAC-derived and are checked before and after backend retrieval
+retrieval rejects mismatched credentials, unbounded dimensions or top-k, NaN values, and missing provenance
+MCP transport validates strict JSON-RPC, handshake identity and capabilities, schema hashes, bounded circuit breaking, HTTPS/mTLS, no redirects, and Layer 6-owned stdio pipes
+```
+
+The Gemini evaluation adapter is a Layer 7 connector and must:
+
+```text
+read credentials only from GEMINI_API_KEY at process construction
+send the credential only in the x-goog-api-key header
+use a fixed Google Interactions API endpoint
+reject redirects
+use a bounded timeout and response size
+set store=false and background=false
+request application/json structured output with a closed schema
+set temperature=0, a fixed seed, and thinking_summaries=none
+never log requests, candidates, test prompts, provider bodies, or credentials
+return raw structured output to Layer 8 for independent validation and scoring
+```
+
+Unit tests must use an injected transport and synthetic credential. A live API
+test is valid only with a newly provisioned environment credential and is not
+proof of connector production readiness by itself.
+
+### 20.2 Repository readiness evidence
+
+The repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+For Layer 7, the check must fail when required connector-registry,
+source-contract, or MCP-manifest schema artifacts are missing, unreadable, or
+placeholder-only. It must also report absent executable source controls
+explicitly required by this spec, including MCP transport, handshake and
+schema-hash validation, mTLS identity, credential audience validation,
+projection enforcement, provenance and taint handling, and tenant-partitioned
+retrieval.
+
+Artifact or source-file presence is not connector certification. Manifest
+signature checks, contract golden tests, tenant isolation tests, transport
+chaos tests, schema-drift tests, provenance tests, SLO checks, and deployment
+attestations remain mandatory.
+
+`cmd/readiness` and `internal/releasegate` are read-only platform CI tooling.
+They must not connect MCP, call connectors, retrieve data, consume credentials,
+access tenant data, mutate connector state, or perform any Layer 7 runtime
+behavior.
+
 ---
 
 ## 21. Performance and SLOs

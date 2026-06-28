@@ -1,13 +1,23 @@
-package data_security_mesh
+// Package datasecuritymesh enforces tenant, identity, projection, provenance,
+// and taint boundaries for Layer 7 data access.
+package datasecuritymesh
 
-import "errors"
+import (
+	"crypto/subtle"
+	"errors"
+)
 
-var ErrCrossTenantLeak = errors.New("CROSS_TENANT_LEAK_PREVENTED")
+var ErrCrossTenantLeak = errors.New("cross-tenant access is blocked")
 
-// EnforceTenantBoundary prevents multi-tenant data bleed during vector or MCP retrieval (Section 3.3).
-// If a JIT credential belongs to Tenant A, it strictly cannot execute a query for Tenant B.
+// EnforceTenantBoundary requires non-empty, exact tenant binding.
 func EnforceTenantBoundary(requestTenantID, credentialTenantID string) error {
-	if requestTenantID != credentialTenantID {
+	if requestTenantID == "" ||
+		credentialTenantID == "" ||
+		len(requestTenantID) != len(credentialTenantID) ||
+		subtle.ConstantTimeCompare(
+			[]byte(requestTenantID),
+			[]byte(credentialTenantID),
+		) != 1 {
 		return ErrCrossTenantLeak
 	}
 	return nil

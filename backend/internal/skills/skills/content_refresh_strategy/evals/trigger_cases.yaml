@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: content_refresh_strategy
+      expected_skill: long_form_content_audit
+      id: adjacent_skill
+      input: Use long form content audit for this request.
+negative:
+    - expected_not_skill: content_refresh_strategy
+      expected_skill: long_form_content_audit
+      id: negative_neighbor
+      input: This request belongs to long form content audit.
+    - expected_intent: capability_explanation
+      expected_not_skill: content_refresh_strategy
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: content_refresh_strategy
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: content_refresh_strategy
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: optimize_content
+      expected_skill: content_refresh_strategy
+      id: positive_1
+      input: Please prioritize existing pages for evidence-backed content refreshes.
+    - expected_intent: optimize_content
+      expected_skill: content_refresh_strategy
+      id: positive_2
+      input: For this project, I need you to prioritize existing pages for evidence-backed content refreshes.
+    - expected_intent: optimize_content
+      expected_skill: content_refresh_strategy
+      id: positive_3
+      input: Review the available context and prioritize existing pages for evidence-backed content refreshes.
+rephrasing_stability:
+    - expected_skill: content_refresh_strategy
+      input: Can you help me prioritize existing pages for evidence-backed content refreshes?
+      source_case: positive_1
+    - expected_skill: content_refresh_strategy
+      input: The outcome I need is to prioritize existing pages for evidence-backed content refreshes.
+      source_case: positive_2
+    - expected_skill: content_refresh_strategy
+      input: Using the supplied evidence, prioritize existing pages for evidence-backed content refreshes.
+      source_case: positive_3
+skill_id: content_refresh_strategy
+version: 1

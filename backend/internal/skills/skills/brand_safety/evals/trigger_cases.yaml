@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: brand_safety
+      expected_skill: competitor_intelligence
+      id: adjacent_skill
+      input: Use competitor intelligence for this request.
+negative:
+    - expected_not_skill: brand_safety
+      expected_skill: competitor_intelligence
+      id: negative_neighbor
+      input: This request belongs to competitor intelligence.
+    - expected_intent: capability_explanation
+      expected_not_skill: brand_safety
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: brand_safety
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: brand_safety
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: draft_article
+      expected_skill: brand_safety
+      id: positive_1
+      input: Please review content for competitor promotion and brand-safety risks.
+    - expected_intent: draft_article
+      expected_skill: brand_safety
+      id: positive_2
+      input: For this project, I need you to review content for competitor promotion and brand-safety risks.
+    - expected_intent: draft_article
+      expected_skill: brand_safety
+      id: positive_3
+      input: Review the available context and review content for competitor promotion and brand-safety risks.
+rephrasing_stability:
+    - expected_skill: brand_safety
+      input: Can you help me review content for competitor promotion and brand-safety risks?
+      source_case: positive_1
+    - expected_skill: brand_safety
+      input: The outcome I need is to review content for competitor promotion and brand-safety risks.
+      source_case: positive_2
+    - expected_skill: brand_safety
+      input: Using the supplied evidence, review content for competitor promotion and brand-safety risks.
+      source_case: positive_3
+skill_id: brand_safety
+version: 1

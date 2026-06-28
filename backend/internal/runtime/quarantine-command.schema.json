@@ -1,1 +1,21 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer6/quarantine-command-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["trace_id", "session_id", "target_scope", "trigger_reason", "severity", "requested_actions", "preserve_state", "decision_ref", "expires_at", "signature"],
+  "properties": {
+    "trace_id": {"$ref": "#/$defs/id"},
+    "session_id": {"$ref": "#/$defs/id"},
+    "target_scope": {"$ref": "#/$defs/id"},
+    "trigger_reason": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "severity": {"enum": ["medium", "high", "critical"]},
+    "requested_actions": {"type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true, "items": {"enum": ["freeze_runtime", "revoke_jit_tokens", "block_egress", "revoke_tool_access", "preserve_forensic_snapshot", "stop_new_executions", "allow_read_only_status", "start_repair_scope"]}},
+    "preserve_state": {"type": "boolean"},
+    "decision_ref": {"$ref": "#/$defs/id"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "signature": {"type": "string", "minLength": 43, "maxLength": 256},
+    "metadata": {"type": "object", "maxProperties": 32, "additionalProperties": {"type": "string", "maxLength": 256}}
+  },
+  "$defs": {"id": {"type": "string", "minLength": 1, "maxLength": 128}}
+}

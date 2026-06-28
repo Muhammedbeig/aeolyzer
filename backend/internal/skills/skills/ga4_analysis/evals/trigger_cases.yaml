@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: ga4_analysis
+      expected_skill: gsc_insights_analysis
+      id: adjacent_skill
+      input: Use gsc insights analysis for this request.
+negative:
+    - expected_not_skill: ga4_analysis
+      expected_skill: gsc_insights_analysis
+      id: negative_neighbor
+      input: This request belongs to gsc insights analysis.
+    - expected_intent: capability_explanation
+      expected_not_skill: ga4_analysis
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: ga4_analysis
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: ga4_analysis
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: traffic_analysis
+      expected_skill: ga4_analysis
+      id: positive_1
+      input: Please interpret GA4 traffic and engagement metrics with limitations.
+    - expected_intent: traffic_analysis
+      expected_skill: ga4_analysis
+      id: positive_2
+      input: For this project, I need you to interpret GA4 traffic and engagement metrics with limitations.
+    - expected_intent: traffic_analysis
+      expected_skill: ga4_analysis
+      id: positive_3
+      input: Review the available context and interpret GA4 traffic and engagement metrics with limitations.
+rephrasing_stability:
+    - expected_skill: ga4_analysis
+      input: Can you help me interpret GA4 traffic and engagement metrics with limitations?
+      source_case: positive_1
+    - expected_skill: ga4_analysis
+      input: The outcome I need is to interpret GA4 traffic and engagement metrics with limitations.
+      source_case: positive_2
+    - expected_skill: ga4_analysis
+      input: Using the supplied evidence, interpret GA4 traffic and engagement metrics with limitations.
+      source_case: positive_3
+skill_id: ga4_analysis
+version: 1

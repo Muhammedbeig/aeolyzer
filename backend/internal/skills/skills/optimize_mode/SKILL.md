@@ -1,7 +1,33 @@
 ---
 name: optimize-mode
-description: |
-  Use when running SEO optimization on an existing article or page. Covers a seven-step workflow: inspecting SEO settings, detecting search intent, generating metadata, generating FAQs, building schema JSON-LD, finding internal links, and validating all outputs. Trigger whenever the user wants to optimize, update SEO fields, generate schema, add FAQs, or build internal links for any piece of content. Do NOT use for new article drafting, topic discovery, or overwriting existing SEO values.
+description: 'Use when running SEO optimization on an existing article or page. Covers a seven-step workflow: inspecting SEO settings, detecting search intent, generating metadata, generating FAQs, building schema JSON-LD, finding internal links, and validating all outputs. Trigger whenever the user wants to optimize, update SEO fields, generate schema, add FAQs, or build internal links for any piece of content. Do NOT use for new article drafting, topic discovery, or overwriting existing SEO values.'
+version: 1.0.0
+owner_team: content_platform
+tier: draft
+risk_class: medium
+compatible_profiles:
+    - content_execution_guard
+compatible_intents:
+    - optimize_content
+allowed_modes:
+    - write
+    - edit
+    - optimize
+capability_tags:
+    - optimize_mode
+declared_action_classes:
+    - read_brand_context
+    - canvas_write
+output_contracts:
+    - optimize_mode_draft
+    - quality_summary
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Optimize Mode
@@ -95,3 +121,60 @@ description: |
 | `scrapePage()` | read page content before linking |
 | `readMemoryDoc()` | check brand/tone constraints |
 | `quickContext()` | brand name, domain, positioning |
+
+## Purpose
+
+Provide procedural guidance to coordinate bounded improvements to existing selected content.
+
+## When to use
+
+- Use when the authorized intent is `optimize_content` and the request is to coordinate bounded improvements to existing selected content.
+
+## When NOT to use
+
+- Do not use when the request belongs to `post_write_checklist`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `optimize_mode_draft`
+- `quality_summary`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

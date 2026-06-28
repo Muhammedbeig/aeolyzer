@@ -1,1 +1,51 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer6/sandbox-lease-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["lease_id", "trace_id", "task_id", "runtime_class", "sandbox_profile", "rootless_user", "mounts", "egress_profile", "resource_budgets", "created_at", "expires_at", "image_digest"],
+  "properties": {
+    "lease_id": {"$ref": "#/$defs/id"},
+    "trace_id": {"$ref": "#/$defs/id"},
+    "task_id": {"$ref": "#/$defs/id"},
+    "runtime_class": {"type": "string", "minLength": 1, "maxLength": 64},
+    "sandbox_profile": {"type": "string", "minLength": 1, "maxLength": 64},
+    "rootless_user": {"type": "string", "minLength": 1, "maxLength": 64},
+    "image_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "mounts": {"type": "array", "maxItems": 64, "items": {"$ref": "#/$defs/mount"}},
+    "egress_profile": {"type": "string", "minLength": 1, "maxLength": 64},
+    "credential_refs": {"type": "array", "maxItems": 16, "items": {"$ref": "#/$defs/id"}},
+    "resource_budgets": {"$ref": "#/$defs/budgets"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "labels": {"type": "object", "maxProperties": 32, "additionalProperties": {"type": "string", "maxLength": 128}}
+  },
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "mount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_name", "mode", "scope"],
+      "properties": {
+        "logical_name": {"type": "string", "minLength": 1, "maxLength": 64},
+        "mode": {"enum": ["read_only", "write_only", "read_write"]},
+        "scope": {"type": "string", "minLength": 1, "maxLength": 256},
+        "max_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824}
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_wall_clock_ms", "max_cpu_percent", "max_memory_mb", "max_processes", "max_output_bytes", "max_network_mb", "max_retries"],
+      "properties": {
+        "max_wall_clock_ms": {"type": "integer", "minimum": 100, "maximum": 900000},
+        "max_cpu_percent": {"type": "integer", "minimum": 1, "maximum": 400},
+        "max_memory_mb": {"type": "integer", "minimum": 64, "maximum": 8192},
+        "max_processes": {"type": "integer", "minimum": 1, "maximum": 256},
+        "max_output_bytes": {"type": "integer", "minimum": 1, "maximum": 33554432},
+        "max_network_mb": {"type": "integer", "minimum": 0, "maximum": 1024},
+        "max_retries": {"type": "integer", "minimum": 0, "maximum": 3}
+      }
+    }
+  }
+}

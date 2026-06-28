@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "policy_mode": "fail_closed",
+  "allowed_intents": [
+    "topic_discovery",
+    "content_brief",
+    "content_research",
+    "seo_planning",
+    "page_analysis",
+    "article_planning",
+    "memory_tone_management",
+    "update_memory",
+    "draft_article",
+    "optimize_content",
+    "repurpose_content",
+    "switch_content_type",
+    "edit_existing",
+    "site_audit",
+    "aeo_visibility",
+    "traffic_analysis",
+    "prompt_research",
+    "site_health",
+    "fallback_clarification",
+    "capability_explanation",
+    "documentation_lookup"
+  ],
+  "allowed_modes": ["plan", "read", "write", "edit", "optimize", "audit"],
+  "unknown_intent": "reject",
+  "allow_user_supplied_routes": false,
+  "require_internal_route_mapping": true,
+  "minimum_confidence": 0.7,
+  "low_confidence_behavior": "clarify"
+}

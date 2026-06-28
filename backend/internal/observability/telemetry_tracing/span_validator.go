@@ -1,4 +1,4 @@
-package telemetry_tracing
+package telemetrytracing
 
 import "errors"
 
@@ -9,7 +9,7 @@ type Span struct {
 	TenantID string `json:"tenant_id,omitempty"`
 }
 
-var ErrMissingContext = errors.New("MISSING_SPAN_CONTEXT")
+var ErrMissingContext = errors.New("span context is incomplete")
 
 // ValidateSpan ensures that no trace is committed to storage without proper attribution (Section 7).
 func ValidateSpan(span Span) error {

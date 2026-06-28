@@ -1206,6 +1206,56 @@ Layer 2 never exposes internal tool names, workflow IDs, profile IDs, skill file
 all boundary tests pass
 ```
 
+### 17.1 Executable enforcement baseline
+
+The repository implementation must retain these executable controls:
+
+```text
+config.LoadEmbedded strictly decodes routing-schema.json and policies.yaml and rejects unknown fields
+config validation cross-checks every allowed intent and action class and requires fail_closed semantic denials
+cmd/api validates the embedded Layer 2 configuration before opening a listener
+middleware/llm_firewall normalizes Unicode with NFKC, enforces input limits, detects split role markers and bounded encoded injection, and fails closed
+middleware/protected_metadata_redactor removes protected identifiers and value-level credential patterns without returning the matched value
+middleware/content_intent_classifier returns a closed intent enum or clarification for ambiguous and low-confidence input
+intake contracts preserve trace, tenant, approval, and authorization wire names
+```
+
+Required tests:
+
+```text
+strict config decode and unknown-field rejection
+unsafe semantic-policy rejection
+plain, split-token, full-width, role-marker, and base64 prompt-injection rejection
+safe-input false-positive tests
+credential and protected-metadata redaction tests
+classifier ambiguity and unsupported-intent tests
+wire-contract and sanitized-event tests
+```
+
+These controls are a baseline, not proof that all Layer 2 authorization paths
+or adversarial corpora are complete.
+
+### 17.2 Repository readiness evidence
+
+The repository-level production check is:
+
+```text
+go run ./cmd/readiness -root .
+```
+
+For Layer 2, the check must fail closed when required policy or routing-schema
+artifacts are missing, unreadable, or placeholder-only. It must also report
+explicit prototype markers in Layer 2 production sources.
+
+This check proves repository evidence only. It does not replace startup schema
+validation, semantic policy validation, prompt-injection tests, authorization
+tests, redaction tests, or the production test matrix above.
+
+`cmd/readiness` and `internal/releasegate` are read-only platform CI tooling.
+They must not classify intent, inspect or store raw prompts, authorize tools,
+modify policies, emit runtime safety decisions, or otherwise perform Layer 2
+runtime behavior.
+
 ---
 
 ## 18. Acceptance Criteria

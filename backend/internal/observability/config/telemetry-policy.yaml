@@ -1,1 +1,46 @@
 version: 2
+policy_mode: fail_closed
+
+trace_requirements:
+  required_root_span: agent.session
+  required_child_spans:
+    - intake.decision
+    - orchestration.plan
+    - skill.activation
+    - tool.proposal
+    - tool.authorization
+    - runtime.execution
+    - connector.call
+    - presentation.intent
+    - output.final
+  allow_missing_optional_spans: true
+  reject_unlinked_spans: true
+  reject_trace_without_tenant: true
+  reject_trace_without_intent: true
+  reject_trace_without_mode: true
+
+redacted_reasoning:
+  store_hidden_chain_of_thought: false
+  store_reasoning_summary: true
+  max_summary_chars: 2000
+  require_summary_redaction: true
+
+sampling:
+  default: tail_based
+  retain_all_errors: true
+  retain_all_policy_blocks: true
+  retain_all_quarantine_decisions: true
+  retain_all_eval_failures: true
+  retain_all_high_cost_sessions: true
+  retain_success_sample_rate: 0.05
+
+cost_latency:
+  track_token_input: true
+  track_token_output: true
+  track_tool_latency_ms: true
+  track_connector_latency_ms: true
+  track_runtime_latency_ms: true
+  track_cost_usd: true
+  max_cost_per_session_warning_usd: 2.00
+  max_turns_warning: 30
+  max_tool_calls_warning: 50

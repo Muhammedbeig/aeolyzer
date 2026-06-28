@@ -1,7 +1,31 @@
 ---
 name: link-opportunity-discovery
-description: |
-  Discovers and prioritizes realistic backlink and citation prospects from competing links, cited domains, listicles, directories, and resource pages. Use when the user wants specific outreach targets. Do NOT use for internal links, generic backlink education, or sending outreach.
+description: Discovers and prioritizes realistic backlink and citation prospects from competing links, cited domains, listicles, directories, and resource pages. Use when the user wants specific outreach targets. Do NOT use for internal links, generic backlink education, or sending outreach.
+version: 1.0.0
+owner_team: content_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - content_collaborator
+compatible_intents:
+    - seo_planning
+allowed_modes:
+    - plan
+    - read
+capability_tags:
+    - link_opportunity_discovery
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - link_opportunity_discovery_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Link Opportunity Finder
@@ -250,3 +274,59 @@ Present as:
 - Never confuse resource pages with listicles - treat them separately
 - Always check whether user's domain is already included before flagging
 - Never recommend a target without stating why the user belongs there
+
+## Purpose
+
+Provide procedural guidance to identify pages and relationships that create credible link opportunities.
+
+## When to use
+
+- Use when the authorized intent is `seo_planning` and the request is to identify pages and relationships that create credible link opportunities.
+
+## When NOT to use
+
+- Do not use when the request belongs to `backlink_strategy`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `link_opportunity_discovery_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

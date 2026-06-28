@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: strategic_intelligence
+      expected_skill: content_strategy
+      id: adjacent_skill
+      input: Use content strategy for this request.
+negative:
+    - expected_not_skill: strategic_intelligence
+      expected_skill: content_strategy
+      id: negative_neighbor
+      input: This request belongs to content strategy.
+    - expected_intent: capability_explanation
+      expected_not_skill: strategic_intelligence
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: strategic_intelligence
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: strategic_intelligence
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: seo_planning
+      expected_skill: strategic_intelligence
+      id: positive_1
+      input: Please synthesize market, audience, competitor, and source evidence into strategy.
+    - expected_intent: seo_planning
+      expected_skill: strategic_intelligence
+      id: positive_2
+      input: For this project, I need you to synthesize market, audience, competitor, and source evidence into strategy.
+    - expected_intent: seo_planning
+      expected_skill: strategic_intelligence
+      id: positive_3
+      input: Review the available context and synthesize market, audience, competitor, and source evidence into strategy.
+rephrasing_stability:
+    - expected_skill: strategic_intelligence
+      input: Can you help me synthesize market, audience, competitor, and source evidence into strategy?
+      source_case: positive_1
+    - expected_skill: strategic_intelligence
+      input: The outcome I need is to synthesize market, audience, competitor, and source evidence into strategy.
+      source_case: positive_2
+    - expected_skill: strategic_intelligence
+      input: Using the supplied evidence, synthesize market, audience, competitor, and source evidence into strategy.
+      source_case: positive_3
+skill_id: strategic_intelligence
+version: 1

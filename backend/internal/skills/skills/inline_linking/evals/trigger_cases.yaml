@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: inline_linking
+      expected_skill: internal_linking_strategy
+      id: adjacent_skill
+      input: Use internal linking strategy for this request.
+negative:
+    - expected_not_skill: inline_linking
+      expected_skill: internal_linking_strategy
+      id: negative_neighbor
+      input: This request belongs to internal linking strategy.
+    - expected_intent: capability_explanation
+      expected_not_skill: inline_linking
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: inline_linking
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: inline_linking
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: optimize_content
+      expected_skill: inline_linking
+      id: positive_1
+      input: Please place contextually relevant internal links inside draft content.
+    - expected_intent: optimize_content
+      expected_skill: inline_linking
+      id: positive_2
+      input: For this project, I need you to place contextually relevant internal links inside draft content.
+    - expected_intent: optimize_content
+      expected_skill: inline_linking
+      id: positive_3
+      input: Review the available context and place contextually relevant internal links inside draft content.
+rephrasing_stability:
+    - expected_skill: inline_linking
+      input: Can you help me place contextually relevant internal links inside draft content?
+      source_case: positive_1
+    - expected_skill: inline_linking
+      input: The outcome I need is to place contextually relevant internal links inside draft content.
+      source_case: positive_2
+    - expected_skill: inline_linking
+      input: Using the supplied evidence, place contextually relevant internal links inside draft content.
+      source_case: positive_3
+skill_id: inline_linking
+version: 1

@@ -1,7 +1,31 @@
 ---
 name: post-write-checklist
-description: |
-  A 12-point quality checklist to run after completing all article sections. Covers structure, text walls, H3 usage, link counts, redundancy, completeness, tables, quotes, formatting variety, em dashes, duplicate headings, and SEO suggestions. Use immediately after finishing any article or long-form content piece. Do NOT use before the draft is complete, for content planning, or for research.
+description: A 12-point quality checklist to run after completing all article sections. Covers structure, text walls, H3 usage, link counts, redundancy, completeness, tables, quotes, formatting variety, em dashes, duplicate headings, and SEO suggestions. Use immediately after finishing any article or long-form content piece. Do NOT use before the draft is complete, for content planning, or for research.
+version: 1.0.0
+owner_team: content_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - content_collaborator
+compatible_intents:
+    - optimize_content
+allowed_modes:
+    - plan
+    - read
+capability_tags:
+    - post_write_checklist
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - post_write_checklist_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Post-Write Checklist
@@ -52,3 +76,59 @@ If only 1-2 isolated issues, use proposeEdit for targeted fixes.
 12. SEO SUGGESTION: After all checks pass, suggest SEO optimization: "Content's done. Want me to
     set up SEO settings? I'll generate meta title, description, FAQs, and schema markup."
     This is a natural next step; most users want it but won't think to ask.
+
+## Purpose
+
+Provide procedural guidance to run post-write quality checks before content approval.
+
+## When to use
+
+- Use when the authorized intent is `optimize_content` and the request is to run post-write quality checks before content approval.
+
+## When NOT to use
+
+- Do not use when the request belongs to `anti_redundancy`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `post_write_checklist_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

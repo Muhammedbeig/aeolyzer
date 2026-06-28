@@ -1,7 +1,31 @@
 ---
 name: core-web-vitals-optimization
-description: |
-  Interprets LCP, INP, CLS, page-speed, and device-performance problems and turns them into prioritized technical recommendations. Use when the user wants to diagnose or improve Core Web Vitals. Do NOT use for content quality, keyword strategy, or general analytics reporting.
+description: Interprets LCP, INP, CLS, page-speed, and device-performance problems and turns them into prioritized technical recommendations. Use when the user wants to diagnose or improve Core Web Vitals. Do NOT use for content quality, keyword strategy, or general analytics reporting.
+version: 1.0.0
+owner_team: audit_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - seo_aeo_auditor
+compatible_intents:
+    - site_audit
+allowed_modes:
+    - audit
+    - read
+capability_tags:
+    - core_web_vitals_optimization
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - core_web_vitals_optimization_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Core Web Vitals Optimizer
@@ -102,3 +126,59 @@ Present as:
 - Never treat lab scores as exact real-user performance
 - Never recommend fixes without tying them to the likely metric
 - Always prioritize the biggest measurable gain first
+
+## Purpose
+
+Provide procedural guidance to map measured Core Web Vitals issues to technical recommendations.
+
+## When to use
+
+- Use when the authorized intent is `site_audit` and the request is to map measured Core Web Vitals issues to technical recommendations.
+
+## When NOT to use
+
+- Do not use when the request belongs to `site_audit_interpretation`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `core_web_vitals_optimization_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

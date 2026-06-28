@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: llms_txt_generation
+      expected_skill: robots_txt_generation
+      id: adjacent_skill
+      input: Use robots txt generation for this request.
+negative:
+    - expected_not_skill: llms_txt_generation
+      expected_skill: robots_txt_generation
+      id: negative_neighbor
+      input: This request belongs to robots txt generation.
+    - expected_intent: capability_explanation
+      expected_not_skill: llms_txt_generation
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: llms_txt_generation
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: llms_txt_generation
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: seo_planning
+      expected_skill: llms_txt_generation
+      id: positive_1
+      input: Please prepare a conservative llms.txt proposal from verified site information.
+    - expected_intent: seo_planning
+      expected_skill: llms_txt_generation
+      id: positive_2
+      input: For this project, I need you to prepare a conservative llms.txt proposal from verified site information.
+    - expected_intent: seo_planning
+      expected_skill: llms_txt_generation
+      id: positive_3
+      input: Review the available context and prepare a conservative llms.txt proposal from verified site information.
+rephrasing_stability:
+    - expected_skill: llms_txt_generation
+      input: Can you help me prepare a conservative llms.txt proposal from verified site information?
+      source_case: positive_1
+    - expected_skill: llms_txt_generation
+      input: The outcome I need is to prepare a conservative llms.txt proposal from verified site information.
+      source_case: positive_2
+    - expected_skill: llms_txt_generation
+      input: Using the supplied evidence, prepare a conservative llms.txt proposal from verified site information.
+      source_case: positive_3
+skill_id: llms_txt_generation
+version: 1

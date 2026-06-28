@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: post_write_checklist
+      expected_skill: anti_redundancy
+      id: adjacent_skill
+      input: Use anti redundancy for this request.
+negative:
+    - expected_not_skill: post_write_checklist
+      expected_skill: anti_redundancy
+      id: negative_neighbor
+      input: This request belongs to anti redundancy.
+    - expected_intent: capability_explanation
+      expected_not_skill: post_write_checklist
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: post_write_checklist
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: post_write_checklist
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: optimize_content
+      expected_skill: post_write_checklist
+      id: positive_1
+      input: Please run post-write quality checks before content approval.
+    - expected_intent: optimize_content
+      expected_skill: post_write_checklist
+      id: positive_2
+      input: For this project, I need you to run post-write quality checks before content approval.
+    - expected_intent: optimize_content
+      expected_skill: post_write_checklist
+      id: positive_3
+      input: Review the available context and run post-write quality checks before content approval.
+rephrasing_stability:
+    - expected_skill: post_write_checklist
+      input: Can you help me run post-write quality checks before content approval?
+      source_case: positive_1
+    - expected_skill: post_write_checklist
+      input: The outcome I need is to run post-write quality checks before content approval.
+      source_case: positive_2
+    - expected_skill: post_write_checklist
+      input: Using the supplied evidence, run post-write quality checks before content approval.
+      source_case: positive_3
+skill_id: post_write_checklist
+version: 1

@@ -94,14 +94,19 @@ type ProposedToolRequest struct {
 	Payload map[string]interface{} `json:"payload"`
 }
 
-// DAGPlan is a placeholder representation of a loaded workflow blueprint.
+// DAGPlan is a validated, immutable workflow topology.
 type DAGPlan struct {
-	WorkflowID WorkflowID
+	WorkflowID WorkflowID `json:"workflow_id"`
+	Version    string     `json:"version"`
+	EntryTask  TaskID     `json:"entry_task"`
+	Nodes      []TaskNode `json:"nodes"`
 }
 
 // TaskNode represents a node in the executing DAG.
 type TaskNode struct {
-	ID TaskID
+	ID           TaskID   `json:"id"`
+	ActionClass  string   `json:"action_class"`
+	Dependencies []TaskID `json:"dependencies,omitempty"`
 }
 
 // PlanningContext is the localized state context available to a task node.

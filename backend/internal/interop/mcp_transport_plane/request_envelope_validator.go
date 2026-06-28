@@ -1,16 +1,20 @@
-package mcp_transport_plane
+// Package mcptransportplane implements bounded MCP JSON-RPC transports.
+package mcptransportplane
 
 import (
-	"aeolyzer/internal/interop"
 	"errors"
+
+	"aeolyzer/internal/interop"
 )
 
-var ErrMissingContext = errors.New("MISSING_REQUIRED_CONTEXT")
+var ErrMissingContext = errors.New("mcp request context is incomplete")
 
-// ValidateEnvelope enforces the fails-closed policy for incomplete connector requests (Section 3.1).
-// Ensures no arbitrary execution can occur without explicit orchestration and policy lineage.
-func ValidateEnvelope(req interop.InteropRequest) error {
-	if req.RequestID == "" || req.TenantID == "" || req.ConnectorID == "" || req.PolicyDecisionID == "" {
+// ValidateEnvelope enforces required policy and tenant lineage.
+func ValidateEnvelope(request interop.InteropRequest) error {
+	if request.RequestID == "" ||
+		request.TenantID == "" ||
+		request.ConnectorID == "" ||
+		request.PolicyDecisionID == "" {
 		return ErrMissingContext
 	}
 	return nil

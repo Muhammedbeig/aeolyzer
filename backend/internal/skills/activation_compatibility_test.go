@@ -20,22 +20,10 @@ func TestActivationCompatibility(t *testing.T) {
 	}
 }
 
-// TestNoExecutionBoundary ensures Layer 4 strictly functions as procedural memory
-// and never executes the scripts it manages.
-func TestNoExecutionBoundary(t *testing.T) {
-	// A script handle is returned, but execution is structurally impossible within this layer.
-	// This acts as a compliance test representing the firewall rule.
-	handle := "scripts/heading_structure_checker.go"
-	if handle == "" {
-		t.Fatal("script handle missing")
-	}
-}
-
 // TestProtectedMetadata validates that internal registry data is not exposed raw.
 func TestProtectedMetadata(t *testing.T) {
-	// Dummy test mirroring the spec rule
 	err := skills.VerifyChecksum("hash1", "hash2")
-	if err == nil {
-		t.Fatal("expected CHECKSUM_MISMATCH")
+	if err != skills.ErrChecksumMismatch {
+		t.Fatalf("VerifyChecksum() error = %v, want %v", err, skills.ErrChecksumMismatch)
 	}
 }

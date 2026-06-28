@@ -5,13 +5,15 @@ import (
 )
 
 var (
-	ErrSkillUnknown        = errors.New("SKILL_UNKNOWN")
-	ErrSkillBlocked        = errors.New("SKILL_BLOCKED")
-	ErrIntentIncompatible  = errors.New("INTENT_INCOMPATIBLE")
-	ErrModeIncompatible    = errors.New("MODE_INCOMPATIBLE")
-	ErrProfileIncompatible = errors.New("PROFILE_INCOMPATIBLE")
-	ErrTokenBudgetExceeded = errors.New("TOKEN_BUDGET_EXCEEDED")
-	ErrProtectedMetadata   = errors.New("PROTECTED_METADATA")
+	ErrSkillUnknown         = errors.New("skill is unknown")
+	ErrSkillBlocked         = errors.New("skill is blocked")
+	ErrIntentIncompatible   = errors.New("intent is incompatible")
+	ErrModeIncompatible     = errors.New("mode is incompatible")
+	ErrProfileIncompatible  = errors.New("profile is incompatible")
+	ErrTokenBudgetExceeded  = errors.New("token budget exceeded")
+	ErrProtectedMetadata    = errors.New("protected metadata detected")
+	ErrSchemasNotConfigured = errors.New("skill schemas are not configured")
+	ErrChecksumMismatch     = errors.New("checksum mismatch")
 )
 
 // ValidateActivationRequest enforces Layer 4 strict progressive disclosure boundaries.
@@ -37,7 +39,7 @@ func ValidateActivationRequest(req SkillActivationRequest) error {
 // ChecksumVerifier acts as a supply-chain firewall ensuring resources are untampered.
 func VerifyChecksum(expected, actual string) error {
 	if expected != actual {
-		return errors.New("CHECKSUM_MISMATCH")
+		return ErrChecksumMismatch
 	}
 	return nil
 }

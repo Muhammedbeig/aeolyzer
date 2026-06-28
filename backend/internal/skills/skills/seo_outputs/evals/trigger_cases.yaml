@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: seo_outputs
+      expected_skill: content_seo_settings
+      id: adjacent_skill
+      input: Use content seo settings for this request.
+negative:
+    - expected_not_skill: seo_outputs
+      expected_skill: content_seo_settings
+      id: negative_neighbor
+      input: This request belongs to content seo settings.
+    - expected_intent: capability_explanation
+      expected_not_skill: seo_outputs
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: seo_outputs
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: seo_outputs
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: optimize_content
+      expected_skill: seo_outputs
+      id: positive_1
+      input: Please package SEO recommendations into explicit reviewable outputs.
+    - expected_intent: optimize_content
+      expected_skill: seo_outputs
+      id: positive_2
+      input: For this project, I need you to package SEO recommendations into explicit reviewable outputs.
+    - expected_intent: optimize_content
+      expected_skill: seo_outputs
+      id: positive_3
+      input: Review the available context and package SEO recommendations into explicit reviewable outputs.
+rephrasing_stability:
+    - expected_skill: seo_outputs
+      input: Can you help me package SEO recommendations into explicit reviewable outputs?
+      source_case: positive_1
+    - expected_skill: seo_outputs
+      input: The outcome I need is to package SEO recommendations into explicit reviewable outputs.
+      source_case: positive_2
+    - expected_skill: seo_outputs
+      input: Using the supplied evidence, package SEO recommendations into explicit reviewable outputs.
+      source_case: positive_3
+skill_id: seo_outputs
+version: 1

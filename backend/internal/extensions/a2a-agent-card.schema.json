@@ -1,1 +1,21 @@
-{}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aeolyzer.local/schemas/layer5/a2a-agent-card-v2.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["agent_id", "display_name", "description", "protocol_version", "endpoint", "public_capabilities"],
+  "properties": {
+    "agent_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$"},
+    "display_name": {"type": "string", "minLength": 1, "maxLength": 100},
+    "description": {"type": "string", "minLength": 20, "maxLength": 500},
+    "protocol_version": {"type": "string", "minLength": 1, "maxLength": 32},
+    "endpoint": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "public_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"}
+    }
+  }
+}

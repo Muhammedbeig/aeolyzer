@@ -81,6 +81,26 @@ Exercise the parser.
 	}
 }
 
+func TestRegistrySkillStatuses(t *testing.T) {
+	statuses := registrySkillStatuses(`skills:
+  - skill_id: topic_discovery
+    name: topic-discovery
+    status: experimental
+  - skill_id: writing
+    name: writing
+    status: active
+`)
+	if statuses["topic_discovery"] != "experimental" {
+		t.Fatalf(
+			"registrySkillStatuses(topic_discovery) = %q",
+			statuses["topic_discovery"],
+		)
+	}
+	if statuses["writing"] != "active" {
+		t.Fatalf("registrySkillStatuses(writing) = %q", statuses["writing"])
+	}
+}
+
 func writeTestFile(t *testing.T, root, relativePath, content string) {
 	t.Helper()
 	path := filepath.Join(root, filepath.FromSlash(relativePath))

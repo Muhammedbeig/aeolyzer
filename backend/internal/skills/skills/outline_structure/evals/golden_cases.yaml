@@ -1,0 +1,18 @@
+cases:
+    - forbidden_qualities:
+        - fabricated_metrics
+        - unapproved_side_effect
+        - raw_secret
+        - internal_identifier_disclosure
+      id: golden_contract_1
+      input: Use the approved context to create a section hierarchy from an approved brief and evidence.
+      required_outputs:
+        - outline_structure_draft
+        - quality_summary
+      required_qualities:
+        - intent_aligned
+        - evidence_bounded
+        - safe_summary
+        - no_protected_metadata
+skill_id: outline_structure
+version: 1

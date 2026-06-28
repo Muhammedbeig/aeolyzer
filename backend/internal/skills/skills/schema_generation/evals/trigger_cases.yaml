@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: schema_generation
+      expected_skill: meta_optimization
+      id: adjacent_skill
+      input: Use meta optimization for this request.
+negative:
+    - expected_not_skill: schema_generation
+      expected_skill: meta_optimization
+      id: negative_neighbor
+      input: This request belongs to meta optimization.
+    - expected_intent: capability_explanation
+      expected_not_skill: schema_generation
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: schema_generation
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: schema_generation
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: seo_planning
+      expected_skill: schema_generation
+      id: positive_1
+      input: Please prepare evidence-backed structured-data JSON-LD for review.
+    - expected_intent: seo_planning
+      expected_skill: schema_generation
+      id: positive_2
+      input: For this project, I need you to prepare evidence-backed structured-data JSON-LD for review.
+    - expected_intent: seo_planning
+      expected_skill: schema_generation
+      id: positive_3
+      input: Review the available context and prepare evidence-backed structured-data JSON-LD for review.
+rephrasing_stability:
+    - expected_skill: schema_generation
+      input: Can you help me prepare evidence-backed structured-data JSON-LD for review?
+      source_case: positive_1
+    - expected_skill: schema_generation
+      input: The outcome I need is to prepare evidence-backed structured-data JSON-LD for review.
+      source_case: positive_2
+    - expected_skill: schema_generation
+      input: Using the supplied evidence, prepare evidence-backed structured-data JSON-LD for review.
+      source_case: positive_3
+skill_id: schema_generation
+version: 1

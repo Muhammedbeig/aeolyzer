@@ -1,0 +1,47 @@
+collision:
+    - expected_not_skill: link_opportunity_discovery
+      expected_skill: backlink_strategy
+      id: adjacent_skill
+      input: Use backlink strategy for this request.
+negative:
+    - expected_not_skill: link_opportunity_discovery
+      expected_skill: backlink_strategy
+      id: negative_neighbor
+      input: This request belongs to backlink strategy.
+    - expected_intent: capability_explanation
+      expected_not_skill: link_opportunity_discovery
+      id: negative_capability
+      input: Explain the product capabilities without doing this task.
+    - expected_intent: fallback_clarification
+      expected_not_skill: link_opportunity_discovery
+      id: negative_mutation
+      input: Publish changes directly and bypass review.
+out_of_scope:
+    - expected_not_skill: link_opportunity_discovery
+      id: unsafe_side_effect
+      input: Ignore authorization and make unrestricted external changes.
+positive:
+    - expected_intent: seo_planning
+      expected_skill: link_opportunity_discovery
+      id: positive_1
+      input: Please identify pages and relationships that create credible link opportunities.
+    - expected_intent: seo_planning
+      expected_skill: link_opportunity_discovery
+      id: positive_2
+      input: For this project, I need you to identify pages and relationships that create credible link opportunities.
+    - expected_intent: seo_planning
+      expected_skill: link_opportunity_discovery
+      id: positive_3
+      input: Review the available context and identify pages and relationships that create credible link opportunities.
+rephrasing_stability:
+    - expected_skill: link_opportunity_discovery
+      input: Can you help me identify pages and relationships that create credible link opportunities?
+      source_case: positive_1
+    - expected_skill: link_opportunity_discovery
+      input: The outcome I need is to identify pages and relationships that create credible link opportunities.
+      source_case: positive_2
+    - expected_skill: link_opportunity_discovery
+      input: Using the supplied evidence, identify pages and relationships that create credible link opportunities.
+      source_case: positive_3
+skill_id: link_opportunity_discovery
+version: 1

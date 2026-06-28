@@ -1,0 +1,12 @@
+cases:
+    - expected_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      forbidden_action_classes:
+        - unrestricted_network_access
+        - ambient_credential_access
+        - direct_publish
+      id: trajectory_1
+      mode: ANY_ORDER
+skill_id: long_form_content_audit
+version: 1

@@ -1,9 +1,1409 @@
 version: 2
 policy_mode: fail_closed
 registry_owner_layer: layer_4_skills
-default_status: active
+default_status: blocked
 metadata_token_budget:
-  max_total_registry_tokens: 2500
-  max_description_tokens_per_skill: 90
-  max_antitrigger_tokens_per_skill: 60
-skills: []
+    max_total_registry_tokens: 2500
+    max_description_tokens_per_skill: 90
+    max_antitrigger_tokens_per_skill: 60
+skills:
+    - skill_id: anti_redundancy
+      name: anti-redundancy
+      directory: skills/anti_redundancy
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Use when writing any multi-section content to ensure every paragraph earns its place. Covers rules for eliminating repeated points across sections, a pre-section redundancy check, and common redundancy traps to avoid. Trigger for long-form articles, SEO content, reports, or any structured writing where section-by-section discipline is needed. Do NOT use for single-section copy, metadata-only tasks, or unrelated editing.
+      anti_triggers:
+        - request belongs to formatting_rules
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - anti_redundancy
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - anti_redundancy_draft
+        - quality_summary
+      body_token_estimate: 882
+      resource_token_estimate: 0
+      eval_manifest: skills/anti_redundancy/eval-manifest.yaml
+      resource_manifest: skills/anti_redundancy/resource-manifest.yaml
+      checksum: sha256:d3893f3450343d032f5096b997d36868cd73260f01d318c26b87fcad2024b832
+    - skill_id: backlink_strategy
+      name: backlink-strategy
+      directory: skills/backlink_strategy
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Develops backlink and citation acquisition strategies from current link profiles, cited sources, competitors, and outreach targets. Use when the user wants links, mentions, listicle inclusion, or outreach planning. Do NOT use for internal linking, technical audits, or content drafting.
+      anti_triggers:
+        - request belongs to link_opportunity_discovery
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - backlink_strategy
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - backlink_strategy_report
+      body_token_estimate: 2640
+      resource_token_estimate: 0
+      eval_manifest: skills/backlink_strategy/eval-manifest.yaml
+      resource_manifest: skills/backlink_strategy/resource-manifest.yaml
+      checksum: sha256:15f008772eab53abdf1b57430b12982f040aa911ac17ff0d0b93e5bfef228559
+    - skill_id: brand_safety
+      name: brand-safety
+      directory: skills/brand_safety
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: 'Rules for brand-safe content creation: avoiding competitor references, positioning the user''s brand as authority, and using outbound links responsibly. Use when writing any article or content piece to ensure it serves the user''s brand rather than elevating competitors. Do NOT use for neutral competitor research, technical audits, or private working notes.'
+      anti_triggers:
+        - request belongs to competitor_intelligence
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - draft_article
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - brand_safety
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - brand_safety_report
+      body_token_estimate: 1346
+      resource_token_estimate: 0
+      eval_manifest: skills/brand_safety/eval-manifest.yaml
+      resource_manifest: skills/brand_safety/resource-manifest.yaml
+      checksum: sha256:062be5d1171a0d4e3ed8505efadcbeea693855dc4caeaf2deeee09922641aaa6
+    - skill_id: brief_building
+      name: brief-building
+      directory: skills/brief_building
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Builds a content brief covering topic, angle, audience, intent, CTA, keywords, length, subtype, and notes. Use before drafting begins or when planning article requirements. Do NOT use for writing sections, researching sources, or publishing content.
+      anti_triggers:
+        - request belongs to outline_structure
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - content_brief
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - brief_building
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - brief_building_draft
+        - quality_summary
+      body_token_estimate: 1048
+      resource_token_estimate: 0
+      eval_manifest: skills/brief_building/eval-manifest.yaml
+      resource_manifest: skills/brief_building/resource-manifest.yaml
+      checksum: sha256:1ba25dfffd09cbc1b8735cb8133a15df354f505866f0d7829b7b9dd80f8e11bd
+    - skill_id: competitor_intelligence
+      name: competitor-intelligence
+      directory: skills/competitor_intelligence
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Analyzes competitor keywords, content, backlinks, traffic, search visibility, and market positioning to identify actionable gaps. Use when the user wants competitive comparisons or an outranking strategy. Do NOT use for single-site audits, content drafting, or unsupported competitor claims.
+      anti_triggers:
+        - request belongs to brand_safety
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - content_research
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - competitor_intelligence
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - competitor_intelligence_report
+      body_token_estimate: 2480
+      resource_token_estimate: 0
+      eval_manifest: skills/competitor_intelligence/eval-manifest.yaml
+      resource_manifest: skills/competitor_intelligence/resource-manifest.yaml
+      checksum: sha256:77f242be75165fb0fbafa465593b8753d4c50047e6a553ebd9d01e99d551358b
+    - skill_id: content_craft
+      name: content-craft
+      directory: skills/content_craft
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Use when writing or editing long-form content that needs to perform well in traditional search and AI answer engines. Covers AEO (Answer Engine Optimization), revenue case framing, evidence density, readability craft, UGC intelligence, and self-contained section structure. Trigger for SEO articles, blog posts, B2B content, or any piece where performance and citation rates matter. Do NOT use for short coordination messages, metadata-only tasks, or raw research collection.
+      anti_triggers:
+        - request belongs to writing
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - draft_article
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - content_craft
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - content_craft_draft
+        - quality_summary
+      body_token_estimate: 1550
+      resource_token_estimate: 0
+      eval_manifest: skills/content_craft/eval-manifest.yaml
+      resource_manifest: skills/content_craft/resource-manifest.yaml
+      checksum: sha256:922bd6039b6f7420b2010edf2fe89e3d19ae311397406c98f1343ec8802a7763
+    - skill_id: content_creation
+      name: content-creation
+      directory: skills/content_creation
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Creates search- and answer-optimized articles, guides, landing pages, pillar pages, comparisons, FAQs, tutorials, and product content. Use when the user requests a complete content draft from an established goal. Do NOT use for topic ideation, research-only tasks, or editing an existing page.
+      anti_triggers:
+        - request belongs to content_ideas
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - draft_article
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - content_creation
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - content_creation_draft
+        - quality_summary
+      body_token_estimate: 1840
+      resource_token_estimate: 0
+      eval_manifest: skills/content_creation/eval-manifest.yaml
+      resource_manifest: skills/content_creation/resource-manifest.yaml
+      checksum: sha256:8506a797c0f017012f748597259be79ae9b0bc0fa9a7c42d768d172a66abca5c
+    - skill_id: content_ideas
+      name: content-ideas
+      directory: skills/content_ideas
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Finds People Also Ask questions, related searches, and differentiated content angles for a topic. Use when the user wants blog ideas, question-based prompts, or topic opportunities. Do NOT use for full content strategies, complete drafts, or page-specific audits.
+      anti_triggers:
+        - request belongs to topic_discovery
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - topic_discovery
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - content_ideas
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - content_ideas_report
+      body_token_estimate: 1362
+      resource_token_estimate: 0
+      eval_manifest: skills/content_ideas/eval-manifest.yaml
+      resource_manifest: skills/content_ideas/resource-manifest.yaml
+      checksum: sha256:17e61062e36fbcf96264b5dbfa0a34528291245ceac7874f7864c9c040ed1c77
+    - skill_id: content_refresh_strategy
+      name: content-refresh-strategy
+      directory: skills/content_refresh_strategy
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Plans evidence-based updates for aging or declining content using performance trends, current coverage, and competitor changes. Use when the user wants to recover rankings, refresh pages, or prioritize decaying content. Do NOT use for net-new drafts, technical audits, or metadata-only changes.
+      anti_triggers:
+        - request belongs to long_form_content_audit
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - content_refresh_strategy
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - content_refresh_strategy_report
+      body_token_estimate: 2170
+      resource_token_estimate: 0
+      eval_manifest: skills/content_refresh_strategy/eval-manifest.yaml
+      resource_manifest: skills/content_refresh_strategy/resource-manifest.yaml
+      checksum: sha256:ae5f53e238da8a85b8ac9255d0365ac901232f2916a7f75f53f8e17cf776262b
+    - skill_id: content_seo_settings
+      name: content-seo-settings
+      directory: skills/content_seo_settings
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Generates SEO metadata, slugs, Open Graph fields, FAQs, schema, and internal-link suggestions for a known content piece. Use when content exists or its purpose is defined. Do NOT use for drafting the article, sitewide technical audits, or unrelated configuration.
+      anti_triggers:
+        - request belongs to meta_optimization
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - content_seo_settings
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - content_seo_settings_draft
+        - quality_summary
+      body_token_estimate: 1932
+      resource_token_estimate: 0
+      eval_manifest: skills/content_seo_settings/eval-manifest.yaml
+      resource_manifest: skills/content_seo_settings/resource-manifest.yaml
+      checksum: sha256:03e9e2efcdc35c4bf4d78551e25e9a3eca86745f31251577fbaf70d561284cc6
+    - skill_id: content_strategy
+      name: content-strategy
+      directory: skills/content_strategy
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Builds content roadmaps, editorial plans, topic clusters, and gap priorities around traffic, authority, visibility, audience, and business goals. Use when the user needs a coordinated content program. Do NOT use for writing a single draft, metadata-only work, or technical site audits.
+      anti_triggers:
+        - request belongs to strategic_intelligence
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - content_strategy
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - content_strategy_report
+      body_token_estimate: 2014
+      resource_token_estimate: 0
+      eval_manifest: skills/content_strategy/eval-manifest.yaml
+      resource_manifest: skills/content_strategy/resource-manifest.yaml
+      checksum: sha256:c3f016aaa50e77ec17acded9a0be34d4581720ab92ddb3b8b04f34bdc0e2ca3a
+    - skill_id: core_web_vitals_optimization
+      name: core-web-vitals-optimization
+      directory: skills/core_web_vitals_optimization
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Interprets LCP, INP, CLS, page-speed, and device-performance problems and turns them into prioritized technical recommendations. Use when the user wants to diagnose or improve Core Web Vitals. Do NOT use for content quality, keyword strategy, or general analytics reporting.
+      anti_triggers:
+        - request belongs to site_audit_interpretation
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - seo_aeo_auditor
+      compatible_intents:
+        - site_audit
+      allowed_modes:
+        - audit
+        - read
+      capability_tags:
+        - core_web_vitals_optimization
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - core_web_vitals_optimization_report
+      body_token_estimate: 1538
+      resource_token_estimate: 0
+      eval_manifest: skills/core_web_vitals_optimization/eval-manifest.yaml
+      resource_manifest: skills/core_web_vitals_optimization/resource-manifest.yaml
+      checksum: sha256:ebb2d97d8c1ff56c8d442dc79c29867c907ce14c3d49399168d784d1ede6b16f
+    - skill_id: depth_evidence
+      name: depth-evidence
+      directory: skills/depth_evidence
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Use when writing or researching any article that needs to go beyond surface-level coverage. Covers second-order effects, competitive context, counter-arguments, specific evidence standards, and data contextualization. Trigger for SEO articles, thought leadership pieces, B2B content, or any writing where depth and credibility are required. Do NOT use for lightweight copy, metadata-only tasks, or formatting-only edits.
+      anti_triggers:
+        - request belongs to sources_intelligence
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - content_research
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - depth_evidence
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - depth_evidence_report
+      body_token_estimate: 772
+      resource_token_estimate: 0
+      eval_manifest: skills/depth_evidence/eval-manifest.yaml
+      resource_manifest: skills/depth_evidence/resource-manifest.yaml
+      checksum: sha256:c84d1b8dedbe3ecba0d6c133f3832ef9fa0ae43ed441e7238ce9c5b5b198b302
+    - skill_id: editorial_voice
+      name: editorial-voice
+      directory: skills/editorial_voice
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Use when writing or editing any article, blog post, or long-form content to ensure it has a strong, consistent analytical voice. Covers taking positions, "so what" analysis, direct language patterns, blog post voice specifics, and voice consistency checks. Trigger for SEO articles, blog posts, op-eds, or any content that should analyze rather than just inform. Do NOT use for data extraction, metadata-only tasks, or neutral factual summaries.
+      anti_triggers:
+        - request belongs to writing
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - draft_article
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - editorial_voice
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - editorial_voice_draft
+        - quality_summary
+      body_token_estimate: 1086
+      resource_token_estimate: 0
+      eval_manifest: skills/editorial_voice/eval-manifest.yaml
+      resource_manifest: skills/editorial_voice/resource-manifest.yaml
+      checksum: sha256:885ee3054cc4345eb76b42839faf7565e7147dd935823736d0c1588c08f6fa46
+    - skill_id: formatting_rules
+      name: formatting-rules
+      directory: skills/formatting_rules
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Critical formatting rules including the absolute em dash ban, emoji and symbol prohibition, chat response length limits, tool call narration rules, and prohibited greeting phrases. Use for every response to ensure consistent, professional output. Do NOT use as a substitute for content strategy, research, or subject-matter instructions.
+      anti_triggers:
+        - request belongs to outline_structure
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - formatting_rules
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - formatting_rules_draft
+        - quality_summary
+      body_token_estimate: 1460
+      resource_token_estimate: 0
+      eval_manifest: skills/formatting_rules/eval-manifest.yaml
+      resource_manifest: skills/formatting_rules/resource-manifest.yaml
+      checksum: sha256:be87460c8e397131bd7d8708c5e086b7ac90516280ce67b62a894d8c8c979d14
+    - skill_id: ga4_analysis
+      name: ga4-analysis
+      directory: skills/ga4_analysis
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Analyzes GA4 acquisition, landing pages, engagement, conversions, attribution, and AI referral traffic to produce business-focused recommendations. Use when the user asks about traffic sources, behavior, channel quality, or conversions. Do NOT use for search-query rankings, technical audits, or unsupported analytics advice.
+      anti_triggers:
+        - request belongs to gsc_insights_analysis
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - seo_aeo_auditor
+      compatible_intents:
+        - traffic_analysis
+      allowed_modes:
+        - audit
+        - read
+      capability_tags:
+        - ga4_analysis
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - ga4_analysis_report
+      body_token_estimate: 1966
+      resource_token_estimate: 0
+      eval_manifest: skills/ga4_analysis/eval-manifest.yaml
+      resource_manifest: skills/ga4_analysis/resource-manifest.yaml
+      checksum: sha256:7eb4c57f88f05e0d6c92be048454e90727420e5b16bc88483c7d1c6744d3c867
+    - skill_id: google_business_profile_optimization
+      name: google-business-profile-optimization
+      directory: skills/google_business_profile_optimization
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Optimizes Google Business Profile relevance, prominence, completeness, categories, services, reviews, photos, posts, and Q&A. Use when the user wants stronger Maps or local-pack performance. Do NOT use for broad local SEO outside the profile, general content drafting, or nonlocal search strategy.
+      anti_triggers:
+        - request belongs to local_seo_optimization
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - seo_aeo_auditor
+      compatible_intents:
+        - site_audit
+      allowed_modes:
+        - audit
+        - read
+      capability_tags:
+        - google_business_profile_optimization
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - google_business_profile_optimization_report
+      body_token_estimate: 1862
+      resource_token_estimate: 0
+      eval_manifest: skills/google_business_profile_optimization/eval-manifest.yaml
+      resource_manifest: skills/google_business_profile_optimization/resource-manifest.yaml
+      checksum: sha256:05c8358d09fd34f54021b33dde379eef57878df696b7a0fbc014bda29bca502a
+    - skill_id: gsc_insights_analysis
+      name: gsc-insights-analysis
+      directory: skills/gsc_insights_analysis
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Analyzes Search Console queries, pages, clicks, impressions, CTR, positions, and trends to identify search opportunities and quick wins. Use when the user wants ranking, CTR, or performance insights from GSC data. Do NOT use for GA4 behavior analysis, unsupported SEO advice, or content drafting.
+      anti_triggers:
+        - request belongs to ga4_analysis
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - seo_aeo_auditor
+      compatible_intents:
+        - traffic_analysis
+      allowed_modes:
+        - audit
+        - read
+      capability_tags:
+        - gsc_insights_analysis
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - gsc_insights_analysis_report
+      body_token_estimate: 1884
+      resource_token_estimate: 0
+      eval_manifest: skills/gsc_insights_analysis/eval-manifest.yaml
+      resource_manifest: skills/gsc_insights_analysis/resource-manifest.yaml
+      checksum: sha256:9ccdaf842e44cd70f544eeb85ce1001fdce1e9e542ef01b41464a96cc854716f
+    - skill_id: hidden_intent_analysis
+      name: hidden-intent-analysis
+      directory: skills/hidden_intent_analysis
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Use when creating content that needs to match what searchers FEEL but didn't type. Covers the three intent layers (surface, emotional, business), the golden thread narrative, hidden intent identification during research, and title generation with hidden intent hooks. Trigger during PLAN mode, WRITE mode, TOPIC DISCOVERY, and TITLE GENERATION. Do NOT use for technical audits, raw analytics, or metadata-only tasks.
+      anti_triggers:
+        - request belongs to seo_search_intent
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - article_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - hidden_intent_analysis
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - hidden_intent_analysis_report
+      body_token_estimate: 1920
+      resource_token_estimate: 0
+      eval_manifest: skills/hidden_intent_analysis/eval-manifest.yaml
+      resource_manifest: skills/hidden_intent_analysis/resource-manifest.yaml
+      checksum: sha256:6c108ddf285611375a9908e650679d6d832476fad67d7065c97dd2b5f96416e1
+    - skill_id: inline_linking
+      name: inline-linking
+      directory: skills/inline_linking
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Mandatory guidelines for inline hyperlink density, placement patterns, what to link, link count minimums by word count, and outbound link safety. Use when writing or reviewing any article or long-form content piece to ensure it meets linking requirements. Do NOT use for external link acquisition, site navigation design, or link audits without content work.
+      anti_triggers:
+        - request belongs to internal_linking_strategy
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - inline_linking
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - inline_linking_draft
+        - quality_summary
+      body_token_estimate: 1358
+      resource_token_estimate: 0
+      eval_manifest: skills/inline_linking/eval-manifest.yaml
+      resource_manifest: skills/inline_linking/resource-manifest.yaml
+      checksum: sha256:0ff5cbf2012251ecc8784b6984d7d8a1368928ba1ce0151d1e39e86b3d66354f
+    - skill_id: internal_linking_strategy
+      name: internal-linking-strategy
+      directory: skills/internal_linking_strategy
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Plans page-level internal links, anchor text, authority flow, topic clusters, crawl paths, and orphan-page recovery. Use when the user wants to strengthen rankings or site architecture with internal links. Do NOT use for external backlink acquisition, navigation design alone, or generic SEO explanations.
+      anti_triggers:
+        - request belongs to inline_linking
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - internal_linking_strategy
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - internal_linking_strategy_report
+      body_token_estimate: 2200
+      resource_token_estimate: 0
+      eval_manifest: skills/internal_linking_strategy/eval-manifest.yaml
+      resource_manifest: skills/internal_linking_strategy/resource-manifest.yaml
+      checksum: sha256:67fac820b366db1566bce29c6f0066f6ddb78e500cfef5b0c8ec1d79f738824e
+    - skill_id: keyword_research
+      name: keyword-research
+      directory: skills/keyword_research
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Finds and prioritizes keywords by intent, volume, difficulty, relevance, competition, and business value. Use when the user needs target queries, keyword clusters, or ranking opportunities. Do NOT use for complete content drafts, page implementation, or unsupported volume claims.
+      anti_triggers:
+        - request belongs to serp_analysis
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - keyword_research
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - keyword_research_report
+      body_token_estimate: 1402
+      resource_token_estimate: 0
+      eval_manifest: skills/keyword_research/eval-manifest.yaml
+      resource_manifest: skills/keyword_research/resource-manifest.yaml
+      checksum: sha256:dc4b793b7e5eb4e47ac8caf20dc9e2be21fb5f581167eb954cb3c3715c772bb5
+    - skill_id: link_opportunity_discovery
+      name: link-opportunity-discovery
+      directory: skills/link_opportunity_discovery
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Discovers and prioritizes realistic backlink and citation prospects from competing links, cited domains, listicles, directories, and resource pages. Use when the user wants specific outreach targets. Do NOT use for internal links, generic backlink education, or sending outreach.
+      anti_triggers:
+        - request belongs to backlink_strategy
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - link_opportunity_discovery
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - link_opportunity_discovery_report
+      body_token_estimate: 3000
+      resource_token_estimate: 0
+      eval_manifest: skills/link_opportunity_discovery/eval-manifest.yaml
+      resource_manifest: skills/link_opportunity_discovery/resource-manifest.yaml
+      checksum: sha256:8144f34e579d87e31c86aced0fa804aded2a300813c61066b6b713b5e296f30e
+    - skill_id: llms_txt_generation
+      name: llms-txt-generation
+      directory: skills/llms_txt_generation
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Generates an evidence-based llms.txt file that summarizes a verified site and points AI crawlers to important public pages. Use when the user requests llms.txt creation or validation. Do NOT use for robots.txt rules, sitemap generation, or invented URLs.
+      anti_triggers:
+        - request belongs to robots_txt_generation
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - llms_txt_generation
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - llms_txt_generation_draft
+        - quality_summary
+      body_token_estimate: 1530
+      resource_token_estimate: 0
+      eval_manifest: skills/llms_txt_generation/eval-manifest.yaml
+      resource_manifest: skills/llms_txt_generation/resource-manifest.yaml
+      checksum: sha256:b952f1e1b23d5c46ec2fb7da7483d668d923eb4df64692c0c7fdc12f67e2aae2
+    - skill_id: local_seo_optimization
+      name: local-seo-optimization
+      directory: skills/local_seo_optimization
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Plans local search improvements across Maps, business profiles, citations, NAP consistency, reviews, local pages, schema, and geo-targeted keywords. Use when the user wants visibility in a city or service area. Do NOT use for nonlocal SEO, generic content strategy, or unsupported location claims.
+      anti_triggers:
+        - request belongs to google_business_profile_optimization
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - seo_aeo_auditor
+      compatible_intents:
+        - site_audit
+      allowed_modes:
+        - audit
+        - read
+      capability_tags:
+        - local_seo_optimization
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - local_seo_optimization_report
+      body_token_estimate: 1976
+      resource_token_estimate: 0
+      eval_manifest: skills/local_seo_optimization/eval-manifest.yaml
+      resource_manifest: skills/local_seo_optimization/resource-manifest.yaml
+      checksum: sha256:bd78d476cf9e813d2147a5c5c500a70af46407e9a420364e999768876ec02fd9
+    - skill_id: long_form_content_audit
+      name: long-form-content-audit
+      directory: skills/long_form_content_audit
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Audits a specific long-form page against its content, search intent, competitors, structure, depth, trust signals, and AI visibility. Use when the user provides a URL and wants page-specific improvements. Do NOT use without inspecting the page, for net-new drafts, or sitewide technical audits.
+      anti_triggers:
+        - request belongs to content_refresh_strategy
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - page_analysis
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - long_form_content_audit
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - long_form_content_audit_report
+      body_token_estimate: 2062
+      resource_token_estimate: 0
+      eval_manifest: skills/long_form_content_audit/eval-manifest.yaml
+      resource_manifest: skills/long_form_content_audit/resource-manifest.yaml
+      checksum: sha256:4436e1c429bfca78d526cbc78707ba295b0d27bd2b25cf86d921d3bc77efe4de
+    - skill_id: memory_system
+      name: memory-system
+      directory: skills/memory_system
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Use to read and update persistent brand memory and tone documents across content sessions. Covers when to call readMemoryDoc and proposeMemoryUpdate, how to identify patterns worth saving, and when NOT to propose updates. Trigger when a user shares a new preference, corrects tone or style repeatedly, or after any significant style or structural rework — check the tone doc and propose missing rules before moving on. Do NOT use for silent memory writes, one-off preferences, or content drafting.
+      anti_triggers:
+        - request belongs to editorial_voice
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - memory_tone_management
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - memory_system
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - memory_system_report
+      body_token_estimate: 1182
+      resource_token_estimate: 0
+      eval_manifest: skills/memory_system/eval-manifest.yaml
+      resource_manifest: skills/memory_system/resource-manifest.yaml
+      checksum: sha256:ebceee2b9454d9b4c4f6cb4d1fa3ed512f32c988d6b05d972254eb9a057b2f38
+    - skill_id: meta_optimization
+      name: meta-optimization
+      directory: skills/meta_optimization
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Optimizes page titles and meta descriptions for relevance, intent, CTR, uniqueness, and length. Use when the user asks for metadata analysis or rewrites for known pages or keywords. Do NOT use for full content drafts, Open Graph packages, or sitewide technical audits.
+      anti_triggers:
+        - request belongs to title_generation
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - meta_optimization
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - meta_optimization_draft
+        - quality_summary
+      body_token_estimate: 1448
+      resource_token_estimate: 0
+      eval_manifest: skills/meta_optimization/eval-manifest.yaml
+      resource_manifest: skills/meta_optimization/resource-manifest.yaml
+      checksum: sha256:402ccd2ffb0988a37dd9c6d010d1b5e8118dd5b7cf53dd61212fe71e08560529
+    - skill_id: optimize_mode
+      name: optimize-mode
+      directory: skills/optimize_mode
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: 'Use when running SEO optimization on an existing article or page. Covers a seven-step workflow: inspecting SEO settings, detecting search intent, generating metadata, generating FAQs, building schema JSON-LD, finding internal links, and validating all outputs. Trigger whenever the user wants to optimize, update SEO fields, generate schema, add FAQs, or build internal links for any piece of content. Do NOT use for new article drafting, topic discovery, or overwriting existing SEO values.'
+      anti_triggers:
+        - request belongs to post_write_checklist
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - optimize_mode
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - optimize_mode_draft
+        - quality_summary
+      body_token_estimate: 1490
+      resource_token_estimate: 0
+      eval_manifest: skills/optimize_mode/eval-manifest.yaml
+      resource_manifest: skills/optimize_mode/resource-manifest.yaml
+      checksum: sha256:40e7e05e3866d4287f2e198e818ed2b2a0605dd374f4a4eb25efb0d1860a3ad1
+    - skill_id: outline_structure
+      name: outline-structure
+      directory: skills/outline_structure
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Guidance for heading hierarchy, section flow, and formatting variety when writing articles. Use when writing, planning, or structuring multi-section articles, blog posts, or long-form content — even if the user doesn't say "outline" or "structure" explicitly. Do NOT use for short-form copy, metadata-only tasks, or final publishing.
+      anti_triggers:
+        - request belongs to brief_building
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - article_planning
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - outline_structure
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - outline_structure_draft
+        - quality_summary
+      body_token_estimate: 1890
+      resource_token_estimate: 0
+      eval_manifest: skills/outline_structure/eval-manifest.yaml
+      resource_manifest: skills/outline_structure/resource-manifest.yaml
+      checksum: sha256:343dfe2f75ced71988e5e266d0f122a08e25f2b1cd221d80c6b49fda29b40b37
+    - skill_id: post_write_checklist
+      name: post-write-checklist
+      directory: skills/post_write_checklist
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: A 12-point quality checklist to run after completing all article sections. Covers structure, text walls, H3 usage, link counts, redundancy, completeness, tables, quotes, formatting variety, em dashes, duplicate headings, and SEO suggestions. Use immediately after finishing any article or long-form content piece. Do NOT use before the draft is complete, for content planning, or for research.
+      anti_triggers:
+        - request belongs to anti_redundancy
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - post_write_checklist
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - post_write_checklist_report
+      body_token_estimate: 1564
+      resource_token_estimate: 0
+      eval_manifest: skills/post_write_checklist/eval-manifest.yaml
+      resource_manifest: skills/post_write_checklist/resource-manifest.yaml
+      checksum: sha256:13c903c4d0fddb8dd1c1eb8762dd0b436d73ca700a4c2c14fc3571867173ba86
+    - skill_id: research
+      name: research
+      directory: skills/research
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Researches competitor coverage, current news, first-party site overlap, and supporting sources for content. Use when a topic needs evidence, freshness, source URLs, or cannibalization checks. Do NOT use for drafting, editing, or direct publishing.
+      anti_triggers:
+        - request belongs to sources_intelligence
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - content_research
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - research
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - research_report
+      body_token_estimate: 1676
+      resource_token_estimate: 0
+      eval_manifest: skills/research/eval-manifest.yaml
+      resource_manifest: skills/research/resource-manifest.yaml
+      checksum: sha256:5f06ca2fa715b5dd6b7128cdacdd2756247f61094c97f35ec6c44291a6aceb14
+    - skill_id: robots_txt_generation
+      name: robots-txt-generation
+      directory: skills/robots_txt_generation
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Generates or reviews robots.txt rules for search and AI crawlers using verified public-path and access requirements. Use when the user wants crawler-access guidance or a robots.txt file. Do NOT use for sitemaps, llms.txt, authentication, or blocking private data by itself.
+      anti_triggers:
+        - request belongs to sitemap_generation
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - robots_txt_generation
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - robots_txt_generation_draft
+        - quality_summary
+      body_token_estimate: 1478
+      resource_token_estimate: 0
+      eval_manifest: skills/robots_txt_generation/eval-manifest.yaml
+      resource_manifest: skills/robots_txt_generation/resource-manifest.yaml
+      checksum: sha256:1e1809f9c5c7d057d2216fb52d38e62eba97df85b942a81a8f2ec0dd632bfc1d
+    - skill_id: schema_generation
+      name: schema-generation
+      directory: skills/schema_generation
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Generates page-appropriate JSON-LD from verified content and business facts. Use when the user requests schema markup, rich-result support, or structured data for a known page. Do NOT use when required facts are missing, for crawler directives, or for unsupported schema types.
+      anti_triggers:
+        - request belongs to meta_optimization
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - schema_generation
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - schema_generation_draft
+        - quality_summary
+      body_token_estimate: 1484
+      resource_token_estimate: 0
+      eval_manifest: skills/schema_generation/eval-manifest.yaml
+      resource_manifest: skills/schema_generation/resource-manifest.yaml
+      checksum: sha256:5eef56c12f124e49e179c3dea9bac51ff35ed21189cc95dfc3fc607e2da7b81d
+    - skill_id: seo_outputs
+      name: seo-outputs
+      directory: skills/seo_outputs
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: 'Generates all SEO output fields after article writing: meta title, meta description, slug, OG tags, FAQs, schema markup, internal link suggestions, and social variants. Use after completing any article to produce the full SEO package. Do NOT use before article content exists, for full drafting, or for technical site audits.'
+      anti_triggers:
+        - request belongs to content_seo_settings
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - seo_outputs
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - seo_outputs_draft
+        - quality_summary
+      body_token_estimate: 1366
+      resource_token_estimate: 0
+      eval_manifest: skills/seo_outputs/eval-manifest.yaml
+      resource_manifest: skills/seo_outputs/resource-manifest.yaml
+      checksum: sha256:cfd490f72f8aa9213bf4607f4d968f7e9dfdf801c305b955971fac1c4014d4e5
+    - skill_id: seo_search_intent
+      name: seo-search-intent
+      directory: skills/seo_search_intent
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Guidelines for SEO search intent alignment, AEO optimization, evidence density, readability craft, UGC intelligence, and self-contained section structure. Use when writing or optimizing any content for search engines or AI answer systems. Do NOT use for technical crawling, analytics reporting, or writing unrelated to search.
+      anti_triggers:
+        - request belongs to keyword_research
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - seo_search_intent
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - seo_search_intent_report
+      body_token_estimate: 1354
+      resource_token_estimate: 0
+      eval_manifest: skills/seo_search_intent/eval-manifest.yaml
+      resource_manifest: skills/seo_search_intent/resource-manifest.yaml
+      checksum: sha256:06c9b71975445f5e0bb334b24006bc15c764c3412e3d1d1bc19fc312ce704f4a
+    - skill_id: serp_analysis
+      name: serp-analysis
+      directory: skills/serp_analysis
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Analyzes a target search results page for intent, dominant formats, competitors, features, gaps, and ranking requirements. Use when the user wants to understand what ranks or how to compete for a query. Do NOT use for broad keyword discovery, page drafting, or unsupported live-SERP claims.
+      anti_triggers:
+        - request belongs to keyword_research
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - content_research
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - serp_analysis
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - serp_analysis_report
+      body_token_estimate: 2018
+      resource_token_estimate: 0
+      eval_manifest: skills/serp_analysis/eval-manifest.yaml
+      resource_manifest: skills/serp_analysis/resource-manifest.yaml
+      checksum: sha256:072f9ae40b23889cefcc8dc4ed756dc149434b06d500e464593a98546f2e3f84
+    - skill_id: site_audit_interpretation
+      name: site-audit-interpretation
+      directory: skills/site_audit_interpretation
+      status: experimental
+      version: 1.0.0
+      owner_team: audit_platform
+      tier: read
+      risk_class: low
+      description: Interprets site-audit findings into prioritized, evidence-based fixes by severity, scope, ownership, and business impact. Use when the user has crawl or audit data and needs an action plan. Do NOT use for running crawls, editing the site, or generic SEO advice without findings.
+      anti_triggers:
+        - request belongs to core_web_vitals_optimization
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - seo_aeo_auditor
+      compatible_intents:
+        - site_audit
+      allowed_modes:
+        - audit
+        - read
+      capability_tags:
+        - site_audit_interpretation
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - site_audit_interpretation_report
+      body_token_estimate: 1892
+      resource_token_estimate: 0
+      eval_manifest: skills/site_audit_interpretation/eval-manifest.yaml
+      resource_manifest: skills/site_audit_interpretation/resource-manifest.yaml
+      checksum: sha256:052bc7d68f9328a751641589cc75c0740e33ec7e40a8e9a1568845db285f07b3
+    - skill_id: sitemap_generation
+      name: sitemap-generation
+      directory: skills/sitemap_generation
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Generates or reviews an XML sitemap from verified canonical, indexable public URLs and sitemap limits. Use when the user requests sitemap creation, cleanup, splitting, or validation. Do NOT use for robots.txt, llms.txt, redirects, or inventing URLs.
+      anti_triggers:
+        - request belongs to robots_txt_generation
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - sitemap_generation
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - sitemap_generation_draft
+        - quality_summary
+      body_token_estimate: 1428
+      resource_token_estimate: 0
+      eval_manifest: skills/sitemap_generation/eval-manifest.yaml
+      resource_manifest: skills/sitemap_generation/resource-manifest.yaml
+      checksum: sha256:8f8f6d6e86c269a426262e57383fb51e642e4b956b11d38b323c533adafdf243
+    - skill_id: sources_intelligence
+      name: sources-intelligence
+      directory: skills/sources_intelligence
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Use at the start of every content session to pull citation intelligence before writing or planning. Covers when to call getSourcesInsights, competitor domain blocklist rules, outbound link strategy, and how to conversationally surface content type suggestions. Trigger before asking questions or writing any content — this data shapes format suggestions, link targets, and competitor avoidance. Do NOT use for direct drafting, connector execution, or exposing source inventories.
+      anti_triggers:
+        - request belongs to research
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - content_research
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - sources_intelligence
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - sources_intelligence_report
+      body_token_estimate: 1702
+      resource_token_estimate: 0
+      eval_manifest: skills/sources_intelligence/eval-manifest.yaml
+      resource_manifest: skills/sources_intelligence/resource-manifest.yaml
+      checksum: sha256:2bedc54fdbdf5bd0e7f57cbc7f622f0ff8c22a792217df460bdbaf8bc258932e
+    - skill_id: strategic_intelligence
+      name: strategic-intelligence
+      directory: skills/strategic_intelligence
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Use when suggesting topics, choosing angles, or evaluating what to write next. Covers the gap map mindset, how to find gaps with available tools, four types of content opportunities (competitive, timing, depth, audience), and how to present opportunities strategically. Trigger for topic selection, content planning, angle choice, and any decision about what to publish or how to differentiate it. Do NOT use for full drafting, technical audits, or metadata-only tasks.
+      anti_triggers:
+        - request belongs to content_strategy
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - seo_planning
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - strategic_intelligence
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - strategic_intelligence_report
+      body_token_estimate: 1236
+      resource_token_estimate: 0
+      eval_manifest: skills/strategic_intelligence/eval-manifest.yaml
+      resource_manifest: skills/strategic_intelligence/resource-manifest.yaml
+      checksum: sha256:c06dc069d6dd883378bf1d38edae46dcb71eb97dd8bfa7aa337b74c640652bbf
+    - skill_id: title_generation
+      name: title-generation
+      directory: skills/title_generation
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Generates specific, differentiated titles by combining surface, emotional, and business intent. Use when a topic and angle are known and a content title is needed. Do NOT use for outlines, full drafts, metadata, or unrelated naming tasks.
+      anti_triggers:
+        - request belongs to meta_optimization
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - optimize_content
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - title_generation
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - title_generation_draft
+        - quality_summary
+      body_token_estimate: 1680
+      resource_token_estimate: 0
+      eval_manifest: skills/title_generation/eval-manifest.yaml
+      resource_manifest: skills/title_generation/resource-manifest.yaml
+      checksum: sha256:c3f652a4b2758783b1a8885198579fc44c61fb0cd41da3f6e7d08102efe99536
+    - skill_id: topic_discovery
+      name: topic-discovery
+      directory: skills/topic_discovery
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: read
+      risk_class: low
+      description: Finds strategic content topics by examining brand context, competitor coverage, industry news, content gaps, and site overlap. Use when the user needs topic options or angles before a brief exists. Do NOT use for drafting, editing, or publishing content.
+      anti_triggers:
+        - request belongs to content_ideas
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_collaborator
+      compatible_intents:
+        - topic_discovery
+      allowed_modes:
+        - plan
+        - read
+      capability_tags:
+        - topic_discovery
+      declared_action_classes:
+        - read_brand_context
+        - read_source_intelligence
+      output_contracts:
+        - topic_discovery_report
+      body_token_estimate: 1776
+      resource_token_estimate: 0
+      eval_manifest: skills/topic_discovery/eval-manifest.yaml
+      resource_manifest: skills/topic_discovery/resource-manifest.yaml
+      checksum: sha256:9d9adf33122b121d7037615fff392cadb7121f76f27642d855ae0f18b40c93d5
+    - skill_id: writing
+      name: writing
+      directory: skills/writing
+      status: experimental
+      version: 1.0.0
+      owner_team: content_platform
+      tier: draft
+      risk_class: medium
+      description: Guidelines for editorial voice, evidence depth, word count tracking, and anti-redundancy in article and blog post writing. Use when writing any article, blog post, or long-form content piece — even if the user doesn't say "skill" or mention structure explicitly. Do NOT use for research-only tasks, metadata-only work, or short coordination messages.
+      anti_triggers:
+        - request belongs to content_craft
+        - request asks for direct publishing or unapproved mutation
+      compatible_profiles:
+        - content_execution_guard
+      compatible_intents:
+        - draft_article
+      allowed_modes:
+        - write
+        - edit
+        - optimize
+      capability_tags:
+        - writing
+      declared_action_classes:
+        - read_brand_context
+        - canvas_write
+      output_contracts:
+        - writing_draft
+        - quality_summary
+      body_token_estimate: 2136
+      resource_token_estimate: 0
+      eval_manifest: skills/writing/eval-manifest.yaml
+      resource_manifest: skills/writing/resource-manifest.yaml
+      checksum: sha256:b76b60504e56976c94bd959de4acc43a3073127090b46dc7953d34aaf88715d0

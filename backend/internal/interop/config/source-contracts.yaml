@@ -1,1 +1,27 @@
 version: 2
+policy_mode: fail_closed
+
+contracts:
+  - contract_id: public_site_metadata_v1
+    connector_id: public_site_metadata
+    version: 1.0.0
+    input_fields:
+      - target_url
+      - max_bytes
+    output_fields:
+      - title
+      - description
+      - icon_url
+      - category
+      - candidate_competitors
+    forbidden_output_fields:
+      - raw_page_body
+      - cookies
+      - authorization
+      - request_headers
+    required_provenance_fields:
+      - source_id
+      - retrieved_at
+      - payload_hash
+    max_records: 1
+    max_string_chars: 4000

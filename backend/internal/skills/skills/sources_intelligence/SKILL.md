@@ -1,7 +1,31 @@
 ---
 name: sources-intelligence
-description: |
-  Use at the start of every content session to pull citation intelligence before writing or planning. Covers when to call getSourcesInsights, competitor domain blocklist rules, outbound link strategy, and how to conversationally surface content type suggestions. Trigger before asking questions or writing any content — this data shapes format suggestions, link targets, and competitor avoidance. Do NOT use for direct drafting, connector execution, or exposing source inventories.
+description: Use at the start of every content session to pull citation intelligence before writing or planning. Covers when to call getSourcesInsights, competitor domain blocklist rules, outbound link strategy, and how to conversationally surface content type suggestions. Trigger before asking questions or writing any content — this data shapes format suggestions, link targets, and competitor avoidance. Do NOT use for direct drafting, connector execution, or exposing source inventories.
+version: 1.0.0
+owner_team: content_platform
+tier: read
+risk_class: low
+compatible_profiles:
+    - content_collaborator
+compatible_intents:
+    - content_research
+allowed_modes:
+    - plan
+    - read
+capability_tags:
+    - sources_intelligence
+declared_action_classes:
+    - read_brand_context
+    - read_source_intelligence
+output_contracts:
+    - sources_intelligence_report
+token_budget:
+    body_max_tokens: 3000
+    references_max_tokens: 0
+    assets_max_tokens: 0
+    total_active_max_tokens: 3000
+resource_manifest: resource-manifest.yaml
+eval_manifest: eval-manifest.yaml
 ---
 
 # Sources Intelligence
@@ -53,3 +77,59 @@ After calling getSourcesInsights, you have the exact list of competitor domains.
 
 - Only mention this when the user hasn't already picked a specific format or topic. If they said "let's write a comparison post", don't repeat the data back at them. You can briefly affirm: "Good pick, that format is doing well right now."
 - If they already have a topic AND format, skip the suggestion entirely and move on.
+
+## Purpose
+
+Provide procedural guidance to assess source authority, recency, conflicts, and citation suitability.
+
+## When to use
+
+- Use when the authorized intent is `content_research` and the request is to assess source authority, recency, conflicts, and citation suitability.
+
+## When NOT to use
+
+- Do not use when the request belongs to `research`.
+- Do not use for direct publishing, policy bypass, or unapproved mutation.
+
+## Inputs expected
+
+- Sanitized project context
+- Authorized intent and mode
+- Evidence references or approved source summaries when required
+
+## Procedure
+
+Follow the skill-specific instructions above in order. Stop when required context, evidence, mode, or approval is absent.
+
+## Output contract
+
+- `sources_intelligence_report`
+
+## Quality gates
+
+- Keep claims tied to supplied evidence.
+- Separate facts, inferences, and recommendations.
+- Reject protected metadata and unsupported certainty.
+- Confirm the output matches the declared contract.
+
+## Boundary rules
+
+This skill provides procedural guidance only.
+
+It must not:
+- classify raw user intent
+- choose workflows or agents
+- authorize or execute tools or scripts
+- connect to MCP servers or external APIs
+- read or write memory documents directly
+- mutate canvas, brief, chat, dashboard, or UI state
+- store telemetry or score evaluations
+- expose internal identifiers, endpoints, traces, credentials, or protected metadata
+
+## Resources
+
+No runtime references, assets, or scripts are declared for this version.
+
+## Failure behavior
+
+Fail closed and return a safe request for the missing context, evidence, mode, or approval. Never fabricate data or silently broaden scope.

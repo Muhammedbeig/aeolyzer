@@ -1,9 +1,9 @@
 package tests
 
 import (
-	"testing"
 	"aeolyzer/internal/intake/contracts"
 	"aeolyzer/internal/intake/middleware"
+	"testing"
 )
 
 func TestValidateModeForIntent(t *testing.T) {

@@ -50,7 +50,7 @@ func BuildDashboardFrame(intent DashboardIntent) (DashboardFrame, error) {
 		SchemaVersion: "1.0",
 		Surface:       "audit_dashboard",
 		// Normalize timestamp to UTC to avoid cross-timezone clock skew anomalies in client rendering.
-		GeneratedAt:   intent.GeneratedAt.UTC(),
+		GeneratedAt: intent.GeneratedAt.UTC(),
 		Project: DashboardProject{
 			BrandName: intent.Profile.BrandName,
 			Domain:    intent.Profile.Domain,

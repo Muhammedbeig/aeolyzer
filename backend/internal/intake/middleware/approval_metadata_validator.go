@@ -12,20 +12,20 @@ var (
 	ErrApprovalRequired            = errors.New("APPROVAL_REQUIRED")
 	ErrDeepResearchApprovalMissing = errors.New("DEEP_RESEARCH_APPROVAL_MISSING")
 	ErrMemoryApprovalMissing       = errors.New("MEMORY_APPROVAL_MISSING")
-	// Thrown when an edit tool is invoked without a cryptographic signature matching 
+	// Thrown when an edit tool is invoked without a cryptographic signature matching
 	// the active canvas selection.
-	ErrCanvasApprovalMissing       = errors.New("CANVAS_APPROVAL_MISSING")
+	ErrCanvasApprovalMissing = errors.New("CANVAS_APPROVAL_MISSING")
 )
 
 // Validates that the provided JIT approval strictly matches the proposed execution context.
-// Rejects approvals derived solely from conversational context to prevent Confused Deputy exploits 
+// Rejects approvals derived solely from conversational context to prevent Confused Deputy exploits
 // where the agent hallucinates consent based on fuzzy phrasing.
 func ValidateApprovalMetadata(action contracts.ApprovedAction, expected contracts.ApprovalExpectation) error {
 	if action.ApprovalFor != expected.ApprovalFor {
 		return ErrApprovalRequired
 	}
-	
-	// Prevents "It Works, Ship It" failure modes where the user absent-mindedly agrees 
+
+	// Prevents "It Works, Ship It" failure modes where the user absent-mindedly agrees
 	// to a complex generated plan. Require explicit UI/hardware assertion.
 	if action.Source == "free_text" {
 		return RejectFreeTextApproval("free_text")
@@ -40,7 +40,7 @@ func ValidateApprovalForTool(intent contracts.Intent, actionClass string, approv
 	case "deep_research":
 		return validateSpecificApproval(approvals, "deep_research", ErrDeepResearchApprovalMissing)
 	case "propose_memory_update":
-		// Prevents cross-tenant vector poisoning by ensuring long-term memory updates 
+		// Prevents cross-tenant vector poisoning by ensuring long-term memory updates
 		// explicitly cleared user elicitation.
 		return validateSpecificApproval(approvals, "memory_update", ErrMemoryApprovalMissing)
 	case "canvas_edit":
@@ -48,7 +48,7 @@ func ValidateApprovalForTool(intent contracts.Intent, actionClass string, approv
 	case "update_brief":
 		return validateSpecificApproval(approvals, "brief_overwrite", ErrApprovalRequired)
 	}
-	
+
 	// Lower-risk tools bypass the approval gate implicitly.
 	return nil
 }

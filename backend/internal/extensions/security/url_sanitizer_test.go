@@ -1,8 +1,8 @@
 package security_test
 
 import (
-	"testing"
 	"aeolyzer/internal/extensions/security"
+	"testing"
 )
 
 func TestURLSanitization(t *testing.T) {

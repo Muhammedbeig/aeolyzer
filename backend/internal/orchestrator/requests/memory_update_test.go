@@ -1,9 +1,9 @@
 package requests_test
 
 import (
-	"testing"
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/orchestrator/requests"
+	"testing"
 )
 
 // TestMemoryUpdateRequiresApproval verifies the hard stop against silent memory mutation.
@@ -14,7 +14,7 @@ func TestMemoryUpdateRequiresApproval(t *testing.T) {
 		Intent:          "update_memory",
 		ApprovedActions: []string{}, // Missing "memoryUpdate" explicit approval
 	}
-	
+
 	err := requests.ValidateApprovalResult(decision, "memoryUpdate")
 	if err == nil {
 		t.Fatal("expected ErrMemoryApprovalMissing but got nil")
@@ -31,7 +31,7 @@ func TestDeepResearchRequiresApproval(t *testing.T) {
 		Intent:          "content_research",
 		ApprovedActions: []string{"someOtherAction"},
 	}
-	
+
 	err := requests.ValidateApprovalResult(decision, "deepResearch")
 	if err == nil {
 		t.Fatal("expected ErrDeepResearchApprovalMissing but got nil")

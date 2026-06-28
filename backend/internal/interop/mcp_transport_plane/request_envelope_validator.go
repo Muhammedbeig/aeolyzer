@@ -1,8 +1,8 @@
 package mcp_transport_plane
 
 import (
-	"errors"
 	"aeolyzer/internal/interop"
+	"errors"
 )
 
 var ErrMissingContext = errors.New("MISSING_REQUIRED_CONTEXT")

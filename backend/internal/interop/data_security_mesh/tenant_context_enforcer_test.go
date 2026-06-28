@@ -1,8 +1,8 @@
 package data_security_mesh_test
 
 import (
-	"testing"
 	"aeolyzer/internal/interop/data_security_mesh"
+	"testing"
 )
 
 func TestEnforceTenantBoundary(t *testing.T) {

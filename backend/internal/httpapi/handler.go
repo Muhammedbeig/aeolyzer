@@ -8,11 +8,11 @@ import (
 	"strings"
 	"time"
 
-	"aeolyzer/internal/intake"
-	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/extensions"
-	"aeolyzer/internal/runtime"
+	"aeolyzer/internal/intake"
 	"aeolyzer/internal/observability"
+	"aeolyzer/internal/orchestrator"
+	"aeolyzer/internal/runtime"
 )
 
 const maxRequestBytes = 64 << 10 // BOUNDS: Hard limit payload memory allocation to mitigate DoS vectors.
@@ -36,11 +36,11 @@ func NewHandler(
 	allowedOrigin string,
 ) *Handler {
 	return &Handler{
-		intake:        intakeService,
-		orchestrator:  orchestrator,
-		executor:      executor,
-		events:        events,
-		logger:        loggerOrDefault(logger),
+		intake:       intakeService,
+		orchestrator: orchestrator,
+		executor:     executor,
+		events:       events,
+		logger:       loggerOrDefault(logger),
 		// INVARIANT: Normalize origin path to strip trailing slashes, neutralizing basic spoofing attacks.
 		allowedOrigin: strings.TrimRight(allowedOrigin, "/"),
 		now:           time.Now,

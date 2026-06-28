@@ -1,8 +1,8 @@
 package skills_test
 
 import (
-	"testing"
 	"aeolyzer/internal/skills"
+	"testing"
 )
 
 // TestActivationCompatibility verifies that Layer 3 cannot coerce Layer 4 into serving
@@ -20,7 +20,7 @@ func TestActivationCompatibility(t *testing.T) {
 	}
 }
 
-// TestNoExecutionBoundary ensures Layer 4 strictly functions as procedural memory 
+// TestNoExecutionBoundary ensures Layer 4 strictly functions as procedural memory
 // and never executes the scripts it manages.
 func TestNoExecutionBoundary(t *testing.T) {
 	// A script handle is returned, but execution is structurally impossible within this layer.

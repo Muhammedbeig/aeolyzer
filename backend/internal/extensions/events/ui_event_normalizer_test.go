@@ -1,9 +1,9 @@
 package events_test
 
 import (
+	"aeolyzer/internal/extensions/events"
 	"testing"
 	"time"
-	"aeolyzer/internal/extensions/events"
 )
 
 func TestStaleEventRejection(t *testing.T) {

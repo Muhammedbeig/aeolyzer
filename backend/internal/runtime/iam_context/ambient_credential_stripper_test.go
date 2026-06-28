@@ -1,8 +1,8 @@
 package iam_context_test
 
 import (
-	"testing"
 	"aeolyzer/internal/runtime/iam_context"
+	"testing"
 )
 
 func TestAmbientCredentialStripping(t *testing.T) {

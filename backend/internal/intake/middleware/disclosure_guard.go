@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"strings"
 	"aeolyzer/internal/intake/contracts"
+	"strings"
 )
 
 func CheckForProtectedDisclosure(input contracts.SanitizedInput) contracts.DisclosureStatus {

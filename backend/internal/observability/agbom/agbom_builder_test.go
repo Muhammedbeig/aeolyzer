@@ -1,8 +1,8 @@
 package agbom_test
 
 import (
-	"testing"
 	"aeolyzer/internal/observability/agbom"
+	"testing"
 )
 
 func TestBuildAgBOM(t *testing.T) {

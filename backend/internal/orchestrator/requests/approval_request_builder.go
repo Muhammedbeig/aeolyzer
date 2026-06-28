@@ -1,8 +1,8 @@
 package requests
 
 import (
-	"errors"
 	"aeolyzer/internal/orchestrator"
+	"errors"
 )
 
 var (

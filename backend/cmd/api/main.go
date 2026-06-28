@@ -14,10 +14,10 @@ import (
 
 	"aeolyzer/internal/httpapi"
 	"aeolyzer/internal/intake"
-	"aeolyzer/internal/orchestrator"
-	"aeolyzer/internal/runtime"
 	"aeolyzer/internal/interop"
 	"aeolyzer/internal/observability"
+	"aeolyzer/internal/orchestrator"
+	"aeolyzer/internal/runtime"
 )
 
 func main() {
@@ -45,8 +45,8 @@ func main() {
 	)
 
 	server := &http.Server{
-		Addr:              address,
-		Handler:           handler.Routes(),
+		Addr:    address,
+		Handler: handler.Routes(),
 		// Aggressive connection timeouts mitigate Slowloris attacks and socket descriptor exhaustion.
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,

@@ -24,7 +24,7 @@ func TestSinkRemainsBoundedUnderConcurrentWrites(t *testing.T) {
 				EventType: "test",
 				Outcome:   "succeeded",
 				// Deterministic timestamp injection to avoid flakey state behavior.
-				At:        time.Unix(int64(index), 0),
+				At: time.Unix(int64(index), 0),
 			})
 		}(index)
 	}

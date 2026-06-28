@@ -1,7 +1,7 @@
 package extensions
 
 // PresentationIntent represents a sanitized outcome from Layer 3 that is ready for display.
-// Structural separation guarantees Layer 5 does not execute the actual business logic; 
+// Structural separation guarantees Layer 5 does not execute the actual business logic;
 // it merely maps state into declarative UI frames.
 type PresentationIntent struct {
 	TraceID          string                 `json:"trace_id"`
@@ -18,20 +18,20 @@ type PresentationIntent struct {
 	Metadata         map[string]string      `json:"metadata,omitempty"`
 }
 
-// A2UIFrame is a strictly typed declarative UI model passed to the client. 
+// A2UIFrame is a strictly typed declarative UI model passed to the client.
 // Executable boundaries: No javascript, HTML, or CSS is allowed here.
 type A2UIFrame struct {
-	FrameID        string            `json:"frame_id"`
-	TraceID        string            `json:"trace_id,omitempty"`
-	Surface        string            `json:"surface"`
-	CatalogID      string            `json:"catalog_id"`
-	CatalogVersion string            `json:"catalog_version"`
-	SchemaVersion  string            `json:"schema_version"`
-	RootID         string            `json:"root_id"`
-	Nodes          []A2UINode        `json:"nodes"`
-	FallbackText   string            `json:"fallback_text,omitempty"`
-	ExpiresAt      string            `json:"expires_at,omitempty"`
-	Signature      string            `json:"signature"`
+	FrameID        string     `json:"frame_id"`
+	TraceID        string     `json:"trace_id,omitempty"`
+	Surface        string     `json:"surface"`
+	CatalogID      string     `json:"catalog_id"`
+	CatalogVersion string     `json:"catalog_version"`
+	SchemaVersion  string     `json:"schema_version"`
+	RootID         string     `json:"root_id"`
+	Nodes          []A2UINode `json:"nodes"`
+	FallbackText   string     `json:"fallback_text,omitempty"`
+	ExpiresAt      string     `json:"expires_at,omitempty"`
+	Signature      string     `json:"signature"`
 }
 
 type A2UINode struct {

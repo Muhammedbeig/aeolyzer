@@ -1,8 +1,8 @@
 package state
 
 import (
-	"errors"
 	"aeolyzer/internal/orchestrator"
+	"errors"
 )
 
 var (
@@ -10,7 +10,7 @@ var (
 )
 
 // ValidateBriefRequiredFields verifies that the sanitized payload contains essential planning signals.
-// By strictly matching keys, we eliminate the risk of executing partial content generation 
+// By strictly matching keys, we eliminate the risk of executing partial content generation
 // that leads to hallucinatory interpolation by downstream LLMs.
 func ValidateBriefRequiredFields(ctx map[string]string, required []string) error {
 	for _, req := range required {
@@ -22,7 +22,7 @@ func ValidateBriefRequiredFields(ctx map[string]string, required []string) error
 }
 
 // BuildBriefUpdateProposal packages incremental brief modifications into a safe request.
-// Layer 3 never directly accesses the filesystem to write brief files. It merely requests 
+// Layer 3 never directly accesses the filesystem to write brief files. It merely requests
 // that the Layer 6 execution environment perform the state mutation.
 func BuildBriefUpdateProposal(plan orchestrator.DAGPlan, task orchestrator.TaskNode, fields map[string]string) (orchestrator.ProposedToolRequest, error) {
 	payload := make(map[string]interface{})
@@ -37,7 +37,7 @@ func BuildBriefUpdateProposal(plan orchestrator.DAGPlan, task orchestrator.TaskN
 }
 
 // ValidateNoBriefOverwrite prevents destructive modifications to already-approved strategic boundaries.
-// By checking against locked keys, we protect against prompt-injection attacks aiming to quietly pivot 
+// By checking against locked keys, we protect against prompt-injection attacks aiming to quietly pivot
 // the topic or brand constraints mid-workflow.
 func ValidateNoBriefOverwrite(fields map[string]string, existingKeys []string) error {
 	existingMap := make(map[string]bool)

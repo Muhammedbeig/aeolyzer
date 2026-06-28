@@ -1,9 +1,9 @@
 package tests
 
 import (
+	"aeolyzer/internal/intake/middleware"
 	"strings"
 	"testing"
-	"aeolyzer/internal/intake/middleware"
 )
 
 func TestSelectedTextValidation(t *testing.T) {

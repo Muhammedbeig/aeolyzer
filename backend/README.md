@@ -1,6 +1,8 @@
 # AEOlyzer backend
 
-This module contains the first production vertical slice for guest onboarding:
+This module contains the first production vertical slice for guest onboarding.
+It is not yet the complete production backend described by the layer specs or
+the whitepapers:
 
 ```text
 Layer 2 validates and authorizes
@@ -49,3 +51,18 @@ go test ./...
 go vet ./...
 go test -race ./...
 ```
+
+## Production readiness gate
+
+Do not infer production readiness from a successful compile or unit-test run.
+The repository contains a fail-closed evidence gate for the schemas, policies,
+skill evaluations, and executable controls required by the current specs:
+
+```powershell
+go run ./cmd/readiness -root .
+```
+
+The command exits with status 1 while any production blocker remains. A release
+must not be described or deployed as production-ready until this gate reports
+`production readiness: PASS` and the infrastructure, security, canary, and human
+review attestations required by the specs have also completed.

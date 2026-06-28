@@ -1,8 +1,8 @@
 package handoff_test
 
 import (
-	"testing"
 	"aeolyzer/internal/orchestrator/handoff"
+	"testing"
 )
 
 // TestValidateSurfaceHint ensures that orchestrator handoffs rigidly conform

@@ -17,7 +17,7 @@ type Sink struct {
 	mu     sync.Mutex
 	events []Event
 	// Strict bound to prevent memory exhaustion (OOM) during event spikes.
-	limit  int
+	limit int
 }
 
 func NewSink(limit int) *Sink {

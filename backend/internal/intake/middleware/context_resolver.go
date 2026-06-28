@@ -1,7 +1,5 @@
 package middleware
 
-
-
 func ResolveContext(raw map[string]interface{}) map[string]string {
 	return ExtractSanitizedContext(raw)
 }

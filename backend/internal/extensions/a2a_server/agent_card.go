@@ -10,7 +10,7 @@ type AgentCard struct {
 }
 
 // ValidateAgentCard guarantees that internal mechanisms (like DAGs or specific skills)
-// are masked from the public A2A endpoint. 
+// are masked from the public A2A endpoint.
 // This acts as an API gateway firewall against topology disclosure.
 func ValidateAgentCard(card AgentCard) error {
 	for _, cap := range card.PublicCapabilities {

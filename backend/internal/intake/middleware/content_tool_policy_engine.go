@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	ErrToolNotAllowed    = errors.New("TOOL_NOT_ALLOWED")
+	ErrToolNotAllowed = errors.New("TOOL_NOT_ALLOWED")
 	// Thrown when an output path attempts directory traversal or absolute pathing.
 	// Used to prevent accidental overwriting of host configuration or secrets via
 	// dynamically generated tool parameters.
@@ -49,7 +49,7 @@ func ClassifyActionClass(toolName string, params map[string]interface{}) (string
 	case "seoUpdate":
 		return "seo_support_update", nil
 	default:
-		// Default-deny for unknown tools. Prevents newly added un-audited tools 
+		// Default-deny for unknown tools. Prevents newly added un-audited tools
 		// from running without explicit policy mappings.
 		return "", ErrToolNotAllowed
 	}
@@ -63,7 +63,7 @@ func ValidateContentToolPolicy(req contracts.ProposedToolRequest, decision contr
 	if err != nil {
 		return err
 	}
-	
+
 	if err := ValidateApprovalForTool(decision.Intent, class, decision.ApprovedActions); err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func ValidateContentToolPolicy(req contracts.ProposedToolRequest, decision contr
 // preventing speculative plans from persisting side effects.
 func ValidateContentSurfaceMutation(req contracts.ProposedToolRequest, decision contracts.IntakeDecision) error {
 	class, _ := ClassifyActionClass(req.ToolName, req.Params)
-	
+
 	if class == "canvas_write" && decision.Mode != contracts.ModeWrite {
 		return ErrWriteModeRequired
 	}

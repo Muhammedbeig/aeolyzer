@@ -1,8 +1,8 @@
 package state
 
 import (
-	"errors"
 	"aeolyzer/internal/orchestrator"
+	"errors"
 )
 
 var (
@@ -12,8 +12,8 @@ var (
 )
 
 // ValidateCanvasWriteMode acts as the primary firewall for content execution.
-// If Layer 2 has not explicitly flagged the intent as 'write', all canvas mutation 
-// nodes fail closed immediately. This protects against hallucinatory planning agents 
+// If Layer 2 has not explicitly flagged the intent as 'write', all canvas mutation
+// nodes fail closed immediately. This protects against hallucinatory planning agents
 // generating unauthorized drafts.
 func ValidateCanvasWriteMode(decision orchestrator.IntakeDecision) error {
 	if decision.Mode != string(orchestrator.ModeWrite) {
@@ -40,10 +40,10 @@ func BuildCanvasChangeProposal(plan orchestrator.DAGPlan, task orchestrator.Task
 	for k, v := range change.Inputs {
 		payload[k] = v
 	}
-	
+
 	// Enforce that we only write to the targeted surface layer requested
 	payload["target_surface"] = change.SurfaceHint
-	
+
 	return orchestrator.ProposedToolRequest{
 		TaskID:  task.ID,
 		Tool:    "writeCanvas", // Translates to the internal capability binding later

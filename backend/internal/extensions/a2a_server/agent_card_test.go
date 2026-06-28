@@ -1,8 +1,8 @@
 package a2a_server_test
 
 import (
-	"testing"
 	"aeolyzer/internal/extensions/a2a_server"
+	"testing"
 )
 
 func TestAgentCardDisclosure(t *testing.T) {

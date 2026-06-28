@@ -1,15 +1,15 @@
 package tests
 
 import (
-	"testing"
-	"time"
 	"aeolyzer/internal/intake/contracts"
 	"aeolyzer/internal/intake/middleware"
+	"testing"
+	"time"
 )
 
 func TestApprovalValidation(t *testing.T) {
 	now := time.Now()
-	
+
 	tests := []struct {
 		name        string
 		intent      contracts.Intent

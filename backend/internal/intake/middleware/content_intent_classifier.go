@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	ErrUnknownIntent       = errors.New("UNKNOWN_INTENT")
-	// Emitted when intent probabilities fall below threshold. Used to trigger 
+	ErrUnknownIntent = errors.New("UNKNOWN_INTENT")
+	// Emitted when intent probabilities fall below threshold. Used to trigger
 	// deterministic disambiguation flows rather than guessing intent.
 	ErrLowConfidenceIntent = errors.New("LOW_CONFIDENCE_INTENT")
 	// Blocks probes designed to exfiltrate internal system boundaries.
@@ -20,8 +20,8 @@ var (
 // Eliminates the risk of orchestrating on hallucinated or adversarial workflow identifiers.
 func ClassifyContentIntent(input contracts.SanitizedInput) (contracts.Intent, float64, error) {
 	text := strings.ToLower(input.RawText)
-	
-	// Fast-path heuristic classification. 
+
+	// Fast-path heuristic classification.
 	// Production path should swap this for a small, fast classifier model (e.g. fast-text).
 	if strings.Contains(text, "find topic ideas") {
 		return contracts.IntentTopicDiscovery, 0.9, nil
@@ -53,7 +53,7 @@ func ClassifyContentIntent(input contracts.SanitizedInput) (contracts.Intent, fl
 	return contracts.IntentFallbackClarification, 0.4, ErrLowConfidenceIntent
 }
 
-// Optimization: used to quickly branch logic between content-generation pipelines 
+// Optimization: used to quickly branch logic between content-generation pipelines
 // and raw technical SEO diagnostics without pulling in the full enum schema.
 func IsContentIntent(intent contracts.Intent) bool {
 	switch intent {

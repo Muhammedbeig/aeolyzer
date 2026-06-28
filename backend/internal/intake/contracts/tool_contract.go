@@ -1,10 +1,10 @@
 package contracts
 
 type ProposedToolRequest struct {
-	TraceID   string                 `json:"trace_id"`
-	TaskID    string                 `json:"task_id"`
-	ToolName  string                 `json:"tool_name"`
-	Params    map[string]interface{} `json:"params"`
+	TraceID  string                 `json:"trace_id"`
+	TaskID   string                 `json:"task_id"`
+	ToolName string                 `json:"tool_name"`
+	Params   map[string]interface{} `json:"params"`
 }
 
 type AuthorizedToolRequest struct {

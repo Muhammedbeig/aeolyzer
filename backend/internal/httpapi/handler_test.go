@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"aeolyzer/internal/intake"
+	"aeolyzer/internal/observability"
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/runtime"
-	"aeolyzer/internal/observability"
 )
 
 type testResolver struct{}

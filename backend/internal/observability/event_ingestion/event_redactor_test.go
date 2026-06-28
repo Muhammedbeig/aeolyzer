@@ -1,9 +1,9 @@
 package event_ingestion_test
 
 import (
-	"testing"
-	"strings"
 	"aeolyzer/internal/observability/event_ingestion"
+	"strings"
+	"testing"
 )
 
 func TestEventRedaction(t *testing.T) {

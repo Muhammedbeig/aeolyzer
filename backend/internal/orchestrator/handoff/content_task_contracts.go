@@ -1,8 +1,8 @@
 package handoff
 
 import (
-	"errors"
 	"aeolyzer/internal/orchestrator"
+	"errors"
 )
 
 var (
@@ -11,7 +11,7 @@ var (
 )
 
 // BuildContentGenerationTask marshals safe orchestration state into an execution envelope.
-// By isolating task creation here, Layer 3 is structurally incapable of writing prose itself; 
+// By isolating task creation here, Layer 3 is structurally incapable of writing prose itself;
 // it only configures the boundaries (mode, capability constraints) for downstream consumers.
 func BuildContentGenerationTask(plan orchestrator.DAGPlan, task orchestrator.TaskNode, ctx orchestrator.PlanningContext) (orchestrator.ContentGenerationTask, error) {
 	// The core invariant: task building relies strictly on sanitized mapping.

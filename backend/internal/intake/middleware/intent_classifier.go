@@ -14,7 +14,7 @@ func ClassifyIntent(input contracts.SanitizedInput) (contracts.Intent, float64, 
 	}
 
 	text := strings.ToLower(input.RawText)
-	
+
 	if strings.Contains(text, "audit seo") || strings.Contains(text, "seo audit") {
 		return contracts.IntentAuditSEO, 0.9, nil
 	} else if strings.Contains(text, "site health") {

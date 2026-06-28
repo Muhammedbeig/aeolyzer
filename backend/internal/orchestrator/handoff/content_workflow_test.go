@@ -1,9 +1,9 @@
 package handoff_test
 
 import (
-	"testing"
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/orchestrator/handoff"
+	"testing"
 )
 
 // TestValidateContentGenerationTask guards against execution delegation missing required context.
@@ -15,7 +15,7 @@ func TestValidateContentGenerationTask(t *testing.T) {
 		Intent:               "article_planning",
 		RequiredCapabilities: []string{"content_strategy"},
 	}
-	
+
 	err := handoff.ValidateContentGenerationTask(invalidTask)
 	if err == nil {
 		t.Fatal("expected ErrContentTaskInvalid for missing mode")
@@ -26,7 +26,7 @@ func TestValidateContentGenerationTask(t *testing.T) {
 		Intent: "article_planning",
 		Mode:   "plan",
 	}
-	
+
 	err2 := handoff.ValidateContentGenerationTask(invalidTask2)
 	if err2 == nil {
 		t.Fatal("expected ErrContentTaskInvalid for missing capabilities")

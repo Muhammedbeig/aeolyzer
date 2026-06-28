@@ -8,21 +8,21 @@ import (
 
 var (
 	// ErrModeNotAllowed indicates the derived intent is fundamentally incompatible with the active orchestration mode.
-	ErrModeNotAllowed    = errors.New("MODE_NOT_ALLOWED")
+	ErrModeNotAllowed = errors.New("MODE_NOT_ALLOWED")
 	// ErrWriteModeRequired blocks state mutations when operating in read-only/plan modes.
 	ErrWriteModeRequired = errors.New("WRITE_MODE_REQUIRED")
 	// ErrEditModeRequired blocks localized patching unless strictly in Edit mode.
-	ErrEditModeRequired  = errors.New("EDIT_MODE_REQUIRED")
+	ErrEditModeRequired = errors.New("EDIT_MODE_REQUIRED")
 )
 
-// Resolves the execution envelope for the current session. 
+// Resolves the execution envelope for the current session.
 // Uses user-supplied mode flag if present; otherwise, infers deterministic modes based on the intent.
 // Note: Write/Edit modes strictly require upstream policy approval and are not passively inferred here.
 func DeriveMode(input contracts.SanitizedInput, intent contracts.Intent, metadata map[string]interface{}) (contracts.OrchestrationMode, error) {
 	if modeStr, ok := metadata["mode"].(string); ok {
 		return contracts.OrchestrationMode(modeStr), nil
 	}
-	
+
 	switch intent {
 	case contracts.IntentDraftArticle:
 		// Do not infer write mode automatically; must be explicitly passed in metadata.

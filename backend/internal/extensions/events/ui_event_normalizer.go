@@ -15,16 +15,16 @@ type UserInteractionEvent struct {
 }
 
 // NormalizeInteraction strictly validates replay and signature bounds.
-// Rejecting stale or tampered interactions at the border prevents out-of-order 
+// Rejecting stale or tampered interactions at the border prevents out-of-order
 // DAG progression in Layer 3.
 func NormalizeInteraction(evt UserInteractionEvent) error {
 	if evt.Signature == "" {
 		return errors.New("MISSING_SIGNATURE")
 	}
-	
+
 	if time.Now().After(evt.ExpiresAt) {
 		return errors.New("STALE_EVENT_REJECTED")
 	}
-	
+
 	return nil
 }

@@ -1,7 +1,7 @@
 package orchestrator
 
 // OrchestrationMode enforces the isolation boundary between distinct cognitive phases.
-// By strictly typing modes, we prevent state leakage where a planning agent inadvertently 
+// By strictly typing modes, we prevent state leakage where a planning agent inadvertently
 // mutates execution state (e.g., writing article prose during topic discovery).
 type OrchestrationMode string
 
@@ -88,9 +88,9 @@ type ApprovalRequest struct {
 
 // ProposedToolRequest acts as a request envelope for Layer 6 execution. Layer 3 lacks authorization to execute directly.
 type ProposedToolRequest struct {
-	TraceID string `json:"trace_id"`
-	TaskID  TaskID `json:"task_id"`
-	Tool    string `json:"tool"`
+	TraceID string                 `json:"trace_id"`
+	TaskID  TaskID                 `json:"task_id"`
+	Tool    string                 `json:"tool"`
 	Payload map[string]interface{} `json:"payload"`
 }
 

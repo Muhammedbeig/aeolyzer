@@ -5,13 +5,13 @@ import (
 )
 
 var (
-	ErrSkillUnknown       = errors.New("SKILL_UNKNOWN")
-	ErrSkillBlocked       = errors.New("SKILL_BLOCKED")
-	ErrIntentIncompatible = errors.New("INTENT_INCOMPATIBLE")
-	ErrModeIncompatible   = errors.New("MODE_INCOMPATIBLE")
-	ErrProfileIncompatible= errors.New("PROFILE_INCOMPATIBLE")
-	ErrTokenBudgetExceeded= errors.New("TOKEN_BUDGET_EXCEEDED")
-	ErrProtectedMetadata  = errors.New("PROTECTED_METADATA")
+	ErrSkillUnknown        = errors.New("SKILL_UNKNOWN")
+	ErrSkillBlocked        = errors.New("SKILL_BLOCKED")
+	ErrIntentIncompatible  = errors.New("INTENT_INCOMPATIBLE")
+	ErrModeIncompatible    = errors.New("MODE_INCOMPATIBLE")
+	ErrProfileIncompatible = errors.New("PROFILE_INCOMPATIBLE")
+	ErrTokenBudgetExceeded = errors.New("TOKEN_BUDGET_EXCEEDED")
+	ErrProtectedMetadata   = errors.New("PROTECTED_METADATA")
 )
 
 // ValidateActivationRequest enforces Layer 4 strict progressive disclosure boundaries.

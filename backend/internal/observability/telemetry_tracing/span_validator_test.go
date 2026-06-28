@@ -1,13 +1,13 @@
 package telemetry_tracing_test
 
 import (
-	"testing"
 	"aeolyzer/internal/observability/telemetry_tracing"
+	"testing"
 )
 
 func TestSpanValidation(t *testing.T) {
 	span := telemetry_tracing.Span{
-		TraceID: "",
+		TraceID:  "",
 		SpanName: "test_span",
 	}
 	if err := telemetry_tracing.ValidateSpan(span); err == nil {

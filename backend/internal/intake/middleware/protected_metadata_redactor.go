@@ -16,20 +16,20 @@ type Redaction struct {
 	Replaced bool
 }
 
-// Scans outbound response buffers for sensitive internal configuration, 
-// traces, or tool details that the agent may have hallucinated or leaked 
-// during the generation process. 
+// Scans outbound response buffers for sensitive internal configuration,
+// traces, or tool details that the agent may have hallucinated or leaked
+// during the generation process.
 func RedactProtectedMetadata(text string) (string, []Redaction, error) {
 	if ContainsProtectedMetadata(text) {
 		redactions := []Redaction{}
-		
+
 		// Hardcoded suppression of MCP tooling endpoints and internal workflow routing.
 		patterns := []string{
 			"workflow_id", "profile_id", "route_id", "trace_id",
 			"SKILL.md", "mcp://", "https://mcp",
 		}
 
-		// Replaces leaking constants with [REDACTED] to maintain response structure 
+		// Replaces leaking constants with [REDACTED] to maintain response structure
 		// without exposing the exact internal taxonomy.
 		for _, p := range patterns {
 			if strings.Contains(text, p) {
@@ -40,18 +40,18 @@ func RedactProtectedMetadata(text string) (string, []Redaction, error) {
 
 		return text, redactions, nil
 	}
-	
+
 	return text, nil, nil
 }
 
 func ContainsProtectedMetadata(text string) bool {
-	// Secret detection (token/cookie) is naive here; assumes preceding nodes 
+	// Secret detection (token/cookie) is naive here; assumes preceding nodes
 	// emit specific strings. Should ideally be supplemented with entropy analysis.
 	patterns := []string{
 		"workflow_id", "profile_id", "route_id", "trace_id",
 		"SKILL.md", "mcp://", "https://mcp", "secret", "token", "cookie",
 	}
-	
+
 	for _, p := range patterns {
 		if strings.Contains(text, p) {
 			return true

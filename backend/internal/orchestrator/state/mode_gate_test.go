@@ -1,9 +1,9 @@
 package state_test
 
 import (
-	"testing"
 	"aeolyzer/internal/orchestrator"
 	"aeolyzer/internal/orchestrator/state"
+	"testing"
 )
 
 // TestModeGateWriteRequirement ensures that draft_article intents are structurally blocked
@@ -14,7 +14,7 @@ func TestModeGateWriteRequirement(t *testing.T) {
 		Intent: "draft_article",
 		Mode:   string(orchestrator.ModePlan), // Invalid mode for drafting
 	}
-	
+
 	err := state.ValidateCanvasWriteMode(decision)
 	if err == nil {
 		t.Fatal("expected ErrWriteModeRequired but got nil")
@@ -32,7 +32,7 @@ func TestEditExistingRequiresSelectedText(t *testing.T) {
 		Mode:             string(orchestrator.ModeEdit),
 		SanitizedContext: map[string]string{}, // Missing selected_text
 	}
-	
+
 	err := state.ValidateSelectedTextForEdit(decision)
 	if err == nil {
 		t.Fatal("expected ErrEditSelectionRequired but got nil")

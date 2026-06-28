@@ -22,6 +22,7 @@ function ToggleGroup({
   ...props
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
   VariantProps<typeof toggleVariants>) {
+  // Context provider passes down variant and size to children, reducing prop drilling and enforcing visual consistency.
   return (
     <ToggleGroupPrimitive.Root
       data-slot="toggle-group"

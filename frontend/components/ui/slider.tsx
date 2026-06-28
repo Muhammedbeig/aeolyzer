@@ -15,6 +15,7 @@ function Slider({
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const _values = React.useMemo(
     () =>
+      // Extract arrays reliably for Radix component state, defaulting safely to [min, max] preventing out-of-bound errors.
       Array.isArray(value)
         ? value
         : Array.isArray(defaultValue)

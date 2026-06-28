@@ -1,0 +1,130 @@
+workflow_id: content-optimization.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_execution_guard
+allowed_intents: [optimize_content, edit_existing]
+required_context: []
+allowed_modes: [optimize, edit]
+
+nodes:
+  - node_id: validate_optimization_scope
+    type: orchestration
+    purpose: confirm live page, canvas content, selected text, SEO settings, or optimization goal
+    required_capabilities: [seo_support_outputs, targeted_editing]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: optimization_scope
+    surface_hint: canvas
+
+  - node_id: analyze_current_page
+    type: proposed_tool_request
+    purpose: propose live page analysis when URL is present
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: current_page_summary
+    surface_hint: canvas
+
+  - node_id: compare_current_serp
+    type: proposed_tool_request
+    purpose: propose current SERP or newer-source comparison when optimization needs external context
+    required_capabilities: [seo_planning, content_research]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: serp_comparison_summary
+    surface_hint: canvas
+
+  - node_id: find_internal_link_improvements
+    type: proposed_tool_request
+    purpose: propose internal link candidates and overlap reduction checks
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: optimization_link_summary
+    surface_hint: canvas
+
+  - node_id: build_targeted_edit_contract
+    type: content_generation_task
+    purpose: create targeted edit or SEO-output contract; Layer 3 does not rewrite content directly
+    required_capabilities: [targeted_editing, seo_support_outputs]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 60
+    output_contract: optimization_edit_contract
+    surface_hint: canvas
+
+  - node_id: propose_canvas_edit
+    type: proposed_tool_request
+    purpose: propose exact-match surgical edit or SEO-field update through approved contract; never overwrite existing SEO values unless authorized
+    required_capabilities: [targeted_editing, output_surface_routing]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: true
+    optional: false
+    timeout_seconds: 60
+    output_contract: canvas_edit_result
+    surface_hint: canvas
+
+  - node_id: request_style_memory_approval
+    type: approval_request
+    purpose: request approval before proposing recurring tone or style memory updates
+    required_capabilities: [memory_update_proposal]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: true
+    optional: true
+    timeout_seconds: 10
+    output_contract: memory_update_approval_request
+    surface_hint: chat
+
+  - node_id: present_optimization_status
+    type: presentation_intent
+    purpose: hand off optimization plan, edit status, SEO outputs, and unresolved risks to Layer 5
+    required_capabilities: [seo_support_outputs]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: canvas
+
+edges:
+  - from: validate_optimization_scope
+    to: analyze_current_page
+    condition: if_url_available
+  - from: analyze_current_page
+    to: compare_current_serp
+    condition: if_external_context_needed
+  - from: compare_current_serp
+    to: find_internal_link_improvements
+    condition: always
+  - from: find_internal_link_improvements
+    to: build_targeted_edit_contract
+    condition: always
+  - from: build_targeted_edit_contract
+    to: propose_canvas_edit
+    condition: if_exact_edit_available
+  - from: propose_canvas_edit
+    to: request_style_memory_approval
+    condition: if_recurring_style_rule_detected
+  - from: request_style_memory_approval
+    to: present_optimization_status
+    condition: always
+
+failure_policy:
+  missing_context: ask_only_for_required_missing_fields
+  mode_not_allowed: stop_and_request_supported_mode
+  approval_missing: wait_for_user_decision
+  layer2_denied_tool: skip_node_and_record_blocked_dependency
+  layer4_skill_unavailable: continue_with_reduced_capability_if_optional
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: mark_node_failed_and_stop_if_edit_failed
+  layer7_data_unavailable: continue_with_data_gap_if_optional
+  protected_disclosure: stop_and_return_safe_response

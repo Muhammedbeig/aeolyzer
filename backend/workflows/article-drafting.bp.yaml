@@ -1,0 +1,144 @@
+workflow_id: article-drafting.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_execution_guard
+allowed_intents: [draft_article]
+required_context: [topic, audience, intent, target_word_count]
+allowed_modes: [write]
+
+nodes:
+  - node_id: enforce_write_mode
+    type: orchestration
+    purpose: fail closed unless Layer 2 supplied authorized write-mode flag
+    required_capabilities: [guarded_drafting]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: write_mode_validated
+    surface_hint: canvas
+
+  - node_id: collect_tone_rules
+    type: proposed_tool_request
+    purpose: propose reading stored tone and brand rules through approved contracts
+    required_capabilities: [tone_adaptation]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: tone_rule_summary
+    surface_hint: canvas
+
+  - node_id: refresh_positioning_context
+    type: proposed_tool_request
+    purpose: propose brand positioning refresh if needed for drafting
+    required_capabilities: [content_strategy]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: positioning_summary
+    surface_hint: canvas
+
+  - node_id: collect_supporting_page_context
+    type: proposed_tool_request
+    purpose: propose page extraction only when draft must reflect or quote a page
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: supporting_page_summary
+    surface_hint: canvas
+
+  - node_id: collect_internal_link_targets
+    type: proposed_tool_request
+    purpose: propose first-party page discovery for internal linking targets
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: internal_link_target_summary
+    surface_hint: canvas
+
+  - node_id: build_section_generation_contract
+    type: content_generation_task
+    purpose: create section-by-section drafting contract with word-count tracking; Layer 3 does not write section prose
+    required_capabilities: [section_by_section_writing, guarded_drafting]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 60
+    output_contract: section_generation_contract
+    surface_hint: canvas
+
+  - node_id: propose_canvas_write
+    type: proposed_tool_request
+    purpose: propose writing approved section content to canvas through canvas write contract
+    required_capabilities: [output_surface_routing]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 60
+    output_contract: canvas_write_result
+    surface_hint: canvas
+
+  - node_id: request_post_write_quality
+    type: skill_activation_request
+    purpose: request post-write quality checks without loading skill bodies in Layer 3
+    required_capabilities: [post_write_quality]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 30
+    output_contract: post_write_quality_request
+    surface_hint: canvas
+
+  - node_id: present_draft_status
+    type: presentation_intent
+    purpose: hand off drafting status, word-count summary, quality-check status, and optional SEO next step to Layer 5
+    required_capabilities: [guarded_drafting]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: canvas
+
+edges:
+  - from: enforce_write_mode
+    to: collect_tone_rules
+    condition: always
+  - from: collect_tone_rules
+    to: refresh_positioning_context
+    condition: always
+  - from: refresh_positioning_context
+    to: collect_supporting_page_context
+    condition: if_page_context_required
+  - from: collect_supporting_page_context
+    to: collect_internal_link_targets
+    condition: always
+  - from: collect_internal_link_targets
+    to: build_section_generation_contract
+    condition: always
+  - from: build_section_generation_contract
+    to: propose_canvas_write
+    condition: if_content_contract_ready
+  - from: propose_canvas_write
+    to: request_post_write_quality
+    condition: after_each_section_or_final_section
+  - from: request_post_write_quality
+    to: present_draft_status
+    condition: when_target_word_count_reached_or_user_stops
+
+failure_policy:
+  missing_context: stop_and_request_clarification
+  mode_not_allowed: stop_and_request_write_mode
+  approval_missing: wait_for_user_decision
+  layer2_denied_tool: block_required_canvas_write_or_skip_optional_dependency
+  layer4_skill_unavailable: block_if_required
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: mark_node_failed_and_stop_if_canvas_write_failed
+  layer7_data_unavailable: continue_with_data_gap_if_optional
+  protected_disclosure: stop_and_return_safe_response

@@ -1,0 +1,11 @@
+version: 2
+policy_mode: fail_closed
+
+redact_patterns:
+  - pattern: 'workflow_id'
+  - pattern: 'profile_id'
+  - pattern: 'trace_id'
+  - pattern: 'mcp_url'
+  - pattern: 'SKILL.md'
+  - pattern: '/skills/'
+  - pattern: 'tool_policy_engine'

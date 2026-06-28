@@ -3,6 +3,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 function Textarea({ className, ...props }: React.ComponentProps<'textarea'>) {
+  // Using native textarea rather than a controlled div with contentEditable ensures mobile keyboard features (autocorrect, dictation) work reliably.
   return (
     <textarea
       data-slot="textarea"

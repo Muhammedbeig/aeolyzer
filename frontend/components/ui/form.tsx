@@ -25,6 +25,7 @@ type FormFieldContextValue<
   name: TName
 }
 
+// Lexical scope encapsulation guarantees correct React-hook-form instance linking, preventing sibling form state corruption.
 const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue,
 )

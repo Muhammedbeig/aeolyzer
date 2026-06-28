@@ -21,6 +21,7 @@ function Avatar({
   )
 }
 
+// Image loading state machine guarantees fallback rendering if src fails, preserving UI layout invariants.
 function AvatarImage({
   className,
   ...props

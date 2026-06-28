@@ -7,6 +7,7 @@ import (
 )
 
 func TestSignAndVerify(t *testing.T) {
+	// Isolate execution state to surface race conditions and minimize suite latency.
 	t.Parallel()
 
 	key := []byte("01234567890123456789012345678901")
@@ -34,6 +35,7 @@ func TestSignAndVerify(t *testing.T) {
 }
 
 func TestVerifyRejectsExpiredToken(t *testing.T) {
+	// Isolate execution state to surface race conditions and minimize suite latency.
 	t.Parallel()
 
 	key := []byte("01234567890123456789012345678901")

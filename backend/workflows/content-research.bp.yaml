@@ -1,0 +1,116 @@
+workflow_id: content-research.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_collaborator
+allowed_intents: [content_research]
+required_context: [topic]
+allowed_modes: [plan, write]
+
+nodes:
+  - node_id: validate_research_scope
+    type: orchestration
+    purpose: confirm topic, evidence depth, source restrictions, and competitor blocklist availability
+    required_capabilities: [content_research]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: research_scope_validated
+    surface_hint: chat
+
+  - node_id: collect_source_intelligence
+    type: proposed_tool_request
+    purpose: propose authority-source and competitor-blocklist collection before research
+    required_capabilities: [source_intelligence]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: source_intelligence_summary
+    surface_hint: chat
+
+  - node_id: run_fast_research
+    type: proposed_tool_request
+    purpose: propose fast web research for stats, quotes, current developments, competitor coverage, and search intent
+    required_capabilities: [content_research]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 60
+    output_contract: fast_research_summary
+    surface_hint: chat
+
+  - node_id: request_deep_research_approval
+    type: approval_request
+    purpose: ask for user approval before slower evidence-heavy research
+    required_capabilities: [content_research]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: true
+    optional: true
+    timeout_seconds: 10
+    output_contract: deep_research_approval_request
+    surface_hint: chat
+
+  - node_id: run_deep_research
+    type: proposed_tool_request
+    purpose: propose deeper research only after explicit approval
+    required_capabilities: [content_research]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: true
+    optional: true
+    timeout_seconds: 180
+    output_contract: deep_research_summary
+    surface_hint: chat
+
+  - node_id: scrape_important_sources
+    type: proposed_tool_request
+    purpose: propose clean extraction from important URLs only when required by evidence plan
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: extracted_source_summary
+    surface_hint: chat
+
+  - node_id: present_research_summary
+    type: presentation_intent
+    purpose: hand off safe research summary and usable evidence set to Layer 5
+    required_capabilities: [content_research]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: chat
+
+edges:
+  - from: validate_research_scope
+    to: collect_source_intelligence
+    condition: always
+  - from: collect_source_intelligence
+    to: run_fast_research
+    condition: always
+  - from: run_fast_research
+    to: request_deep_research_approval
+    condition: if_evidence_heavy_piece
+  - from: request_deep_research_approval
+    to: run_deep_research
+    condition: if_approved
+  - from: run_deep_research
+    to: scrape_important_sources
+    condition: if_important_urls_found
+  - from: scrape_important_sources
+    to: present_research_summary
+    condition: always
+
+failure_policy:
+  missing_context: stop_and_request_clarification
+  mode_not_allowed: stop_and_request_supported_mode
+  approval_missing: skip_deep_research
+  layer2_denied_tool: skip_node_and_record_blocked_dependency
+  layer4_skill_unavailable: continue_with_reduced_capability_if_optional
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: mark_node_failed_and_continue_if_optional
+  layer7_data_unavailable: continue_with_data_gap_if_optional
+  protected_disclosure: stop_and_return_safe_response

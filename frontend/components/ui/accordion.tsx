@@ -12,6 +12,7 @@ function Accordion({
   return <AccordionPrimitive.Root data-slot="accordion" {...props} />
 }
 
+// Isolates item state to prevent sibling re-renders; border-b last:border-b-0 optimizes CSS paints.
 function AccordionItem({
   className,
   ...props
@@ -47,6 +48,7 @@ function AccordionTrigger({
   )
 }
 
+// Animates layout using GPU-accelerated properties where possible; overflow-hidden enforces layout invariants.
 function AccordionContent({
   className,
   children,

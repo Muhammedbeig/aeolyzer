@@ -93,6 +93,7 @@ function ContextMenuSubContent({
   )
 }
 
+// Portal detaches menu content from typical DOM hierarchy to prevent z-index stacking context collisions.
 function ContextMenuContent({
   className,
   ...props

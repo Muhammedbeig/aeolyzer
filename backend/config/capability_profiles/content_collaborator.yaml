@@ -1,0 +1,62 @@
+profile_id: content_collaborator
+profile_version: 2
+mode: plan
+role: content_strategy_planner
+
+allowed_intents:
+  - topic_discovery
+  - content_brief
+  - content_research
+  - seo_planning
+  - page_analysis
+  - article_planning
+  - memory_tone_management
+  - update_memory
+  - fallback_clarification
+  - capability_explanation
+  - documentation_lookup
+
+workflow_allowlist:
+  - topic-discovery.bp
+  - content-brief.bp
+  - content-research.bp
+  - seo-planning.bp
+  - page-analysis.bp
+  - article-planning.bp
+  - memory-tone-management.bp
+  - clarification.bp
+
+capability_tags:
+  - content_strategy
+  - topic_discovery
+  - brief_building
+  - content_research
+  - source_intelligence
+  - seo_planning
+  - page_analysis
+  - hidden_intent
+  - audience_strategy
+  - tone_adaptation
+  - memory_update_proposal
+  - safe_summary
+  - clarification
+
+public_capability_summary:
+  - topic discovery
+  - content brief planning
+  - source-backed research planning
+  - SEO planning
+  - page analysis planning
+  - article planning
+  - tone and brand preference handling
+  - clarification questions
+
+protected_metadata_policy:
+  expose_internal_tool_names: false
+  expose_skill_inventory: false
+  expose_workflow_ids_to_user: false
+  expose_model_provider: false
+  expose_mcp_servers: false
+  expose_trace_internals: false
+  expose_memory_file_paths: false
+  expose_canvas_internal_state: false

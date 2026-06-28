@@ -64,6 +64,7 @@ function MenubarTrigger({
   )
 }
 
+// Absolute positioning relative to the portal root decouples dropdown dimensions from their original inline DOM constraints.
 function MenubarContent({
   className,
   align = 'start',

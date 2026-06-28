@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "policy_mode": "fail_closed",
+  "allowed_intents": [
+    "audit_seo",
+    "site_health",
+    "analyze_page",
+    "crawl_site",
+    "analyze_gsc",
+    "analyze_ga4",
+    "analyze_ai_visibility",
+    "analyze_citations",
+    "analyze_brand_facts",
+    "analyze_sentiment",
+    "generate_schema",
+    "generate_llms_txt",
+    "generate_robots_txt",
+    "generate_sitemap",
+    "optimize_metadata",
+    "analyze_internal_links",
+    "analyze_core_web_vitals",
+    "content_strategy",
+
+    "topic_discovery",
+    "content_brief",
+    "content_research",
+    "seo_planning",
+    "page_analysis",
+    "article_planning",
+    "draft_article",
+    "optimize_content",
+    "repurpose_content",
+    "switch_content_type",
+    "edit_existing",
+    "memory_tone_management",
+    "update_memory",
+
+    "capability_explanation",
+    "documentation_lookup",
+    "fallback_clarification",
+    "protected_disclosure_request",
+    "out_of_bounds"
+  ],
+  "terminal_intents": [
+    "capability_explanation",
+    "documentation_lookup",
+    "fallback_clarification",
+    "protected_disclosure_request",
+    "out_of_bounds"
+  ]
+}

@@ -54,6 +54,7 @@ function TabsContent({
   className,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) {
+  // Unmounted inactive tabs prevent hidden DOM bloat, though state within them will be lost unless explicitly preserved upstream.
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"

@@ -83,6 +83,7 @@ export function OnboardingFlow({
   onThemeChange: (theme: ThemeMode) => void
   onComplete: (project: ProjectProfile) => void
 }) {
+  // Memoize static dictionaries to prevent repeated execution during state-driven UI reconciliations.
   const allCountries = useMemo(() => countries(), [])
   const allLanguages = useMemo(() => languages(), [])
   const [stage, setStage] = useState<Stage>("account")
@@ -93,6 +94,8 @@ export function OnboardingFlow({
   const [competitorInput, setCompetitorInput] = useState("")
   const [prompts, setPrompts] = useState<string[]>([])
 
+  // Orchestrate sequential UI transitions.
+  // Cleans up timeouts on unmount or dependency change to avoid memory leaks and ghost state updates.
   useEffect(() => {
     if (stage !== "scan") return
     const timer = window.setTimeout(() => setStage("competitors"), 1700)

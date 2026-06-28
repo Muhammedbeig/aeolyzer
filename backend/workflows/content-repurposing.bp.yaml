@@ -1,0 +1,116 @@
+workflow_id: content-repurposing.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_execution_guard
+allowed_intents: [repurpose_content, switch_content_type]
+required_context: [content_type]
+allowed_modes: [edit, write]
+
+nodes:
+  - node_id: validate_repurposing_scope
+    type: orchestration
+    purpose: confirm target content type, source content availability, and tone requirements
+    required_capabilities: [content_repurposing]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: repurposing_scope
+    surface_hint: canvas
+
+  - node_id: set_content_type_contract
+    type: proposed_tool_request
+    purpose: propose content type switch through approved content-type contract
+    required_capabilities: [content_repurposing]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 30
+    output_contract: content_type_set
+    surface_hint: canvas
+
+  - node_id: collect_tone_rules
+    type: proposed_tool_request
+    purpose: propose reading stored tone rules through approved contract
+    required_capabilities: [tone_adaptation]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: tone_rule_summary
+    surface_hint: canvas
+
+  - node_id: save_new_format_intent
+    type: proposed_tool_request
+    purpose: propose saving new format intent to brief
+    required_capabilities: [brief_building]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: repurposing_brief_saved
+    surface_hint: brief
+
+  - node_id: build_repurposed_content_contract
+    type: content_generation_task
+    purpose: create repurposed-content contract; Layer 3 does not write final content directly
+    required_capabilities: [content_repurposing, guarded_drafting]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 60
+    output_contract: repurposed_content_contract
+    surface_hint: canvas
+
+  - node_id: propose_canvas_write_or_edit
+    type: proposed_tool_request
+    purpose: propose canvas write or exact-match edit through approved contract
+    required_capabilities: [output_surface_routing]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: true
+    optional: false
+    timeout_seconds: 60
+    output_contract: repurposed_canvas_result
+    surface_hint: canvas
+
+  - node_id: present_repurposing_status
+    type: presentation_intent
+    purpose: hand off content-type switch, repurposing status, and unresolved decisions to Layer 5
+    required_capabilities: [content_repurposing]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: canvas
+
+edges:
+  - from: validate_repurposing_scope
+    to: set_content_type_contract
+    condition: always
+  - from: set_content_type_contract
+    to: collect_tone_rules
+    condition: always
+  - from: collect_tone_rules
+    to: save_new_format_intent
+    condition: always
+  - from: save_new_format_intent
+    to: build_repurposed_content_contract
+    condition: always
+  - from: build_repurposed_content_contract
+    to: propose_canvas_write_or_edit
+    condition: if_contract_ready
+  - from: propose_canvas_write_or_edit
+    to: present_repurposing_status
+    condition: always
+
+failure_policy:
+  missing_context: stop_and_request_clarification
+  mode_not_allowed: stop_and_request_supported_mode
+  approval_missing: wait_for_user_decision
+  layer2_denied_tool: block_required_canvas_change
+  layer4_skill_unavailable: continue_with_reduced_capability_if_optional
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: mark_node_failed_and_stop_if_canvas_change_failed
+  layer7_data_unavailable: continue_with_data_gap_if_optional
+  protected_disclosure: stop_and_return_safe_response

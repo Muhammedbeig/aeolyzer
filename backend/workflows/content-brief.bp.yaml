@@ -1,0 +1,88 @@
+workflow_id: content-brief.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_collaborator
+allowed_intents: [content_brief]
+required_context: []
+allowed_modes: [plan]
+
+nodes:
+  - node_id: collect_brief_defaults
+    type: proposed_tool_request
+    purpose: propose brand context and stored tone preference lookup through approved contracts
+    required_capabilities: [brief_building, tone_adaptation]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: brief_defaults_summary
+    surface_hint: brief
+
+  - node_id: request_missing_brief_inputs
+    type: approval_request
+    purpose: ask for missing topic, angle, audience, intent, CTA, length, or notes in a batched decision request
+    required_capabilities: [clarification]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: true
+    optional: false
+    timeout_seconds: 10
+    output_contract: brief_input_request
+    surface_hint: chat
+
+  - node_id: save_brief
+    type: proposed_tool_request
+    purpose: propose saving topic, angle, audience, intent, CTA, and notes to brief
+    required_capabilities: [brief_building]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 30
+    output_contract: brief_saved
+    surface_hint: brief
+
+  - node_id: propose_reusable_preference
+    type: approval_request
+    purpose: request approval before proposing reusable brand or tone preference update
+    required_capabilities: [memory_update_proposal]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: true
+    optional: true
+    timeout_seconds: 10
+    output_contract: memory_update_approval_request
+    surface_hint: chat
+
+  - node_id: present_brief_status
+    type: presentation_intent
+    purpose: hand off brief summary and next available actions to Layer 5
+    required_capabilities: [brief_building]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: brief
+
+edges:
+  - from: collect_brief_defaults
+    to: request_missing_brief_inputs
+    condition: if_brief_incomplete
+  - from: request_missing_brief_inputs
+    to: save_brief
+    condition: if_inputs_available
+  - from: save_brief
+    to: propose_reusable_preference
+    condition: if_reusable_preference_detected
+  - from: propose_reusable_preference
+    to: present_brief_status
+    condition: always
+
+failure_policy:
+  missing_context: ask_only_for_required_missing_fields
+  mode_not_allowed: stop_and_request_plan_mode
+  approval_missing: wait_for_user_decision
+  layer2_denied_tool: terminal_safe_response
+  layer4_skill_unavailable: terminal_safe_response
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: terminal_safe_response
+  layer7_data_unavailable: terminal_safe_response
+  protected_disclosure: stop_and_return_safe_response

@@ -35,6 +35,7 @@ function Toggle({
   ...props
 }: React.ComponentProps<typeof TogglePrimitive.Root> &
   VariantProps<typeof toggleVariants>) {
+  // Radix Toggle internally manages pressed state and accessibility attributes (aria-pressed), so we only map visual variants here.
   return (
     <TogglePrimitive.Root
       data-slot="toggle"

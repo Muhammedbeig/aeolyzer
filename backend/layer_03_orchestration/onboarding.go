@@ -28,6 +28,7 @@ func NewService() *Service {
 
 func (s *Service) PlanSiteInspection(decision intake.SiteInspectionDecision) (SiteInspectionPlan, error) {
 	if decision.Authorization == "" || decision.Operation != "inspect_public_site" {
+		// SECURITY: Halt immediately if authorization token is absent or operation semantic diverges.
 		return SiteInspectionPlan{}, errors.New("site inspection is not authorized")
 	}
 
@@ -38,7 +39,7 @@ func (s *Service) PlanSiteInspection(decision intake.SiteInspectionDecision) (Si
 			SessionID:     decision.SessionID,
 			Operation:     decision.Operation,
 			TargetURL:     decision.CanonicalURL,
-			MaxBytes:      2 << 20,
+			MaxBytes:      2 << 20, // MEMORY: Hardbound response processing at 2MB to preempt runaway allocations.
 			Authorization: decision.Authorization,
 		},
 	}, nil
@@ -60,6 +61,7 @@ func (s *Service) BuildPromptPlan(decision intake.OnboardingDecision, category s
 	}
 	competitorScope := "the leading alternatives"
 	if len(decision.Profile.Competitors) > 0 {
+		// STATE: Branch evaluation avoids out-of-bounds array access and prevents empty string concatenation.
 		competitorScope = strings.Join(decision.Profile.Competitors, ", ")
 	}
 	host := brand

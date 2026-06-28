@@ -1,0 +1,67 @@
+version: 2
+policy_mode: fail_closed
+
+approval_required_for:
+  deep_research:
+    approval_for: deep_research
+    required: true
+    accepted_sources:
+      - layer5_user_approval_event
+    never_infer_from_free_text: true
+
+  memory_update:
+    approval_for: memory_update
+    required: true
+    accepted_sources:
+      - layer5_user_approval_event
+    never_infer_from_free_text: true
+
+  canvas_write:
+    approval_for: canvas_write
+    required_when:
+      - mode_not_write
+      - high_impact_surface_change
+    accepted_sources:
+      - layer5_user_approval_event
+      - preauthorized_write_mode
+
+  canvas_edit:
+    approval_for: canvas_edit
+    required: true
+    requires_selected_text: true
+    accepted_sources:
+      - layer5_user_approval_event
+
+  brief_overwrite:
+    approval_for: brief_overwrite
+    required: true
+    accepted_sources:
+      - layer5_user_approval_event
+
+  external_publish:
+    approval_for: external_publish
+    required: true
+    accepted_sources:
+      - layer5_user_approval_event
+      - mfa_verified_event
+
+mode_requirements:
+  draft_article:
+    required_mode: write
+    write_mode_source: layer2_mode_flag
+    no_free_text_inference: true
+
+  edit_existing:
+    required_mode: edit
+    selected_text_required: true
+
+  optimize_content:
+    allowed_modes:
+      - optimize
+      - edit
+
+  article_planning:
+    required_mode: plan
+
+  topic_discovery:
+    required_mode: plan

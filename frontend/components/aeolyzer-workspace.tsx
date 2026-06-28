@@ -100,6 +100,8 @@ export function AeolyzerWorkspace({
 }) {
   const [mode, setMode] = useState<Mode>("dashboard")
   const [tab, setTab] = useState<DashboardTab>("aeo-insights")
+  // Lazy initialization of state from synchronous storage read.
+  // Avoids re-parsing JSON payload on subsequent renders, optimizing React rendering cycle.
   const [auditMessages, setAuditMessages] = useState<ChatMessage[]>(() =>
     readHistory(auditHistoryKey),
   )
@@ -112,6 +114,8 @@ export function AeolyzerWorkspace({
   const [dashboardActionPage, setDashboardActionPage] = useState(0)
   const [agentActionPage, setAgentActionPage] = useState(0)
 
+  // Imperative synchronization of local state to session storage.
+  // Isolated in effects to decouple persistence from React's render phase.
   useEffect(() => {
     sessionStorage.setItem(auditHistoryKey, JSON.stringify(auditMessages))
   }, [auditMessages])

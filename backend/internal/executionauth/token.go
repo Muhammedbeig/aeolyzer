@@ -22,6 +22,8 @@ type Claims struct {
 }
 
 func Sign(key []byte, claims Claims) (string, error) {
+	// Enforcing strict 256-bit key length guarantees cryptographic margin for HMAC-SHA256.
+	// Eager claim validation short-circuits to avoid burning CPU cycles on malformed inputs.
 	if len(key) < 32 || !validClaims(claims) {
 		return "", ErrInvalidToken
 	}
@@ -30,6 +32,7 @@ func Sign(key []byte, claims Claims) (string, error) {
 	if err != nil {
 		return "", ErrInvalidToken
 	}
+	// RawURLEncoding drops padding characters, minimizing wire-size and parsing complexity.
 	encodedPayload := base64.RawURLEncoding.EncodeToString(payload)
 	signature := signatureFor(key, encodedPayload)
 
@@ -46,6 +49,7 @@ func Verify(key []byte, token string, now time.Time) (Claims, error) {
 		return Claims{}, ErrInvalidToken
 	}
 	signature, err := base64.RawURLEncoding.DecodeString(parts[1])
+	// Constant-time comparison (hmac.Equal) neutralizes timing side-channels during signature verification.
 	if err != nil || !hmac.Equal(signature, signatureFor(key, parts[0])) {
 		return Claims{}, ErrInvalidToken
 	}
@@ -58,6 +62,7 @@ func Verify(key []byte, token string, now time.Time) (Claims, error) {
 	if err := json.Unmarshal(payload, &claims); err != nil || !validClaims(claims) {
 		return Claims{}, ErrInvalidToken
 	}
+	// Time check relies on explicit, deterministic clock injection (now) to support testability and edge-case replay.
 	if now.Unix() >= claims.ExpiresAt {
 		return Claims{}, ErrInvalidToken
 	}

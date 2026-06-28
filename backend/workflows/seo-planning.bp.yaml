@@ -1,0 +1,116 @@
+workflow_id: seo-planning.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_collaborator
+allowed_intents: [seo_planning]
+required_context: []
+allowed_modes: [plan, optimize]
+
+nodes:
+  - node_id: validate_seo_scope
+    type: orchestration
+    purpose: confirm topic, target domain, URL, or existing article context from sanitized state
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: seo_scope_validated
+    surface_hint: brief
+
+  - node_id: collect_serp_landscape
+    type: proposed_tool_request
+    purpose: propose search intent and SERP landscape checks
+    required_capabilities: [seo_planning, content_research]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: serp_landscape_summary
+    surface_hint: brief
+
+  - node_id: collect_internal_link_candidates
+    type: proposed_tool_request
+    purpose: propose first-party page discovery for internal linking opportunities
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: internal_link_candidates_summary
+    surface_hint: brief
+
+  - node_id: verify_link_candidate_pages
+    type: proposed_tool_request
+    purpose: propose page reads for candidate internal links before recommending them
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: verified_internal_links_summary
+    surface_hint: brief
+
+  - node_id: check_cannibalization
+    type: proposed_tool_request
+    purpose: propose overlap and cannibalization risk analysis
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: cannibalization_summary
+    surface_hint: brief
+
+  - node_id: save_keyword_direction
+    type: proposed_tool_request
+    purpose: propose storing keyword, intent, and SEO direction in brief notes
+    required_capabilities: [brief_building]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: seo_direction_saved
+    surface_hint: brief
+
+  - node_id: present_seo_plan
+    type: presentation_intent
+    purpose: hand off SEO plan, search intent, internal link opportunities, and overlap risks to Layer 5
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: brief
+
+edges:
+  - from: validate_seo_scope
+    to: collect_serp_landscape
+    condition: always
+  - from: collect_serp_landscape
+    to: collect_internal_link_candidates
+    condition: always
+  - from: collect_internal_link_candidates
+    to: verify_link_candidate_pages
+    condition: if_candidates_found
+  - from: verify_link_candidate_pages
+    to: check_cannibalization
+    condition: always
+  - from: check_cannibalization
+    to: save_keyword_direction
+    condition: if_direction_available
+  - from: save_keyword_direction
+    to: present_seo_plan
+    condition: always
+
+failure_policy:
+  missing_context: ask_only_for_required_missing_fields
+  mode_not_allowed: stop_and_request_supported_mode
+  approval_missing: terminal_safe_response
+  layer2_denied_tool: skip_node_and_record_blocked_dependency
+  layer4_skill_unavailable: continue_with_reduced_capability_if_optional
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: mark_node_failed_and_continue_if_optional
+  layer7_data_unavailable: continue_with_data_gap_if_optional
+  protected_disclosure: stop_and_return_safe_response

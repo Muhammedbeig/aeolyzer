@@ -4,6 +4,7 @@ import { useTheme } from 'next-themes'
 import { Toaster as Sonner, ToasterProps } from 'sonner'
 
 const Toaster = ({ ...props }: ToasterProps) => {
+  // Re-exporting Toaster from sonner with theme-aware CSS variables allows deep CSS custom property overrides without inline style bloat.
   const { theme = 'system' } = useTheme()
 
   return (

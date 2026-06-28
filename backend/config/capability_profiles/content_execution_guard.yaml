@@ -1,0 +1,45 @@
+profile_id: content_execution_guard
+profile_version: 1
+mode: write_or_edit_guarded
+role: guarded_content_execution_coordinator
+
+allowed_intents:
+  - draft_article
+  - optimize_content
+  - repurpose_content
+  - switch_content_type
+  - edit_existing
+
+workflow_allowlist:
+  - article-drafting.bp
+  - content-optimization.bp
+  - content-repurposing.bp
+  - clarification.bp
+
+capability_tags:
+  - guarded_drafting
+  - section_by_section_writing
+  - targeted_editing
+  - content_repurposing
+  - seo_support_outputs
+  - post_write_quality
+  - output_surface_routing
+  - no_silent_memory_write
+
+public_capability_summary:
+  - guarded article drafting
+  - section-by-section writing coordination
+  - targeted editing coordination
+  - content repurposing coordination
+  - SEO support output planning
+  - post-write quality coordination
+
+protected_metadata_policy:
+  expose_internal_tool_names: false
+  expose_skill_inventory: false
+  expose_workflow_ids_to_user: false
+  expose_model_provider: false
+  expose_mcp_servers: false
+  expose_trace_internals: false
+  expose_memory_file_paths: false
+  expose_canvas_internal_state: false

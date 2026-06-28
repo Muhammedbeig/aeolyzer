@@ -52,6 +52,7 @@ function SheetContent({
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: 'top' | 'right' | 'bottom' | 'left'
 }) {
+  // The Sheet component mounts outside the DOM hierarchy via Portal to avoid stacking context collisions, especially on mobile views.
   return (
     <SheetPortal>
       <SheetOverlay />

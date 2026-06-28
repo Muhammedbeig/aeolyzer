@@ -56,6 +56,7 @@ function SelectContent({
   position = 'popper',
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+  // Portal is mandatory here to break out of any overflow:hidden parents. The position='popper' keeps the dropdown anchored to the trigger.
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content

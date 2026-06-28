@@ -1,1 +1,2 @@
 {"time":"2026-06-28T12:37:39.091461+05:00","level":"INFO","msg":"AEOlyzer API listening","address":"127.0.0.1:8080"}
+{"time":"2026-06-28T16:04:09.4108171+05:00","level":"WARN","msg":"site inspection failed","trace_id":"08db750bcd5b562d2e2c705cce6cbce9","error":"inspect site: unexpected status 403"}

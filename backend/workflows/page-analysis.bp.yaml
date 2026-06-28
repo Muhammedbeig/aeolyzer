@@ -1,0 +1,102 @@
+workflow_id: page-analysis.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_collaborator
+allowed_intents: [page_analysis]
+required_context: [target_url]
+allowed_modes: [plan, audit, optimize]
+
+nodes:
+  - node_id: validate_page_scope
+    type: orchestration
+    purpose: confirm URL, brand context need, and comparison purpose
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: page_scope_validated
+    surface_hint: report
+
+  - node_id: collect_primary_page
+    type: proposed_tool_request
+    purpose: propose clean page extraction as primary page analysis input
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 60
+    output_contract: page_extract_summary
+    surface_hint: report
+
+  - node_id: fallback_search_if_needed
+    type: proposed_tool_request
+    purpose: propose backup search only when scraping is thin or unavailable
+    required_capabilities: [content_research]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: fallback_page_context
+    surface_hint: report
+
+  - node_id: collect_brand_frame
+    type: proposed_tool_request
+    purpose: propose brand-positioning context collection to frame the page
+    required_capabilities: [content_strategy]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: brand_frame_summary
+    surface_hint: report
+
+  - node_id: check_page_overlap
+    type: proposed_tool_request
+    purpose: propose cannibalization or overlap checks when page relates to planned content
+    required_capabilities: [seo_planning]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 60
+    output_contract: page_overlap_summary
+    surface_hint: report
+
+  - node_id: present_page_analysis
+    type: presentation_intent
+    purpose: hand off page findings, evidence, and recommended next steps to Layer 5
+    required_capabilities: [page_analysis]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: report
+
+edges:
+  - from: validate_page_scope
+    to: collect_primary_page
+    condition: always
+  - from: collect_primary_page
+    to: fallback_search_if_needed
+    condition: if_scrape_thin_or_failed
+  - from: fallback_search_if_needed
+    to: collect_brand_frame
+    condition: always
+  - from: collect_brand_frame
+    to: check_page_overlap
+    condition: if_overlap_check_needed
+  - from: check_page_overlap
+    to: present_page_analysis
+    condition: always
+
+failure_policy:
+  missing_context: stop_and_request_clarification
+  mode_not_allowed: stop_and_request_supported_mode
+  approval_missing: terminal_safe_response
+  layer2_denied_tool: skip_node_and_record_blocked_dependency
+  layer4_skill_unavailable: continue_with_reduced_capability_if_optional
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: mark_node_failed_and_continue_if_optional
+  layer7_data_unavailable: continue_with_data_gap_if_optional
+  protected_disclosure: stop_and_return_safe_response

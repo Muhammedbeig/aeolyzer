@@ -36,6 +36,7 @@ function InputOTPGroup({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+// Absolute positioning of fake caret isolates animation repaints from shifting the layout of surrounding characters.
 function InputOTPSlot({
   index,
   className,

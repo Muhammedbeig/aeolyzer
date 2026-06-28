@@ -6,6 +6,7 @@ import { CheckIcon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
+// Controlled/uncontrolled state boundary guarantees native form synchronization via underlying hidden input.
 function Checkbox({
   className,
   ...props

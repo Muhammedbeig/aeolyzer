@@ -1,15 +1,16 @@
-'use client' // -> tells Next.js this code runs in the user's browser, allowing it to switch themes dynamically
+// Forces client-side boundary to prevent hydration mismatch for theme selection, ensuring isolated UI state.
+'use client'
 
-import * as React from 'react' // -> brings in React so we can build user interface pieces
+import * as React from 'react'
 import {
-  ThemeProvider as NextThemesProvider, // -> imports a tool from 'next-themes' and renames it so it doesn't clash with our own ThemeProvider name
-  type ThemeProviderProps, // -> brings in the rules for what data (props) the provider is allowed to expect
-} from 'next-themes' // -> an external package that automatically handles dark mode and light mode switching
+  ThemeProvider as NextThemesProvider,
+  type ThemeProviderProps,
+} from 'next-themes'
 
-// -> This is a wrapper component. Anything placed inside it (its "children") will be able to know if the app is in dark mode or light mode
+// Wraps application root to isolate theme context state.
+// Prevents full app re-renders when theme toggles by delegating DOM mutation to next-themes.
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  // - `<NextThemesProvider>` -> the actual tool doing the work of managing the theme
-  // - `{...props}` -> whatever extra settings were passed to us, pass them straight through to NextThemesProvider (like a relay runner handing off a baton)
-  // - `{children}` -> the rest of our app goes inside here
+  // Prop-drilling explicitly passed through to NextThemesProvider.
+  // Children are passed untouched to prevent unnecessary React re-renders within the provider.
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }

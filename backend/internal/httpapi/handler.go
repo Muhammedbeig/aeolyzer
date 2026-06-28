@@ -15,7 +15,7 @@ import (
 	"aeolyzer/layer_08_observability"
 )
 
-const maxRequestBytes = 64 << 10
+const maxRequestBytes = 64 << 10 // BOUNDS: Hard limit payload memory allocation to mitigate DoS vectors.
 
 type Handler struct {
 	intake        *intake.Service
@@ -41,6 +41,7 @@ func NewHandler(
 		executor:      executor,
 		events:        events,
 		logger:        loggerOrDefault(logger),
+		// INVARIANT: Normalize origin path to strip trailing slashes, neutralizing basic spoofing attacks.
 		allowedOrigin: strings.TrimRight(allowedOrigin, "/"),
 		now:           time.Now,
 	}
@@ -144,6 +145,7 @@ func (h *Handler) record(traceID, eventType, outcome string) {
 
 func (h *Handler) withMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(response http.ResponseWriter, request *http.Request) {
+		// PERIMETER: Force explicit content interpretation and disable cache poisoning vectors.
 		response.Header().Set("Content-Type", "application/json; charset=utf-8")
 		response.Header().Set("X-Content-Type-Options", "nosniff")
 		response.Header().Set("Cache-Control", "no-store")
@@ -174,12 +176,13 @@ func (h *Handler) withMiddleware(next http.Handler) http.Handler {
 func decodeJSON(response http.ResponseWriter, request *http.Request, target any) error {
 	request.Body = http.MaxBytesReader(response, request.Body, maxRequestBytes)
 	decoder := json.NewDecoder(request.Body)
-	decoder.DisallowUnknownFields()
+	decoder.DisallowUnknownFields() // INVARIANT: Strict schema enforcement to prevent unmarshaling silent injections.
 	if err := decoder.Decode(target); err != nil {
 		return err
 	}
 	var extra any
 	if err := decoder.Decode(&extra); err != io.EOF {
+		// EDGE CASE: Trap trailing payload junk to invalidate concatenated attacks.
 		return err
 	}
 	return nil

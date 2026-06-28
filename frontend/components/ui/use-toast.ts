@@ -60,6 +60,7 @@ const addToRemoveQueue = (toastId: string) => {
     return
   }
 
+  // Toast removal is deferred to allow exit animations to complete cleanly before unmounting the DOM node.
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId)
     dispatch({

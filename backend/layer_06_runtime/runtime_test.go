@@ -25,8 +25,10 @@ func (stubAdapter) Inspect(context.Context, string, int64) (ExecutionResult, err
 }
 
 func TestExecutorDeniesPrivateTargets(t *testing.T) {
+	// PERFORMANCE: Enable parallel test execution to amortize suite runtime.
 	t.Parallel()
 
+	// STATE MANAGEMENT: Use a fixed 256-bit symmetric key for deterministic test evaluation.
 	key := []byte("01234567890123456789012345678901")
 	now := time.Unix(100, 0)
 	authorization, err := executionauth.Sign(key, executionauth.Claims{
@@ -57,8 +59,10 @@ func TestExecutorDeniesPrivateTargets(t *testing.T) {
 }
 
 func TestExecutorRejectsTamperedAuthorization(t *testing.T) {
+	// PERFORMANCE: Run test concurrently with other stateless validations.
 	t.Parallel()
 
+	// STATE MANAGEMENT: Use a fixed 256-bit symmetric key for deterministic test evaluation.
 	key := []byte("01234567890123456789012345678901")
 	executor := NewExecutor(
 		stubResolver{addresses: []net.IPAddr{{IP: net.ParseIP("93.184.216.34")}}},

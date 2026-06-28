@@ -5,6 +5,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 function Table({ className, ...props }: React.ComponentProps<'table'>) {
+  // Wrapping the table in a relatively positioned container enables horizontal scrolling on small screens without breaking layout containment.
   return (
     <div
       data-slot="table-container"

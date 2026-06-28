@@ -9,6 +9,7 @@ function Switch({
   className,
   ...props
 }: React.ComponentProps<typeof SwitchPrimitive.Root>) {
+  // Relying on native checkbox roles via SwitchPrimitive ensures keyboard accessibility (space/enter to toggle) is handled automatically.
   return (
     <SwitchPrimitive.Root
       data-slot="switch"

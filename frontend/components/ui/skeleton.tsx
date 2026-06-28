@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 
 function Skeleton({ className, ...props }: React.ComponentProps<'div'>) {
+  // Skeleton relies on standard CSS animations (animate-pulse) to limit repaints compared to complex JS animation loops.
   return (
     <div
       data-slot="skeleton"

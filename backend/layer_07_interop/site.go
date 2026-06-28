@@ -17,6 +17,7 @@ import (
 )
 
 var (
+	// PERFORMANCE: Precompile regular expressions during init to avoid redundant AST evaluations at runtime.
 	titlePattern        = regexp.MustCompile(`(?is)<title[^>]*>(.*?)</title>`)
 	metaPattern         = regexp.MustCompile(`(?is)<meta\s+[^>]*(?:name|property)\s*=\s*["']([^"']+)["'][^>]*content\s*=\s*["']([^"']*)["'][^>]*>`)
 	reversedMetaPattern = regexp.MustCompile(`(?is)<meta\s+[^>]*content\s*=\s*["']([^"']*)["'][^>]*(?:name|property)\s*=\s*["']([^"']+)["'][^>]*>`)
@@ -43,7 +44,9 @@ type SiteClient struct {
 func NewSiteClient(timeout time.Duration) *SiteClient {
 	return &SiteClient{
 		client: &http.Client{
+			// STATE MANAGEMENT: Apply strict timeout to bound thread block durations.
 			Timeout: timeout,
+			// SECURITY INVARIANT: Disable redirects to prevent silent SSRF attacks chaining through 30x codes.
 			CheckRedirect: func(*http.Request, []*http.Request) error {
 				return errors.New("redirects are disabled")
 			},
@@ -67,6 +70,7 @@ func (c *SiteClient) Inspect(ctx context.Context, targetURL string, maxBytes int
 	if err != nil {
 		return runtime.ExecutionResult{}, fmt.Errorf("inspect site: %w", err)
 	}
+	// EDGE CASE: Ensure body is closed to prevent socket exhaustion and FD leaks.
 	defer response.Body.Close()
 
 	if response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusMultipleChoices {
@@ -77,6 +81,7 @@ func (c *SiteClient) Inspect(ctx context.Context, targetURL string, maxBytes int
 		return runtime.ExecutionResult{}, errors.New("inspect site: unsupported content type")
 	}
 
+	// PERFORMANCE & SECURITY INVARIANT: Cap memory buffering via LimitReader to maxBytes + 1, rejecting payloads exceeding the boundary without reading further.
 	body, err := io.ReadAll(io.LimitReader(response.Body, maxBytes+1))
 	if err != nil {
 		return runtime.ExecutionResult{}, fmt.Errorf("read site: %w", err)
@@ -99,6 +104,7 @@ func extractSiteMetadata(targetURL, document string) runtime.ExecutionResult {
 	}
 
 	return runtime.ExecutionResult{
+		// STATE MANAGEMENT: Sanitize outputs via cleanHTMLText to strip rogue markup before boundary egress.
 		Title:                cleanHTMLText(title),
 		Description:          cleanHTMLText(description),
 		IconURL:              iconURL,

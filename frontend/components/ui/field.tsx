@@ -54,6 +54,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+// Layout orientations via CSS constraints maintain responsive flex invariants without relying on Javascript recalculations.
 const fieldVariants = cva(
   'group/field flex w-full gap-3 data-[invalid=true]:text-destructive',
   {

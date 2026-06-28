@@ -13,6 +13,7 @@ import {
 export function Toaster() {
   const { toasts } = useToast()
 
+  // Iterating over toasts without modifying the backing store prevents synchronization drift during the dismiss animation lifecycle.
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {

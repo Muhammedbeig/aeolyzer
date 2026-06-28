@@ -11,6 +11,7 @@ function Separator({
   decorative = true,
   ...props
 }: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+  // decorative=true by default removes the separator from the accessibility tree, which is generally what we want for purely visual dividers.
   return (
     <SeparatorPrimitive.Root
       data-slot="separator"

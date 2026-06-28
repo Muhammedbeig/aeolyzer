@@ -62,6 +62,7 @@ export interface LanguageOption {
   name: string
 }
 
+// Strip trailing slash statically to guarantee predictable URL construction downstream and prevent SSR route mismatches.
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:8080"
 
@@ -160,6 +161,7 @@ const languageVariants = [
 ]
 
 export function countries(): CountryOption[] {
+  // Intl.DisplayNames defers heavy localization data loading to the browser runtime rather than bloating the bundle.
   const names = new Intl.DisplayNames(["en"], { type: "region" })
   return countryCodes
     .map((code) => ({
@@ -197,6 +199,7 @@ function languageLabel(code: string, names: Intl.DisplayNames): string {
 }
 
 export function fallbackBrandName(rawURL: string): string {
+  // Aggressive exception handling here prevents malformed user-input URLs from crashing the entire rendering cycle.
   try {
     const value = rawURL.includes("://") ? rawURL : `https://${rawURL}`
     const host = new URL(value).hostname.replace(/^www\./, "")
@@ -250,6 +253,7 @@ export async function completeOnboarding(
 }
 
 async function readResponse<T>(response: Response): Promise<T> {
+  // Standardizes error throwing by unwrapping JSON errors before they hit component boundaries.
   if (response.ok) return (await response.json()) as T
 
   const payload = (await response.json().catch(() => null)) as {

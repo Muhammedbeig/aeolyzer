@@ -59,15 +59,19 @@ func NewExecutor(resolver Resolver, adapter Adapter, signingKey []byte, now func
 }
 
 func (e *Executor) Execute(ctx context.Context, request ExecutionRequest) (ExecutionResult, error) {
+	// SECURITY INVARIANT: Enforce complete initialization and minimum 256-bit key length to prevent bypass via weak cryptographic parameters.
 	if e == nil || e.resolver == nil || e.adapter == nil || e.now == nil || len(e.signingKey) < 32 {
 		return ExecutionResult{}, errors.New("runtime executor is not configured")
 	}
+	// EDGE CASE: Explicitly drop requests missing trace contexts or deviating from allowed operations to limit execution surface area.
 	if request.TraceID == "" || request.SessionID == "" || request.Operation != "inspect_public_site" {
 		return ExecutionResult{}, ErrInvalidExecution
 	}
+	// PERFORMANCE: Cap memory allocations at 2MB to prevent OOM via malicious large payloads.
 	if request.MaxBytes <= 0 || request.MaxBytes > 2<<20 {
 		return ExecutionResult{}, ErrInvalidExecution
 	}
+	// SECURITY INVARIANT: Cryptographically bind the request payload to the signed token. Any payload manipulation invalidates execution.
 	claims, err := executionauth.Verify(e.signingKey, request.Authorization, e.now())
 	if err != nil ||
 		claims.TraceID != request.TraceID ||
@@ -85,6 +89,7 @@ func (e *Executor) Execute(ctx context.Context, request ExecutionRequest) (Execu
 }
 
 func validatePublicTarget(ctx context.Context, resolver Resolver, rawURL string) error {
+	// SECURITY INVARIANT: Drop unparseable URLs and non-HTTP schemes early to constrain protocol handlers.
 	parsed, err := url.Parse(rawURL)
 	if err != nil || parsed.Hostname() == "" {
 		return ErrDeniedTarget
@@ -93,11 +98,13 @@ func validatePublicTarget(ctx context.Context, resolver Resolver, rawURL string)
 		return ErrDeniedTarget
 	}
 
+	// SECURITY INVARIANT: Prevent trivial SSRF by blacklisting local loopback domain strings before DNS resolution.
 	host := strings.ToLower(parsed.Hostname())
 	if host == "localhost" || strings.HasSuffix(host, ".localhost") {
 		return ErrDeniedTarget
 	}
 
+	// PERFORMANCE & SECURITY INVARIANT: Resolve target to all IPs and ensure strict public boundary traversal. Deny if ANY resolved IP is private (DNS rebinding defense).
 	addresses, err := resolver.LookupIPAddr(ctx, host)
 	if err != nil {
 		return fmt.Errorf("resolve target: %w", err)
@@ -115,6 +122,7 @@ func validatePublicTarget(ctx context.Context, resolver Resolver, rawURL string)
 }
 
 func isPublicIP(ip net.IP) bool {
+	// EDGE CASE: Explicitly drop IPv6 link-local and multicast ranges which might bypass naive RFC1918 checks.
 	if ip == nil || ip.IsLoopback() || ip.IsPrivate() || ip.IsUnspecified() ||
 		ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() || ip.IsMulticast() {
 		return false

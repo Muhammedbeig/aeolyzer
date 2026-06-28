@@ -23,6 +23,7 @@ function NavigationMenu({
       )}
       {...props}
     >
+      {/* NavigationMenu acts as the root boundary. Render children directly but keep viewport conditional to avoid unmounting layout ref-flows. */}
       {children}
       {viewport && <NavigationMenuViewport />}
     </NavigationMenuPrimitive.Root>

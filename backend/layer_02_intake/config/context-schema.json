@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "allowed_context_keys": [
+    "target_domain",
+    "target_url",
+    "brand",
+    "topic",
+    "seed_topic",
+    "audience",
+    "angle",
+    "intent",
+    "cta",
+    "target_word_count",
+    "content_type",
+    "selected_text",
+    "selected_text_hash",
+    "source_url",
+    "competitor_domains_summary",
+    "existing_brief_summary",
+    "canvas_state_summary",
+    "seo_settings_summary",
+    "requested_output_surface",
+    "research_depth",
+    "requires_current_sources",
+    "requires_deep_research",
+    "requires_memory_update",
+    "requires_canvas_write",
+    "requires_canvas_edit",
+    "requires_brief_update"
+  ]
+}

@@ -1,0 +1,88 @@
+workflow_id: memory-tone-management.bp
+workflow_version: 1
+owner_layer: layer_3_orchestration
+default_profile: content_collaborator
+allowed_intents: [memory_tone_management, update_memory]
+required_context: []
+allowed_modes: [plan, write, edit, optimize]
+
+nodes:
+  - node_id: validate_memory_scope
+    type: orchestration
+    purpose: determine whether request is read-only inspection, reusable preference proposal, or explicit update request
+    required_capabilities: [memory_update_proposal, tone_adaptation]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 5
+    output_contract: memory_scope_validated
+    surface_hint: chat
+
+  - node_id: inspect_memory_or_tone
+    type: proposed_tool_request
+    purpose: propose memory or tone inspection through approved read contract; Layer 3 never reads document bodies directly
+    required_capabilities: [tone_adaptation]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: false
+    optional: true
+    timeout_seconds: 30
+    output_contract: memory_tone_summary
+    surface_hint: chat
+
+  - node_id: request_memory_update_approval
+    type: approval_request
+    purpose: request explicit approval before proposing any persistent memory or tone update
+    required_capabilities: [memory_update_proposal]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: true
+    optional: false
+    timeout_seconds: 10
+    output_contract: memory_update_approval_request
+    surface_hint: chat
+
+  - node_id: propose_memory_update
+    type: proposed_tool_request
+    purpose: propose persistent memory or tone update only after approval; never apply silently
+    required_capabilities: [memory_update_proposal]
+    requires_layer2_tool_authorization: true
+    requires_user_approval: true
+    optional: false
+    timeout_seconds: 30
+    output_contract: memory_update_proposed
+    surface_hint: chat
+
+  - node_id: present_memory_status
+    type: presentation_intent
+    purpose: hand off memory/tone summary, approval state, or proposal status to Layer 5
+    required_capabilities: [memory_update_proposal]
+    requires_layer2_tool_authorization: false
+    requires_user_approval: false
+    optional: false
+    timeout_seconds: 10
+    output_contract: presentation_intent
+    surface_hint: chat
+
+edges:
+  - from: validate_memory_scope
+    to: inspect_memory_or_tone
+    condition: if_read_needed
+  - from: inspect_memory_or_tone
+    to: request_memory_update_approval
+    condition: if_update_needed
+  - from: request_memory_update_approval
+    to: propose_memory_update
+    condition: if_approved
+  - from: propose_memory_update
+    to: present_memory_status
+    condition: always
+
+failure_policy:
+  missing_context: ask_only_for_required_missing_fields
+  mode_not_allowed: stop_and_request_supported_mode
+  approval_missing: wait_for_user_decision
+  layer2_denied_tool: terminal_safe_response
+  layer4_skill_unavailable: terminal_safe_response
+  layer5_surface_unavailable: stop_and_return_safe_response
+  layer6_runtime_failed: terminal_safe_response
+  layer7_data_unavailable: terminal_safe_response
+  protected_disclosure: stop_and_return_safe_response

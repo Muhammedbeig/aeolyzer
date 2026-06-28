@@ -35,9 +35,9 @@ func (testAdapter) Inspect(_ context.Context, _ string, _ int64) (runtime.Execut
 }
 
 func TestCompleteOnboarding(t *testing.T) {
-	t.Parallel()
+	t.Parallel() // OPTIMIZATION: Maximize core utilization by unlocking concurrent thread execution.
 
-	handler := newTestHandler(t)
+	handler := newTestHandler(t) // STATE: Allocate isolated router instance per test to prevent state bleeding.
 	body := `{
 		"session_id":"guest-1",
 		"account_type":"brand",

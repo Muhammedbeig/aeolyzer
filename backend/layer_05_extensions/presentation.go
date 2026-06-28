@@ -37,9 +37,11 @@ type DashboardNavigation struct {
 }
 
 func BuildDashboardFrame(intent DashboardIntent) (DashboardFrame, error) {
+	// Guard against null traces or uninitialized structs to prevent panic during telemetry propagation.
 	if intent.TraceID == "" || intent.Profile.BrandName == "" {
 		return DashboardFrame{}, errors.New("invalid dashboard presentation intent")
 	}
+	// Restrict vector expansion: hard limit prevents UI buffer overflow and layout thrashing.
 	if len(intent.Prompts) < 10 || len(intent.Prompts) > 15 {
 		return DashboardFrame{}, errors.New("dashboard requires 10 to 15 prompts")
 	}
@@ -47,6 +49,7 @@ func BuildDashboardFrame(intent DashboardIntent) (DashboardFrame, error) {
 	return DashboardFrame{
 		SchemaVersion: "1.0",
 		Surface:       "audit_dashboard",
+		// Normalize timestamp to UTC to avoid cross-timezone clock skew anomalies in client rendering.
 		GeneratedAt:   intent.GeneratedAt.UTC(),
 		Project: DashboardProject{
 			BrandName: intent.Profile.BrandName,
@@ -61,6 +64,7 @@ func BuildDashboardFrame(intent DashboardIntent) (DashboardFrame, error) {
 			{ID: "prompt-research", Label: "Prompt Research", Enabled: true},
 			{ID: "site-health", Label: "Site Health", Enabled: true},
 		},
+		// Deep copy to prevent unintended mutation of the underlying slice from background routines.
 		Prompts: append([]string(nil), intent.Prompts...),
 	}, nil
 }

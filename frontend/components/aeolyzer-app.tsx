@@ -13,10 +13,13 @@ const projectStorageKey = "aeolyzer.guest.project"
 const themeStorageKey = "aeolyzer.theme"
 
 export function AeolyzerApp() {
+  // Hydration flag prevents SSR mismatch during initial render.
+  // Isolated state ensures UI remains dormant until client-side mounting is complete.
   const [hydrated, setHydrated] = useState(false)
   const [project, setProject] = useState<ProjectProfile | null>(null)
   const [theme, setTheme] = useState<ThemeMode>("light")
 
+  // Isolate storage reads to client-side mount phase, bypassing SSR memory restrictions.
   useEffect(() => {
     const storedTheme = localStorage.getItem(themeStorageKey)
     if (storedTheme === "system") setTheme("system")
@@ -26,18 +29,23 @@ export function AeolyzerApp() {
       try {
         setProject(JSON.parse(storedProject) as ProjectProfile)
       } catch {
+        // Defensive parsing: gracefully clear corrupted project payload to maintain security invariants.
+        // Prevents unhandled runtime exceptions on invalid JSON injections.
         sessionStorage.removeItem(projectStorageKey)
       }
     }
     setHydrated(true)
   }, [])
 
+  // Imperative DOM mutation isolated to effect hook.
+  // Synchronizes persistent theme state bypassing React's virtual DOM diffing for performance.
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "system")
     document.documentElement.dataset.theme = theme
     localStorage.setItem(themeStorageKey, theme)
   }, [theme])
 
+  // Early return blocks render tree execution to eliminate dead code paths prior to hydration.
   if (!hydrated) {
     return (
       <main className="grid min-h-screen place-items-center bg-[#fbfaf8] text-[#1d1b18] dark:bg-[#2b2a27] dark:text-[#ececec]">

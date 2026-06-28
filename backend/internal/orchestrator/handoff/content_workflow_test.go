@@ -1,4 +1,4 @@
-package orchestrator_test
+package handoff_test
 
 import (
 	"testing"

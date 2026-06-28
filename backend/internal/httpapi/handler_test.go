@@ -14,7 +14,7 @@ import (
 
 	"aeolyzer/internal/intake"
 	"aeolyzer/internal/orchestrator"
-	"aeolyzer/layer_06_runtime"
+	"aeolyzer/internal/runtime"
 	"aeolyzer/layer_08_observability"
 )
 

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"aeolyzer/layer_06_runtime"
+	"aeolyzer/internal/runtime"
 )
 
 var (

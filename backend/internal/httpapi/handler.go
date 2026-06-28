@@ -10,8 +10,8 @@ import (
 
 	"aeolyzer/internal/intake"
 	"aeolyzer/internal/orchestrator"
-	"aeolyzer/layer_05_extensions"
-	"aeolyzer/layer_06_runtime"
+	"aeolyzer/internal/extensions"
+	"aeolyzer/internal/runtime"
 	"aeolyzer/layer_08_observability"
 )
 

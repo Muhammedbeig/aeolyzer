@@ -15,8 +15,8 @@ import (
 	"aeolyzer/internal/httpapi"
 	"aeolyzer/internal/intake"
 	"aeolyzer/internal/orchestrator"
-	"aeolyzer/layer_06_runtime"
-	"aeolyzer/layer_07_interop"
+	"aeolyzer/internal/runtime"
+	"aeolyzer/internal/interop"
 	"aeolyzer/layer_08_observability"
 )
 

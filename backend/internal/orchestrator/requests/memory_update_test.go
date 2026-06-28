@@ -1,4 +1,4 @@
-package orchestrator_test
+package requests_test
 
 import (
 	"testing"

@@ -1,0 +1,9 @@
+version: 2
+policy_mode: fail_closed
+registry_owner_layer: layer_4_skills
+default_status: active
+metadata_token_budget:
+  max_total_registry_tokens: 2500
+  max_description_tokens_per_skill: 90
+  max_antitrigger_tokens_per_skill: 60
+skills: []

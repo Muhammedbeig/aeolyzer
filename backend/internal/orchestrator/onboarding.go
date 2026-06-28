@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"aeolyzer/internal/intake"
-	"aeolyzer/layer_06_runtime"
+	"aeolyzer/internal/runtime"
 )
 
 type SiteInspectionPlan struct {

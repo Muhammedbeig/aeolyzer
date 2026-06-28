@@ -1,4 +1,4 @@
-package orchestrator_test
+package state_test
 
 import (
 	"testing"

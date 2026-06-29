@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils'
 
-// Pointer-events-none ensures semantic wrapper does not capture or block click events intended for the parent interactive container.
 function Kbd({ className, ...props }: React.ComponentProps<'kbd'>) {
   return (
     <kbd

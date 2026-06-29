@@ -30,7 +30,6 @@ function DialogClose({
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
-// Fixed overlay z-index invariant guarantees modal capture; prevents click-through to underlying interactive elements.
 function DialogOverlay({
   className,
   ...props

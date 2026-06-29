@@ -82,7 +82,6 @@ function CommandInput({
   )
 }
 
-// Viewport-constrained container limits layout thrashing during highly dynamic list filtering operations.
 function CommandList({
   className,
   ...props

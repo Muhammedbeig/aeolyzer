@@ -28,7 +28,6 @@ function AlertDialogPortal({
   )
 }
 
-// Fixed overlay z-index invariant guarantees modal capture; prevents click-through to underlying interactive elements.
 function AlertDialogOverlay({
   className,
   ...props
@@ -45,7 +44,6 @@ function AlertDialogOverlay({
   )
 }
 
-// Centered positioning avoids reflows during open/close state transitions via hardware-accelerated translations.
 function AlertDialogContent({
   className,
   ...props

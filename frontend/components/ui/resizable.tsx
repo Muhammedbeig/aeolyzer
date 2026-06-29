@@ -10,7 +10,6 @@ function ResizablePanelGroup({
   className,
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.PanelGroup>) {
-  // PanelGroup synchronizes its internal flex basis with the resize handle DOM events.
   return (
     <ResizablePrimitive.PanelGroup
       data-slot="resizable-panel-group"

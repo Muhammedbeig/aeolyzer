@@ -48,7 +48,6 @@ function PaginationLink({
   size = 'icon',
   ...props
 }: PaginationLinkProps) {
-  // aria-current is critical for screen reader state isolation to distinguish the currently active page.
   return (
     <a
       aria-current={isActive ? 'page' : undefined}

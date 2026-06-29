@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"net/netip"
 	"net/url"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -327,27 +326,4 @@ func containsFold(values []string, expected string) bool {
 		}
 	}
 	return false
-}
-
-func hostPort(target *url.URL) string {
-	port := target.Port()
-	if port == "" {
-		if target.Scheme == "https" {
-			port = "443"
-		} else {
-			port = "80"
-		}
-	}
-	return net.JoinHostPort(target.Hostname(), port)
-}
-
-func parsePort(target *url.URL) (int, error) {
-	port := target.Port()
-	if port == "" {
-		if target.Scheme == "https" {
-			return 443, nil
-		}
-		return 80, nil
-	}
-	return strconv.Atoi(port)
 }

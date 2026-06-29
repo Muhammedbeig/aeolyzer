@@ -2,7 +2,7 @@ package agbom
 
 import "errors"
 
-// RuntimeAgentBillOfMaterials tracks everything a session touches (Section 4.6).
+// RuntimeAgentBillOfMaterials tracks everything a session touches.
 type RuntimeAgentBillOfMaterials struct {
 	TraceID    string   `json:"trace_id"`
 	SkillsUsed []string `json:"skills_used"`

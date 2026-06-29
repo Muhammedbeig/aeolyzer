@@ -3,7 +3,6 @@ package middleware
 import (
 	"errors"
 	"regexp"
-	"strings"
 
 	"aeolyzer/internal/intake/contracts"
 )
@@ -64,8 +63,4 @@ func ContainsProtectedMetadata(text string) bool {
 // SafeCapabilitySummary returns product-level capability language.
 func SafeCapabilitySummary(_ contracts.Intent) string {
 	return "I can help with topic discovery, content briefs, source-backed research, SEO planning, page analysis, article planning, guarded drafting, optimization, repurposing, and tone preference handling."
-}
-
-func normalizeDisclosureText(value string) string {
-	return strings.ToLower(strings.TrimSpace(value))
 }

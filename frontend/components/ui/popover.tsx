@@ -23,7 +23,6 @@ function PopoverContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
-  // Portal ensures the popover content escapes local stacking contexts to prevent z-index clipping.
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content

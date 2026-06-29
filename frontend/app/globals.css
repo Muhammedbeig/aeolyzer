@@ -1,20 +1,206 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Claude.ai exact color scheme - Dark Theme */
+  --background: #2b2a27;
+  --foreground: #ececec;
+  --card: #393836;
+  --card-foreground: #ececec;
+  --popover: #393836;
+  --popover-foreground: #ececec;
+  --primary: #ececec;
+  --primary-foreground: #2b2a27;
+  --secondary: #393836;
+  --secondary-foreground: #ececec;
+  --muted: #393836;
+  --muted-foreground: #a3a29e;
+  --accent: #e07b53;
+  --accent-foreground: #2b2a27;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #4a4945;
+  --input: #393836;
+  --ring: #e07b53;
+  --radius: 0.75rem;
+  
+  /* Claude sidebar */
+  --sidebar-bg: #2b2a27;
+  --sidebar-hover: #393836;
+  --sidebar-active: #4a4945;
+  --sidebar-text: #ececec;
+  --sidebar-muted: #a3a29e;
+  
+  /* Chat area */
+  --chat-bg: #2b2a27;
+  --input-bg: #393836;
+  --message-user: #393836;
+  --message-assistant: transparent;
+  
+  /* Claude brand */
+  --claude-orange: #e07b53;
+}
+
+.dark {
+  --background: #2b2a27;
+  --foreground: #ececec;
+  --card: #393836;
+  --card-foreground: #ececec;
+  --popover: #393836;
+  --popover-foreground: #ececec;
+  --primary: #ececec;
+  --primary-foreground: #2b2a27;
+  --secondary: #393836;
+  --secondary-foreground: #ececec;
+  --muted: #393836;
+  --muted-foreground: #a3a29e;
+  --accent: #e07b53;
+  --accent-foreground: #2b2a27;
+  --destructive: #7f1d1d;
+  --destructive-foreground: #fef2f2;
+  --border: #4a4945;
+  --input: #393836;
+  --ring: #e07b53;
+}
 
 @theme inline {
-  --font-sans: var(--font-geist);
-  --font-display: var(--font-display);
+  --font-sans: 'Geist', 'Geist Fallback', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --font-display: var(--font-display), 'Rokkitt', Georgia, serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Claude typing animation */
+@keyframes pulse-dot {
+  0%, 80%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes text-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+.animate-text-appear {
+  animation: text-appear 0.05s ease-out forwards;
+}
+
+/* Custom scrollbar for Claude */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a4945;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5955;
+}
+
+/* Textarea auto-resize */
+.textarea-auto-resize {
+  resize: none;
+  overflow-y: auto;
+  min-height: 24px;
+  max-height: 200px;
+}
+
+/* Light placeholder text - matches Claude's "How can I help you today?" */
+textarea::placeholder,
+input::placeholder {
+  color: #7a7974;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* Smooth scrolling */
 html {
-  color-scheme: light;
+  scroll-behavior: smooth;
 }
 
-html.dark {
-  color-scheme: dark;
-}
-
-body {
-  min-height: 100vh;
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4945 transparent;
 }

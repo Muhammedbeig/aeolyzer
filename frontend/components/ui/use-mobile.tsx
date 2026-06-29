@@ -5,7 +5,6 @@ const MOBILE_BREAKPOINT = 768
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
 
-  // matchMedia event listener is preferred over resize listeners for performance, firing only when the breakpoint is crossed.
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
     const onChange = () => {

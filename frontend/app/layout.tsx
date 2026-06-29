@@ -1,32 +1,51 @@
-import type { Metadata } from "next"
-import { Geist, Rokkitt } from "next/font/google"
-import "./globals.css"
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono, Rokkitt } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import './globals.css'
 
-// Instantiating Next/font at module level caches the font payload to avoid FOUT and layout shifts during navigation.
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist",
-})
-
-const rokkitt = Rokkitt({
+const _geist = Geist({ subsets: ["latin"] });
+const _geistMono = Geist_Mono({ subsets: ["latin"] });
+// Using Rokkitt as closest Google Fonts alternative to Bogue Slab
+const _rokkitt = Rokkitt({ 
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600"],
-})
+  weight: ["100", "200", "300", "400"]
+});
 
-// Static metadata export enables build-time evaluation, preventing runtime overhead for SEO tag generation.
 export const metadata: Metadata = {
-  title: "AEOlyzer — Answer Engine Visibility",
-  description: "Understand and improve how AI answer engines see your brand.",
+  title: 'AEOlyzer',
+  description: 'Talk to AEOlyzer, your intelligent AI assistant',
+  generator: 'v0.app',
+  icons: {
+    icon: [
+      {
+        url: '/icon-light-32x32.png',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        url: '/icon-dark-32x32.png',
+        media: '(prefers-color-scheme: dark)',
+      },
+      {
+        url: '/icon.svg',
+        type: 'image/svg+xml',
+      },
+    ],
+    apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  // Injecting CSS variables directly into HTML node forces style recalculation upfront, isolating font loading state from child components.
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
-    <html lang="en" className={`${geist.variable} ${rokkitt.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`dark ${_rokkitt.variable}`}>
+      <body className="font-sans antialiased" style={{ backgroundColor: "#2b2a27" }}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }

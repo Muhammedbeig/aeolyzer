@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-// Uncontrolled component pattern relies on native browser DOM for state to eliminate input lag and cursor jumping during typing.
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
   return (
     <input

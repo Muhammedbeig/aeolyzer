@@ -28,7 +28,6 @@ function EmptyHeader({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-// Static variance caching prevents repetitive string concatenations on deeply nested or heavily rendered empty states.
 const emptyMediaVariants = cva(
   'flex shrink-0 items-center justify-center mb-2 [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {

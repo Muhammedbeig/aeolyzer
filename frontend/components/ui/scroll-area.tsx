@@ -10,7 +10,6 @@ function ScrollArea({
   children,
   ...props
 }: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
-  // Radix ScrollArea normalizes scrollbar behavior across OS/browsers. We keep it relative so corner indicators position correctly.
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"

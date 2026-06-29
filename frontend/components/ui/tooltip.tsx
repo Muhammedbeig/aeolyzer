@@ -40,7 +40,6 @@ function TooltipContent({
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
-  // Portal keeps the tooltip at the top-level of the DOM to avoid clipping inside overflow:hidden containers.
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content

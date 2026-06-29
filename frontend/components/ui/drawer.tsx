@@ -45,7 +45,6 @@ function DrawerOverlay({
   )
 }
 
-// Fixed positioning and dimension invariants guarantee drawer boundary containment regardless of viewport scrolling.
 function DrawerContent({
   className,
   children,

@@ -19,7 +19,6 @@ function HoverCardTrigger({
   )
 }
 
-// Animated transitions rely on hardware acceleration to ensure fluid state changes independent of main thread congestion.
 function HoverCardContent({
   className,
   align = 'center',

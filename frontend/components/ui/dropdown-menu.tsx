@@ -31,7 +31,6 @@ function DropdownMenuTrigger({
   )
 }
 
-// Portal usage isolates menu overlay rendering from parent container clipping, z-index bugs, and overflow constraints.
 function DropdownMenuContent({
   className,
   sideOffset = 4,

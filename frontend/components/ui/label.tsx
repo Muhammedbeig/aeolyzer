@@ -5,7 +5,6 @@ import * as LabelPrimitive from '@radix-ui/react-label'
 
 import { cn } from '@/lib/utils'
 
-// Peer-disabled selector maps associated input disabled state up to the label, ensuring visual synchronization without JS binding.
 function Label({
   className,
   ...props

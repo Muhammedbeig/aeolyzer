@@ -19,7 +19,6 @@ function CollapsibleTrigger({
   )
 }
 
-// Defers rendering of hidden children to optimize initial layout calculations and reduce DOM tree size.
 function CollapsibleContent({
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {

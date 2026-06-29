@@ -15,7 +15,6 @@ function Card({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-// CSS Container queries on header isolate internal responsive layout shifts from parent dimensions.
 function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div

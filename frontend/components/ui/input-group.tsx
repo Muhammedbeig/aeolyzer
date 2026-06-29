@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-// Groups inputs via CSS sibling and descendant selectors to manage complex nested focus states without JS event listeners.
 function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div

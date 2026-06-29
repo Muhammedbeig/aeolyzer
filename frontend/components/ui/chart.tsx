@@ -22,7 +22,6 @@ type ChartContextProps = {
   config: ChartConfig
 }
 
-// Context encapsulation isolates chart config mutations from polluting global namespace or unrelated widget instances.
 const ChartContext = React.createContext<ChartContextProps | null>(null)
 
 function useChart() {
@@ -70,7 +69,6 @@ function ChartContainer({
   )
 }
 
-// Dynamic CSS injection maps JS config variables into CSS custom properties, skipping expensive React re-renders for theme toggles.
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color,

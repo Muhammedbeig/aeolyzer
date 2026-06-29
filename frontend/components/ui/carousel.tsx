@@ -61,7 +61,6 @@ function Carousel({
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
 
-  // useCallback memoizes the selection event handler, preventing Embla from aggressively re-binding internal listeners.
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) return
     setCanScrollPrev(api.canScrollPrev())
@@ -133,7 +132,6 @@ function Carousel({
   )
 }
 
-// Hardware-accelerated overflow container isolates slide translations from triggering document-level repaints.
 function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
   const { carouselRef, orientation } = useCarousel()
 

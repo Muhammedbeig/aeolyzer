@@ -13,7 +13,6 @@ const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
 >(({ className, ...props }, ref) => (
-  // The viewport acts as an isolated rendering layer (z-[100]), ensuring toast messages remain visible regardless of the main application's z-index stacking context.
   <ToastPrimitives.Viewport
     ref={ref}
     className={cn(

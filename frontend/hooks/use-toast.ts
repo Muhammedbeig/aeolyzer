@@ -22,7 +22,6 @@ const actionTypes = {
   REMOVE_TOAST: 'REMOVE_TOAST',
 } as const
 
-// Module-level state shared across hook instances ensures unique IDs without React context overhead.
 let count = 0
 
 function genId() {
@@ -72,7 +71,6 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
-// Reducer isolates complex state transitions, keeping useToast pure and preventing multiple re-renders.
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_TOAST':
@@ -93,7 +91,7 @@ export const reducer = (state: State, action: Action): State => {
       const { toastId } = action
 
       // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity. Side effect inside reducer violates strict pure functional constraints but is acceptable here to tightly couple dismiss timing with state updates.
+      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {
@@ -128,7 +126,6 @@ export const reducer = (state: State, action: Action): State => {
   }
 }
 
-// Observer pattern keeps components in sync without requiring a React Provider at the root, reducing render tree depth.
 const listeners: Array<(state: State) => void> = []
 
 let memoryState: State = { toasts: [] }

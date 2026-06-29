@@ -172,7 +172,6 @@ function Calendar({
   )
 }
 
-// Memoizes day selection state to prevent O(N) re-renders across the entire calendar grid when a single day is focused.
 function CalendarDayButton({
   className,
   day,

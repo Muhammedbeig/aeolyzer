@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono, Rokkitt } from 'next/font/google'
+import { Geist, Geist_Mono, Rokkitt, Outfit, Plus_Jakarta_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
@@ -16,6 +16,14 @@ const _rokkitt = Rokkitt({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["100", "200", "300", "400"]
+});
+const _outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+});
+const _jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
 });
 
 export const metadata: Metadata = {
@@ -49,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${_geist.variable} ${_geistMono.variable} ${_rokkitt.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${_geist.variable} ${_geistMono.variable} ${_rokkitt.variable} ${_outfit.variable} ${_jakarta.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-background">
         <ThemeProvider
           attribute="class"

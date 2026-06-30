@@ -83,6 +83,7 @@ Is there anything specific you'd like me to focus on?`
 
 export default function AeolyzerChatbot() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [activeSidebarTab, setActiveSidebarTab] = useState("Home")
   const [activeView, setActiveView] = useState("Agent")
   const [messages, setMessages] = useState<Message[]>([])
@@ -90,13 +91,6 @@ export default function AeolyzerChatbot() {
   const [chatTitle, setChatTitle] = useState<string | undefined>()
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { theme, setTheme } = useTheme()
-
-  // Auto-close sidebar on mobile on initial load
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      setSidebarOpen(false)
-    }
-  }, [])
 
   const handleTabChange = useCallback((tab: string) => {
     setActiveSidebarTab(tab)
@@ -172,7 +166,9 @@ export default function AeolyzerChatbot() {
       {/* Sidebar */}
       <AeolyzerSidebar 
         isOpen={sidebarOpen} 
+        isMobileOpen={mobileSidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
+        onMobileClose={() => setMobileSidebarOpen(false)}
         onNewChat={handleNewChat}
         currentChatTitle={chatTitle}
         activeTab={activeSidebarTab}
@@ -180,16 +176,13 @@ export default function AeolyzerChatbot() {
         onOpenSettings={() => setSettingsOpen(true)}
       />
 
-      {/* Vertical divider */}
-      <div className="w-px bg-border" />
 
-      
       {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0 min-h-0 relative">
         {/* Mobile Header */}
         <div className="md:hidden flex items-center justify-between p-3 border-b-[0.5px] border-black/10 dark:border-white/10 bg-background flex-shrink-0 z-10">
           <button 
-            onClick={() => setSidebarOpen(true)}
+            onClick={() => setMobileSidebarOpen(true)}
             className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"
             aria-label="Open sidebar"
           >

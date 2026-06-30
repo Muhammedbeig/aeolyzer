@@ -10,64 +10,91 @@ import { SidebarHomeContent } from "./sidebar-home-content"
 import { SidebarUserProfile } from "./sidebar-user-profile"
 import { SearchDialog } from "./search-dialog"
 
+interface AeolyzerSidebarProps {
+  isOpen: boolean
+  isMobileOpen?: boolean
+  onToggle: () => void
+  onMobileClose?: () => void
+  activeTab: string
+  onTabChange: (tab: string) => void
+  onNewChat?: () => void
+  currentChatTitle?: string
+  onOpenSettings?: () => void
+}
+
 export function AeolyzerSidebar({ 
   isOpen, 
+  isMobileOpen,
   onToggle, 
-  onNewChat, 
-  currentChatTitle, 
-  onOpenSettings, 
+  onMobileClose,
   activeTab, 
-  onTabChange 
-}: SidebarProps) {
+  onTabChange,
+  onNewChat,
+  currentChatTitle,
+  onOpenSettings
+}: AeolyzerSidebarProps) {
   const [searchOpen, setSearchOpen] = useState(false)
+
+  const displayOpen = isOpen || isMobileOpen
+
+  const handleToggle = () => {
+    // If the mobile sidebar is currently open, clicking the toggle should close it
+    if (isMobileOpen && onMobileClose) {
+      onMobileClose()
+    } else {
+      // Otherwise toggle the desktop sidebar
+      onToggle()
+    }
+  }
 
   return (
     <>
-      {/* Mobile backdrop */}
-      {isOpen && (
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 md:hidden" 
-          onClick={onToggle}
-          aria-hidden="true"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+          onClick={onMobileClose}
         />
       )}
       <aside 
         className={cn(
-          "flex flex-col bg-sidebar-bg border-r-[0.5px] border-black/10 dark:border-white/10 transition-all duration-300 ease-in-out h-full relative z-50",
-          "max-md:fixed max-md:inset-y-0 max-md:left-0",
-          isOpen ? "w-[260px] max-md:translate-x-0" : "w-[0px] border-r-0 md:w-[60px] md:border-r-[0.5px] max-md:-translate-x-full"
+          "flex flex-col bg-sidebar-bg border-r-[0.5px] border-black/10 dark:border-white/10 transition-all duration-300 ease-in-out h-full relative z-50 font-outfit",
+          "max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:w-[260px]",
+          isOpen ? "md:w-[260px]" : "w-[0px] md:w-[60px] md:border-r-[0.5px]",
+          !isOpen && "max-md:border-r-[0.5px]",
+          isMobileOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full"
         )}
       >
         <SidebarHeader 
-          isOpen={isOpen} 
-          onToggle={onToggle} 
+          isOpen={displayOpen} 
+          onToggle={handleToggle} 
           onSearchOpen={() => setSearchOpen(true)} 
         />
 
         <div className={cn(
           "flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar",
-          !isOpen && "hidden md:block"
+          !displayOpen && "hidden md:block"
         )}>
           <SidebarTabs 
-            isOpen={isOpen} 
+            isOpen={displayOpen} 
             activeTab={activeTab} 
             onTabChange={onTabChange} 
           />
 
-          {isOpen && (activeTab === 'Agent' || activeTab === 'Content') && (
+          {displayOpen && (activeTab === 'Agent' || activeTab === 'Content') && (
             <SidebarAgentContent 
               onNewChat={onNewChat} 
               currentChatTitle={currentChatTitle} 
             />
           )}
 
-          {isOpen && activeTab === 'Home' && (
+          {displayOpen && activeTab === 'Home' && (
             <SidebarHomeContent />
           )}
         </div>
 
         <SidebarUserProfile 
-          isOpen={isOpen} 
+          isOpen={displayOpen} 
           onOpenSettings={onOpenSettings} 
         />
       </aside>

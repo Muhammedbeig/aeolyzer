@@ -1,0 +1,31 @@
+export const RECENT_CHATS = [
+  "Your greatest strengths",
+  "Downloaded page color mismatch",
+  "Answer engine optimization key...",
+  "Futbol fibre audience analysis",
+  "Football websites that went viral...",
+  "Growing soccer live score websi...",
+  "SEO-optimized domain names fo...",
+  "Fixing mismatched sports icons",
+  "README file rewrite",
+  "Social media style ad post with e...",
+  "Unified AI generation API for ima...",
+  "AI-powered ad generation with t...",
+  "Fixing modal styling without bre...",
+  "Email verification requirement f...",
+  "README File Correction",
+  "DuckDuckGo Search Views Rev...",
+]
+
+export const SEARCH_RESULTS = [
+  { title: "create an agents md file for f...", time: "Past week" },
+  { title: "Markdown formatting correction for skill-creator", time: "Past week" },
+  { title: "ECC library applications and use cases", time: "Past week" },
+  { title: "Identifying diagram creation software", time: "Past week" },
+  { title: "Ceiling of interactive coding agents", time: "Past week" },
+  { title: "Document prompt over-optimization concerns", time: "Past week" },
+  { title: "Professional resume creation in LaTeX", time: "Past week" },
+  { title: "Questioning energy investment in work", time: "Past week" },
+  { title: "Becoming the leader", time: "Past month" },
+  { title: "Main article for mcdomenuusa.com", time: "Past month" },
+]

@@ -1,8 +1,8 @@
 "use client"
 
 import { useRef, useEffect } from "react"
-import { AeolyzerMessage, AeolyzerThinkingIndicator } from "./aeolyzer-message"
-import { AeolyzerWelcome } from "./aeolyzer-welcome"
+import { AeolyzerMessage, AeolyzerThinkingIndicator } from "./chat-message"
+import { AeolyzerWelcome } from "./welcome-screen"
 import { ChevronDown } from "lucide-react"
 
 interface Message {

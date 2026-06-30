@@ -19,6 +19,7 @@
 
 Every UI change **must** be verified visually before the task is considered done. "It compiles" is not done. "It looks right in Playwright" is done.
 - Before writing any frontend code use your this skill "frontend-patterns".
+- Always visually confirm using playwright snapshot.
 
 ### 2.1 Required Test Coverage for Every Change
 
@@ -57,6 +58,8 @@ npx playwright test --headed
 
 # Debug a single test
 npx playwright test --debug tests/components/button.spec.ts
+
+- Always visually confirm using playwright snapshot.
 ```
 
 ### 2.3 Playwright Test Structure
@@ -101,6 +104,7 @@ test.describe('ComponentName', () => {
 - Never commit a snapshot update without first reviewing the visual diff.
 - When a snapshot intentionally changes (design update), note it explicitly in the commit message: `fix(button): update hover snapshot after design.md token change`.
 - Flaky snapshots must be investigated, not just re-run. Anti-flake strategies: `waitForLoadState('networkidle')`, mask dynamic content (timestamps, avatars), disable CSS animations in test config.
+- Always visually confirm using playwright snapshot.
 
 ### 2.5 Playwright Config Requirements
 
@@ -181,6 +185,7 @@ Before marking any task done, verify:
 - [ ] Fixed/sticky elements do not cover interactive content.
 - [ ] Modals and overlays have proper scroll lock and do not cause body scroll bleed.
 - [ ] Before writing any frontend code use your this skill "frontend-patterns".
+- [ ] Always visually confirm using playwright snapshot.
 
 Test overflow with Playwright:
 

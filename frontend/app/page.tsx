@@ -3,10 +3,11 @@
 import { useState, useCallback, useEffect } from "react"
 import { useTheme } from "next-themes"
 import { Menu, Plus } from "lucide-react"
-import { AeolyzerSidebar } from "@/components/aeolyzer-sidebar"
-import { AeolyzerChatArea } from "@/components/aeolyzer-chat-area"
-import { AeolyzerChatInput } from "@/components/aeolyzer-chat-input"
-import { AeolyzerSettings } from "@/components/aeolyzer-settings"
+import { AeolyzerSidebar } from "@/components/sidebar/aeolyzer-sidebar"
+import { AeolyzerChatArea } from "@/components/chat/chat-area"
+import { AeolyzerWelcome } from "@/components/chat/welcome-screen"
+import { AeolyzerChatInput } from "@/components/chat/chat-input"
+import { AeolyzerSettings } from "@/components/settings/aeolyzer-settings"
 
 type Theme = "light" | "system" | "dark"
 
@@ -82,11 +83,19 @@ Is there anything specific you'd like me to focus on?`
 
 export default function AeolyzerChatbot() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [activeTab, setActiveTab] = useState("Home")
   const [messages, setMessages] = useState<Message[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [chatTitle, setChatTitle] = useState<string | undefined>()
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { theme, setTheme } = useTheme()
+
+  // Auto-close sidebar on mobile on initial load
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false)
+    }
+  }, [])
 
   const handleNewChat = useCallback(() => {
     setMessages([])
@@ -153,6 +162,8 @@ export default function AeolyzerChatbot() {
         onToggle={() => setSidebarOpen(!sidebarOpen)}
         onNewChat={handleNewChat}
         currentChatTitle={chatTitle}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         onOpenSettings={() => setSettingsOpen(true)}
       />
 
@@ -167,6 +178,7 @@ export default function AeolyzerChatbot() {
           <button 
             onClick={() => setSidebarOpen(true)}
             className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"
+            aria-label="Open sidebar"
           >
             <Menu size={20} strokeWidth={1.5} />
           </button>
@@ -174,30 +186,39 @@ export default function AeolyzerChatbot() {
           <button 
             onClick={handleNewChat}
             className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"
+            aria-label="New chat"
           >
             <Plus size={20} strokeWidth={1.5} />
           </button>
         </div>
 
         {/* Chat area or welcome screen */}
-        <AeolyzerChatArea 
-          messages={messages} 
-          isGenerating={isGenerating}
-          chatTitle={chatTitle}
-          onSend={handleSendMessage}
-        />
-
-        {/* Input area - only shown when there are messages */}
-        {messages.length > 0 && (
-          <div 
-            className="flex-shrink-0 px-4 pb-4 pt-2 bg-background"
-          >
-            <AeolyzerChatInput 
-              onSend={handleSendMessage}
-              isGenerating={isGenerating}
-              placeholder="Reply..."
-            />
+        {activeTab === 'Home' ? (
+          <div className="flex-1 flex flex-col bg-background overflow-y-auto">
+            <AeolyzerWelcome onSend={(msg) => { handleSendMessage(msg); setActiveTab('Agent'); }} isGenerating={isGenerating} />
           </div>
+        ) : (
+          <>
+            <AeolyzerChatArea 
+              messages={messages} 
+              isGenerating={isGenerating}
+              chatTitle={chatTitle}
+              onSend={handleSendMessage}
+            />
+
+            {/* Input area - only shown when there are messages */}
+            {messages.length > 0 && (
+              <div 
+                className="flex-shrink-0 px-4 pb-4 pt-2 bg-background"
+              >
+                <AeolyzerChatInput 
+                  onSend={handleSendMessage}
+                  isGenerating={isGenerating}
+                  placeholder="Reply..."
+                />
+              </div>
+            )}
+          </>
         )}
       </main>
 

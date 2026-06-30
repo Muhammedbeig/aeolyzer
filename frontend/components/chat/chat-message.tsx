@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Copy, ThumbsUp, ThumbsDown, RotateCcw } from "lucide-react"
-import { AeolyzerLogoAnimated } from "./aeolyzer-logo"
+import { AeolyzerLogoAnimated } from "@/components/ui/aeolyzer-logo"
 import { cn } from "@/lib/utils"
 
 interface Message {

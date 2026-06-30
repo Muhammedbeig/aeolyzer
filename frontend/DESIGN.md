@@ -124,6 +124,14 @@ All spacing follows Tailwind's spacing scale:
 - **Border**: `1px solid #4a4945` when unselected
 - **Hover**: Dark background (`#252422`)
 
+### Search Modal / Command Palette
+- **Layout**: Centered modal overlay matching the dark theme
+- **Input Area**: "Search chats and projects" with standard muted placeholder text
+- **List Items**:
+  - **Hover/Selected State**: Uses the same `bg-sidebar-hover` and `text-sidebar-text` as the sidebar items for consistency, rather than the brand accent color.
+  - **Icons**: Left-aligned 16px `MessageSquare` with stroke-width 1.5
+  - **Timestamps/Action text**: Right-aligned muted text ("Past week", "Past month"). On hover/selection, this swaps to display "Enter".
+
 ---
 
 ## Interactions & States

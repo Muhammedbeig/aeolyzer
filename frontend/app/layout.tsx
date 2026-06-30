@@ -3,8 +3,14 @@ import { Geist, Geist_Mono, Rokkitt } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const _geist = Geist({ 
+  subsets: ["latin"],
+  variable: "--font-geist-sans"
+});
+const _geistMono = Geist_Mono({ 
+  subsets: ["latin"],
+  variable: "--font-geist-mono"
+});
 // Using Rokkitt as closest Google Fonts alternative to Bogue Slab
 const _rokkitt = Rokkitt({ 
   subsets: ["latin"],
@@ -43,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${_rokkitt.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${_geist.variable} ${_geistMono.variable} ${_rokkitt.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased bg-background">
         <ThemeProvider
           attribute="class"

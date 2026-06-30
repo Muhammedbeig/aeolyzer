@@ -35,16 +35,25 @@ export const metadata: Metadata = {
   },
 }
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`dark ${_rokkitt.variable}`}>
-      <body className="font-sans antialiased" style={{ backgroundColor: "#2b2a27" }}>
-        {children}
-        <Analytics />
+    <html lang="en" className={`${_rokkitt.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased bg-background">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Analytics />
+        </ThemeProvider>
       </body>
     </html>
   )

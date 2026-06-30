@@ -18,6 +18,13 @@ type JSONRPCRequest struct {
 	Params  json.RawMessage `json:"params,omitempty"`
 }
 
+// JSONRPCNotification is a strict JSON-RPC 2.0 notification with no ID.
+type JSONRPCNotification struct {
+	JSONRPC string          `json:"jsonrpc"`
+	Method  string          `json:"method"`
+	Params  json.RawMessage `json:"params,omitempty"`
+}
+
 // JSONRPCError is a strict JSON-RPC error object.
 type JSONRPCError struct {
 	Code    int             `json:"code"`
@@ -44,6 +51,21 @@ func EncodeRequest(request JSONRPCRequest) ([]byte, error) {
 	}
 	if len(data) > maxJSONRPCBytes {
 		return nil, errors.New("json-rpc request exceeds size limit")
+	}
+	return data, nil
+}
+
+// EncodeNotification validates and encodes one JSON-RPC notification.
+func EncodeNotification(notification JSONRPCNotification) ([]byte, error) {
+	if err := validateNotification(notification); err != nil {
+		return nil, err
+	}
+	data, err := json.Marshal(notification)
+	if err != nil {
+		return nil, fmt.Errorf("encode json-rpc notification: %w", err)
+	}
+	if len(data) > maxJSONRPCBytes {
+		return nil, errors.New("json-rpc notification exceeds size limit")
 	}
 	return data, nil
 }
@@ -90,14 +112,28 @@ func DecodeResponse(data []byte) (JSONRPCResponse, error) {
 func validateRequest(request JSONRPCRequest) error {
 	if request.JSONRPC != "2.0" ||
 		!validJSONRPCID(request.ID) ||
-		request.Method == "" ||
-		len(request.Method) > 128 {
+		!validJSONRPCMethod(request.Method) {
 		return errors.New("json-rpc request envelope is invalid")
 	}
 	if len(request.Params) > 0 && !json.Valid(request.Params) {
 		return errors.New("json-rpc params are invalid")
 	}
 	return nil
+}
+
+func validateNotification(notification JSONRPCNotification) error {
+	if notification.JSONRPC != "2.0" ||
+		!validJSONRPCMethod(notification.Method) {
+		return errors.New("json-rpc notification envelope is invalid")
+	}
+	if len(notification.Params) > 0 && !json.Valid(notification.Params) {
+		return errors.New("json-rpc params are invalid")
+	}
+	return nil
+}
+
+func validJSONRPCMethod(method string) bool {
+	return method != "" && len(method) <= 128
 }
 
 func validJSONRPCID(id json.RawMessage) bool {

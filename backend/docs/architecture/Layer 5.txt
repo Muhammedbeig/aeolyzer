@@ -1,81 +1,74 @@
-# ============================================================
 # LAYER 5 COMPLETE ARCHITECTURE: EXTENSIONS, AUDIT UI & A2A INTEROP
 # (Go Backend / A2A Extensions & A2UI Translation)
-# ============================================================
 
 /layer_05_extensions
-│
+|
 # ------------------------------------------------------------
 # /a2ui_translator (Agent-to-User Interface)
 # ------------------------------------------------------------
-│   # Generates dynamic, context-aware interactive interfaces safely
-│   # Framework-agnostic: The agent outputs A2UI intent, and the Next.js frontend renders it natively
-│
-├── /a2ui_translator
-│   │
-│   ├── a2ui_schema_manager.go
-│   │   # Injects the strict A2UI v0.9 component catalog schema into the active prompt
-│   │   # Forces the LLM to output <a2ui-json> blocks using a flat adjacency list referenced by id
-│   │
-│   └── a2ui_part_converter.go
-│       # The middleware that intercepts specific tool responses and converts them into UI parts
-│       # action: Parses the LLM's A2UI output, validates the JSON schema, and routes it to the frontend
-│       # fallback: If schema validation fails, it triggers an auto-retry to the LLM to fix the malformed payload
-│
+|   # Generates dynamic, context-aware interactive interfaces safely.
+|   # Framework-agnostic: the agent outputs A2UI intent, and the Next.js frontend renders it natively.
+|
++-- /a2ui_translator
+|   |
+|   +-- a2ui_schema_manager.go
+|   |   # Injects the strict A2UI component catalog schema into the active prompt.
+|   |   # Forces model/UI output through schema-validated A2UI JSON.
+|   |
+|   +-- a2ui_part_converter.go
+|       # Intercepts selected presentation outputs and converts them into UI parts.
+|       # action: Parses A2UI output, validates the JSON schema, and routes it to the frontend.
+|       # fallback: Schema validation failure returns a safe presentation error instead of executable UI.
+|
 # ------------------------------------------------------------
 # /interactive_components (Dynamic Tool UI Mappings)
 # ------------------------------------------------------------
-│   # Maps your specific exposed tools directly to A2UI component structures
-│
-├── /interactive_components
-│   │
-│   ├── ask_question.ui.json
-│   │   # Maps to askQuestion() tool
-│   │   # A2UI Components used: Card, Text, ChoicePicker, Button
-│   │   # behavior: Renders the 4 options (A/B/C/D) natively; if multiselect=true, renders CheckBoxes
-│   │
-│   ├── propose_edit.ui.json
-│   │   # Maps to proposeEdit() and proposeMemoryUpdate() tools
-│   │   # A2UI Components used: Card, Text (for inline diff), Row (for buttons)
-│   │   # behavior: Displays the "accept/reject card" directly in the chat feed
-│   │   # action: Captures the user's click and routes the event back to the DAG Orchestrator
-│   │
-│   └── audit_dashboard.ui.json
-│       # Maps to the persistent audit reports and issue lists
-│       # A2UI Components used: Surface, Column, Text, DataGrid
-│       # behavior: Renders the dashboard view where site health and prioritized fixes are displayed
-│       # feature: Updates dynamically as the agent resolves issues
-│
+|   # Maps product-level presentation intents to A2UI component structures.
+|
++-- /interactive_components
+|   |
+|   +-- ask_question.ui.json
+|   |   # Maps to safe question prompts.
+|   |   # A2UI components: Card, Text, ChoicePicker, Button.
+|   |
+|   +-- propose_edit.ui.json
+|   |   # Maps to proposed edit and memory-update approval cards.
+|   |   # A2UI components: Card, Text, Row.
+|   |
+|   +-- audit_dashboard.ui.json
+|       # Maps to persistent audit reports and issue lists.
+|       # A2UI components: Surface, Column, Text, DataGrid.
+|
 # ------------------------------------------------------------
 # /a2a_server (External Extensibility)
 # ------------------------------------------------------------
-│   # Exposes your SEO/AEO Agent to the global ecosystem
-│
-└── /a2a_server
-    │
-    ├── agent_card.yaml
-    │   # The machine-readable identity of your SEO/AEO Auditor agent
-    │   # Defines capabilities, interaction schemas, and security requirements
-    │
-    └── a2a_executor.go
-        # The translation layer that allows other external agents to hire your agent
-        # action: Translates incoming A2A requests from remote clients into your internal DAG workflows
-
+|   # Exposes AEOlyzer through canonical A2A Protocol 1.0 using Google ADK Go adka2a/v2.
+|   # OpenAPI is not the A2A contract; Agent Card plus A2A Message/Task objects are.
+|
++-- /a2a_server
+    |
+    +-- agent_card.go
+    |   # Builds and validates the canonical camelCase A2A Agent Card.
+    |   # Defines only public skills, supported interfaces, and high-level security requirements.
+    |
+    +-- a2a_envelope_validator.go
+        # Validates the AEOlyzer signed-envelope extension when trusted interop needs it.
+        # action: Does not replace canonical A2A Message, Task, Part, or Agent Card objects.
 
 # ============================================================
 # ACTIVE LAYER 5 SESSION STATE (EXTENSION FRAMEWORK)
 # ============================================================
 
 session.state {
-  
   # A2UI Presentation State
   active_surface    : "audit_dashboard_view"
   pending_ui_cards  : ["audit_recommendation_card", "technical_issue_card"]
   rendered_catalogs : ["BasicCatalog_v0.9"]
-  
-  # A2A State
-  a2a_connections   : "0_remote_clients"
 
+  # A2A State
+  a2a_contract      : "A2A_1.0_ADK_Go_adka2a_v2"
+  a2a_card_path     : "/.well-known/agent-card.json"
+  a2a_connections   : "0_remote_clients"
 }
 
 # ============================================================

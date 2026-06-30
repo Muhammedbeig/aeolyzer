@@ -7,11 +7,17 @@ AEOlyzer is a modern AI chatbot interface inspired by Claude, featuring a sophis
 
 ## Color Palette
 
-### Primary Colors
+### Primary Colors (System/Dark Mode)
 - **Background (Primary)**: `#2b2a27` - Deep charcoal base for main content areas
 - **Background (Secondary)**: `#393836` - Slightly lighter for input fields and cards
 - **Background (Tertiary)**: `#343330` - For badges and subtle containers
 - **Background (Dark Hover)**: `#252422` - Active/hover state for all interactive elements
+
+### Primary Colors (Light Mode)
+- **Background (Primary)**: `#faf9f5` - Warm off-white base for main content areas
+- **Background (Secondary)**: `#f0efeb` - Slightly darker for input fields and cards
+- **Background (Tertiary)**: `#e6e5e1` - For badges and subtle containers
+- **Background (Hover)**: `#e6e5e1` - Active/hover state for all interactive elements
 
 ### Brand Color
 - **Orange (Brand)**: `#e07b53` - Primary accent used for:
@@ -21,12 +27,19 @@ AEOlyzer is a modern AI chatbot interface inspired by Claude, featuring a sophis
   - Focus rings and selection states
   - Checkmarks and selection indicators
 
-### Text Colors
+### Text Colors (System/Dark Mode)
 - **Text (Primary)**: `#ececec` - Bright white for main content and headings
 - **Text (Secondary)**: `#a3a29e` - Muted grey for sidebar items, icons, placeholders
 - **Text (Tertiary)**: `#7a7974` - Lighter grey for subtle text and hints
 - **Text (Warm)**: `#b8977e` - Warm beige for greeting text and brand messaging
 - **Text (Sidebar)**: `#d4d4d0` - Slightly greyish white for sidebar brand name
+
+### Text Colors (Light Mode)
+- **Text (Primary)**: `#2b2a27` - Charcoal for main content and headings
+- **Text (Secondary)**: `#7a7974` - Muted grey for sidebar items, icons, placeholders
+- **Text (Tertiary)**: `#a3a29e` - Lighter grey for subtle text and hints
+- **Text (Warm)**: `#b8977e` - Warm beige for greeting text and brand messaging
+- **Text (Sidebar)**: `#2b2a27` - Charcoal for sidebar brand name
 
 ### Border & Divider
 - **Borders**: `#4a4945` - Subtle grey for input borders and dividers
@@ -82,8 +95,9 @@ All spacing follows Tailwind's spacing scale:
 ### Input Area
 - **Height**: Min 32px, max 200px with auto-resize
 - **Padding**: `pt-5 pb-4 px-4` - Slightly generous padding
-- **Focus State**: Thin inset border `inset 0 0 0 1px rgba(255,255,255,0.1)` - Subtle focus indicator
-- **Caret Color**: `#ececec` - Matches text color for visibility
+- **Default Border**: 1px subtle border (`border-muted-foreground/20` in light mode, `border-border` in dark mode)
+- **Focus State**: Very thin, sharp 1px border matching the brand color (`border-accent` / `#e07b53`). No fuzzy outset rings (`ring-0`) are used to maintain a crisp look.
+- **Caret Color**: Matches text color for visibility (`caret-foreground`)
 - **Placeholder**: Light grey (`#7a7974`), font-light, letter-spacing 0.01em
 
 ### Quick Action Buttons
@@ -120,12 +134,11 @@ All spacing follows Tailwind's spacing scale:
 - **Transition**: Smooth `transition-colors` for all state changes
 
 ### Focus States
-- **Form Inputs**: `focus:ring-2 focus:ring-[#e07b53]` - Orange ring indicator
-- **Textareas**: Same focus ring treatment
-- **Buttons**: Generally no ring, rely on background change
+- **Form Inputs & Textareas**: A crisp 1px solid border using the brand orange (`border-accent`). Do not use outset fuzzy shadows or `ring-` utilities for input focus to ensure it stays sharp and elegant.
+- **Buttons**: Generally no ring, rely on background change (`hover:bg-muted` or similar)
 
 ### Active/Selected States
-- **Theme Selection**: `ring-2 ring-[#e07b53]` + dark background
+- **Theme Selection**: `border-accent` + dark background
 - **Tab Navigation**: Dark background (`#252422`)
 - **Checkmarks**: Orange color (`#e07b53`) for visibility
 - **Model Selected**: Orange checkmark in dropdown
@@ -176,30 +189,30 @@ All spacing follows Tailwind's spacing scale:
 
 ---
 
-## Dark Mode
+## Theme Modes (System & Light Mode)
 
-The entire application uses a carefully calibrated dark theme:
-- No light mode variant currently implemented
-- All colors optimized for low-light viewing
-- Reduced eye strain through strategic use of warm accents
-- Consistent with modern AI assistant UI conventions
+The application uses the dark theme as the default **System Mode**, alongside a carefully calibrated **Light Mode**:
+- **System Mode (Dark)**: Optimized for low-light viewing and reduced eye strain through strategic use of warm accents.
+- **Light Mode**: Inverted color hierarchy maintaining the warm beige and orange accents, optimized for bright environments.
+- Transitions between themes are immediate but respect user OS preferences via the `next-themes` provider.
 
 ---
 
 ## Design Principles
 
-1. **Minimalist Elegance**: Clean, uncluttered interface with purposeful use of whitespace
-2. **Consistent Interaction**: All hover and focus states follow the same dark pattern
-3. **Brand Consistency**: Orange accent used sparingly but consistently for all interactive elements
-4. **Typography Hierarchy**: Serif display font for welcoming content, sans-serif for functional UI
-5. **Accessibility First**: High contrast, clear focus states, semantic sizing
-6. **Performance**: Minimal shadows, smooth transitions, no gradients unless necessary
+1. **Strictly Tailwind CSS**: Tailwind is the sole source of truth for styling. Absolutely no inline `style={{...}}` objects or hardcoded hex colors inside React components.
+2. **Semantic Design Tokens**: All colors use CSS variables mapped through Tailwind v4's `@theme inline` block in `globals.css` (e.g., `text-sidebar-text`, `bg-sidebar-hover`). Do not use direct hex codes.
+3. **Minimalist Elegance**: Clean, uncluttered interface with purposeful use of whitespace.
+4. **Consistent Interaction**: All hover and focus states follow the same pattern (native Tailwind `hover:`, `group-hover:`, etc.). Avoid using React `onMouseEnter/onMouseLeave` state just for visual changes.
+5. **Brand Consistency**: Orange accent (`#e07b53` / `border-accent`) used sparingly but consistently for active states and input focus.
+6. **Typography Hierarchy**: Serif display font for welcoming content, sans-serif for functional UI.
+7. **Accessibility First**: High contrast text (especially in Light Mode), clear focus states, semantic sizing.
+8. **Performance**: Native CSS transitions, no layout jumping (e.g., icons that appear on hover should use `opacity-0 group-hover:opacity-100` rather than conditional React rendering).
 
 ---
 
 ## Future Considerations
 
-- Light mode implementation with inverted color hierarchy
 - Gradient overlays for visual depth (if needed)
 - Additional accent colors for error/warning states
 - Animation refinement for loading states and transitions

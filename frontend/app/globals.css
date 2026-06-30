@@ -4,46 +4,51 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Claude.ai exact color scheme - Dark Theme */
-  --background: #2b2a27;
-  --foreground: #ececec;
-  --card: #393836;
-  --card-foreground: #ececec;
-  --popover: #393836;
-  --popover-foreground: #ececec;
-  --primary: #ececec;
-  --primary-foreground: #2b2a27;
-  --secondary: #393836;
-  --secondary-foreground: #ececec;
-  --muted: #393836;
-  --muted-foreground: #a3a29e;
+  /* Light Theme */
+  --background: #faf9f5;
+  --foreground: #2b2a27;
+  --card: #f0efeb;
+  --card-foreground: #2b2a27;
+  --popover: #f0efeb;
+  --popover-foreground: #2b2a27;
+  --primary: #2b2a27;
+  --primary-foreground: #ececec;
+  --secondary: #e6e5e1;
+  --secondary-foreground: #2b2a27;
+  --muted: #e6e5e1;
+  --muted-foreground: #4a4945;
   --accent: #e07b53;
-  --accent-foreground: #2b2a27;
+  --accent-foreground: #faf9f5;
   --destructive: #ef4444;
   --destructive-foreground: #fafafa;
-  --border: #4a4945;
-  --input: #393836;
+  --border: #d4d4d0;
+  --input: #ffffff;
   --ring: #e07b53;
   --radius: 0.75rem;
   
   /* Claude sidebar */
-  --sidebar-bg: #2b2a27;
-  --sidebar-hover: #393836;
-  --sidebar-active: #4a4945;
-  --sidebar-text: #ececec;
-  --sidebar-muted: #a3a29e;
+  --sidebar-bg: #f5f4f0;
+  --sidebar-hover: #e6e5e1;
+  --sidebar-active: #d4d4d0;
+  --sidebar-text: #2b2a27;
+  --sidebar-muted: #4a4945;
   
   /* Chat area */
-  --chat-bg: #2b2a27;
-  --input-bg: #393836;
-  --message-user: #393836;
+  --chat-bg: #faf9f5;
+  --input-bg: #ffffff;
+  --message-user: #f0efeb;
   --message-assistant: transparent;
+  
+  /* Welcome area */
+  --welcome-bg: #e6e5e1;
+  --welcome-text: #4a4945;
   
   /* Claude brand */
   --claude-orange: #e07b53;
 }
 
 .dark {
+  /* Claude.ai exact color scheme - Dark Theme */
   --background: #2b2a27;
   --foreground: #ececec;
   --card: #393836;
@@ -63,6 +68,26 @@
   --border: #4a4945;
   --input: #393836;
   --ring: #e07b53;
+  
+  /* Claude sidebar */
+  --sidebar-bg: #2b2a27;
+  --sidebar-hover: #252422;
+  --sidebar-active: #4a4945;
+  --sidebar-text: #d4d4d0;
+  --sidebar-muted: #6b6b66;
+  
+  /* Chat area */
+  --chat-bg: #2b2a27;
+  --input-bg: #393836;
+  --message-user: #393836;
+  --message-assistant: transparent;
+  
+  /* Welcome area */
+  --welcome-bg: #343330;
+  --welcome-text: #8b8b87;
+  
+  /* Claude brand */
+  --claude-orange: #e07b53;
 }
 
 @theme inline {
@@ -88,6 +113,18 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-muted: var(--sidebar-muted);
+  
+  --color-welcome-bg: var(--welcome-bg);
+  --color-welcome-text: var(--welcome-text);
+  
+  --color-claude-orange: var(--claude-orange);
+  
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

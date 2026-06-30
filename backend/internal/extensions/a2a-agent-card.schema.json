@@ -3,19 +3,204 @@
   "$id": "https://aeolyzer.local/schemas/layer5/a2a-agent-card-v2.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["agent_id", "display_name", "description", "protocol_version", "endpoint", "public_capabilities"],
+  "required": [
+    "supportedInterfaces",
+    "capabilities",
+    "defaultInputModes",
+    "defaultOutputModes",
+    "description",
+    "name",
+    "skills",
+    "version"
+  ],
   "properties": {
-    "agent_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$"},
-    "display_name": {"type": "string", "minLength": 1, "maxLength": 100},
+    "supportedInterfaces": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url", "protocolBinding", "protocolVersion"],
+        "properties": {
+          "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+          "protocolBinding": {"enum": ["JSONRPC", "GRPC", "HTTP+JSON"]},
+          "tenant": {"type": "string", "minLength": 1, "maxLength": 128},
+          "protocolVersion": {"const": "1.0"}
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "extensions": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["uri"],
+            "properties": {
+              "uri": {"type": "string", "format": "uri"},
+              "description": {"type": "string", "maxLength": 500},
+              "required": {"type": "boolean"},
+              "params": {"type": "object"}
+            }
+          }
+        },
+        "pushNotifications": {"type": "boolean"},
+        "streaming": {"type": "boolean"},
+        "extendedAgentCard": {"type": "boolean"}
+      }
+    },
+    "defaultInputModes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {"type": "string", "minLength": 1, "maxLength": 128}
+    },
+    "defaultOutputModes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {"type": "string", "minLength": 1, "maxLength": 128}
+    },
     "description": {"type": "string", "minLength": 20, "maxLength": 500},
-    "protocol_version": {"type": "string", "minLength": 1, "maxLength": 32},
-    "endpoint": {"type": "string", "format": "uri", "pattern": "^https://"},
-    "public_capabilities": {
+    "documentationUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "iconUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "name": {"type": "string", "minLength": 1, "maxLength": 100},
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organization", "url"],
+      "properties": {
+        "organization": {"type": "string", "minLength": 1, "maxLength": 100},
+        "url": {"type": "string", "format": "uri", "pattern": "^https://"}
+      }
+    },
+    "securityRequirements": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["schemes"],
+        "properties": {
+          "schemes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {"type": "string", "maxLength": 100}
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "type": "object",
+      "maxProperties": 8,
+      "additionalProperties": {
+        "type": "object",
+        "oneOf": [
+          {
+            "required": ["openIdConnectSecurityScheme"],
+            "properties": {
+              "openIdConnectSecurityScheme": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["openIdConnectUrl"],
+                "properties": {
+                  "description": {"type": "string", "maxLength": 500},
+                  "openIdConnectUrl": {"type": "string", "format": "uri", "pattern": "^https://"}
+                }
+              }
+            }
+          },
+          {
+            "required": ["httpAuthSecurityScheme"],
+            "properties": {
+              "httpAuthSecurityScheme": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["scheme"],
+                "properties": {
+                  "description": {"type": "string", "maxLength": 500},
+                  "scheme": {"type": "string", "minLength": 1, "maxLength": 64},
+                  "bearerFormat": {"type": "string", "maxLength": 64}
+                }
+              }
+            }
+          },
+          {
+            "required": ["mtlsSecurityScheme"],
+            "properties": {
+              "mtlsSecurityScheme": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "description": {"type": "string", "maxLength": 500}
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "signatures": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["protected", "signature"],
+        "properties": {
+          "header": {"type": "object"},
+          "protected": {"type": "string", "minLength": 1},
+          "signature": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "skills": {
       "type": "array",
       "minItems": 1,
       "maxItems": 32,
-      "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"}
-    }
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "description", "tags"],
+        "properties": {
+          "description": {"type": "string", "minLength": 20, "maxLength": 500},
+          "examples": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {"type": "string", "minLength": 1, "maxLength": 500}
+          },
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,63}$"},
+          "inputModes": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {"type": "string", "minLength": 1, "maxLength": 128}
+          },
+          "name": {"type": "string", "minLength": 1, "maxLength": 100},
+          "outputModes": {
+            "type": "array",
+            "maxItems": 16,
+            "items": {"type": "string", "minLength": 1, "maxLength": 128}
+          },
+          "securityRequirements": {
+            "type": "array",
+            "maxItems": 8
+          },
+          "tags": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,31}$"}
+          }
+        }
+      }
+    },
+    "version": {"type": "string", "minLength": 1, "maxLength": 64}
   }
 }

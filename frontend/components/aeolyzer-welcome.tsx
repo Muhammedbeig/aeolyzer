@@ -32,10 +32,9 @@ export function AeolyzerWelcome({ userName = "Muhammad", onSend, isGenerating }:
       {/* Free plan badge */}
       <div className="mb-6">
         <span 
-          className="text-sm px-3 py-1.5 rounded-full"
-          style={{ backgroundColor: "#343330", color: "#8b8b87" }}
+          className="text-sm px-3 py-1.5 rounded-full bg-welcome-bg text-welcome-text"
         >
-          Free plan · <span style={{ color: "#e07b53" }} className="cursor-pointer hover:underline">Upgrade</span>
+          Free plan · <span className="text-accent cursor-pointer hover:underline">Upgrade</span>
         </span>
       </div>
 

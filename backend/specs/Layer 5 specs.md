@@ -294,6 +294,10 @@ Layer 5 owns presentation schemas for canvas, brief, chat, SEO settings, source/
 
 Layer 5 owns the Agent Card, A2A application envelope schemas, extension negotiation, task schemas, and public capability descriptions. Layer 7 owns A2A/MCP transport and mTLS. Layer 2 owns policy. Layer 3 owns internal workflow routing.
 
+The external agent contract is A2A Protocol 1.0 exposed through Google ADK Go. Implementations must use `google.golang.org/adk/server/adka2a/v2` and the canonical `github.com/a2aproject/a2a-go/v2/a2a` data model. Agent Card JSON must use the A2A camelCase fields (`supportedInterfaces`, `defaultInputModes`, `securityRequirements`, and `securitySchemes`), not AEOlyzer-only snake_case fields.
+
+OpenAPI is not the A2A compliance contract. It may be added separately for ordinary REST endpoints owned by `internal/httpapi`, but it must not replace the A2A Agent Card, A2A JSON-RPC/HTTP bindings, or ADK executor wiring.
+
 ---
 
 ## 5. Required Directory Upgrade
@@ -1242,42 +1246,60 @@ Layer 5 does not override Layer 2/3 approval requirements. It only prevents the 
 
 ### 13.1 Agent Card schema
 
-```yaml
-agent_card_version: 1
-agent_id: seo_aeo_content_agent
-display_name: "SEO/AEO Auditor and Content Agent"
-description: >
-  Provides SEO/AEO audit, content planning, evidence-backed brief support,
-  metadata suggestions, internal-link recommendations, structured-data guidance,
-  content-quality review, and guarded content-surface collaboration.
-public_capabilities:
-  - id: seo_audit
-    description: "Review site health, crawlability, structured data, internal links, and AEO readiness."
-    input_schema_ref: schemas/seo_audit_request.schema.json
-    output_schema_ref: schemas/seo_audit_response.schema.json
-  - id: content_brief
-    description: "Create or refine a structured content brief from topic, audience, intent, CTA, and constraints."
-    input_schema_ref: schemas/content_brief_request.schema.json
-    output_schema_ref: schemas/content_brief_response.schema.json
-  - id: content_optimization
-    description: "Suggest improvements to existing content, metadata, internal links, and source support."
-    input_schema_ref: schemas/content_optimization_request.schema.json
-    output_schema_ref: schemas/content_optimization_response.schema.json
-extensions:
-  - a2ui
-security:
-  requires_authenticated_transport: true
-  supports_mfa_challenge: true
-  policy_boundary: "All requests pass through intake and policy gates before internal workflow execution."
-limits:
-  max_request_bytes: 131072
-  max_payload_refs: 20
-  max_runtime_hint: "async task"
-disclosure:
-  public_only: true
-  no_internal_tool_inventory: true
-  no_workflow_ids: true
-  no_skill_inventory: true
+```json
+{
+  "name": "AEOlyzer",
+  "description": "Provides guarded website visibility, AEO audit, and content-planning capabilities through the A2A protocol.",
+  "supportedInterfaces": [
+    {
+      "url": "https://api.example.com/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain"],
+  "skills": [
+    {
+      "id": "site_visibility_guidance",
+      "name": "Site visibility guidance",
+      "description": "Explains safe, public website visibility and content improvement options without exposing internal topology.",
+      "tags": ["aeo", "seo", "content"]
+    }
+  ],
+  "securitySchemes": {
+    "googleOidc": {
+      "openIdConnectSecurityScheme": {
+        "openIdConnectUrl": "https://accounts.google.com/.well-known/openid-configuration"
+      }
+    }
+  },
+  "securityRequirements": [
+    {
+      "schemes": {
+        "googleOidc": []
+      }
+    }
+  ],
+  "version": "1.0.0"
+}
+```
+
+Required implementation rules:
+
+```text
+serve the public Agent Card at /.well-known/agent-card.json
+build the card from official a2a.AgentCard types
+validate the serialized card against the Layer 5 schema at startup
+reject cards that disclose workflow IDs, tool inventories, MCP endpoints, traces, sandbox details, policy file names, or skill file paths
+advertise only public product capabilities as A2A skills
+use Google ADK Go adka2a/v2 to bridge ADK agents to A2A execution
+do not use OpenAPI as the A2A contract
 ```
 
 ### 13.2 Agent Card rules
@@ -1314,19 +1336,21 @@ secrets
 ### 13.3 A2A inbound flow
 
 ```text
-01 receive A2A envelope through Layer 7 transport
-02 validate envelope shape in Layer 5
-03 validate Agent Card capability ID
-04 apply public disclosure filter
-05 normalize into external_request_intake envelope
-06 send to Layer 2 for policy and intent handling if natural-language or unsafe fields exist
-07 send to Layer 3 only after Layer 2 permits intake
-08 receive presentation/task response from Layer 3
-09 format response as A2A envelope
-10 emit sanitized A2A event to Layer 8
+01 Layer 7 receives an A2A JSON-RPC request through the ADK/A2A transport mount
+02 Layer 7 authenticates transport metadata and creates the ADK/A2A request context
+03 Google ADK adka2a/v2 converts the A2A Message or Task request into ADK invocation input
+04 Layer 5 validates public Agent Card and public A2A shape, including disclosure policy
+05 Layer 5 normalizes safe public A2A content into an external request envelope
+06 Layer 2 performs policy, prompt-injection, and outbound-disclosure checks on natural-language content
+07 Layer 3 receives only Layer 2-permitted requests that require workflow routing
+08 Layer 5 formats safe task/message output through official A2A response types
+09 Layer 7 writes the A2A JSON-RPC response without exposing internal transport or workflow details
+10 Layer 8 receives sanitized A2A event facts only
 ```
 
 Layer 5 must not skip Layer 2.
+
+The signed `a2a-envelope` schema remains an AEOlyzer extension payload for trusted interop scenarios. It is not the base A2A protocol shape and must not replace canonical A2A `Message`, `Task`, `Part`, or Agent Card objects.
 
 ---
 

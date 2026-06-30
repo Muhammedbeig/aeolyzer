@@ -32,7 +32,7 @@ export function AeolyzerLogo({ className, size = 32, animate = false }: Aeolyzer
           y1="16"
           x2="16"
           y2={i % 2 === 0 ? "4" : "6"}
-          stroke="#e07b53"
+          stroke="var(--accent)"
           strokeWidth={i % 2 === 0 ? "2.5" : "2"}
           strokeLinecap="round"
           transform={`rotate(${angle} 16 16)`}
@@ -65,7 +65,7 @@ export function AeolyzerLogoAnimated({ className, size = 32 }: { className?: str
           y1="16"
           x2="16"
           y2={i % 2 === 0 ? "4" : "6"}
-          stroke="#e07b53"
+          stroke="var(--accent)"
           strokeWidth={i % 2 === 0 ? "2.5" : "2"}
           strokeLinecap="round"
           transform={`rotate(${angle} 16 16)`}

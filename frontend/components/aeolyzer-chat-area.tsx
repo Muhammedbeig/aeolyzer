@@ -33,24 +33,23 @@ export function AeolyzerChatArea({ messages, isGenerating, chatTitle, onSend }: 
   // If no messages, show welcome screen
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex flex-col" style={{ backgroundColor: "#2b2a27" }}>
+      <div className="flex-1 flex flex-col bg-background">
         <AeolyzerWelcome onSend={onSend} isGenerating={isGenerating} />
       </div>
     )
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0" style={{ backgroundColor: "#2b2a27" }}>
+    <div className="flex-1 flex flex-col min-h-0 bg-background">
       {/* Header with chat title */}
       {chatTitle && (
-        <div className="flex items-center justify-between px-6 py-3 border-b flex-shrink-0" style={{ borderColor: "#4a4945" }}>
+        <div className="flex items-center justify-between px-6 py-3 border-b flex-shrink-0 border-border">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium" style={{ color: "#ececec" }}>{chatTitle}</span>
-            <ChevronDown size={14} style={{ color: "#a3a29e" }} />
+            <span className="text-sm font-medium text-foreground">{chatTitle}</span>
+            <ChevronDown size={14} className="text-muted-foreground" />
           </div>
           <button 
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:bg-[#d4d4d4]"
-            style={{ backgroundColor: "#ececec", color: "#2b2a27" }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:bg-muted bg-foreground text-background"
           >
             Share
           </button>
@@ -61,7 +60,7 @@ export function AeolyzerChatArea({ messages, isGenerating, chatTitle, onSend }: 
       <div 
         ref={containerRef}
         className="flex-1 overflow-y-auto px-4 py-6"
-        style={{ scrollbarWidth: "thin", scrollbarColor: "#4a4945 transparent" }}
+        style={{ scrollbarWidth: "thin", scrollbarColor: "var(--border) transparent" }}
       >
         <div className="max-w-3xl mx-auto">
           {messages.map((message) => (

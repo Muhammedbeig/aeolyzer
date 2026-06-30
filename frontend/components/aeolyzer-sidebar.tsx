@@ -82,52 +82,42 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
   const [showUserMenu, setShowUserMenu] = useState(false)
 
   // Sidebar text color - more muted grey like Claude
-  const sidebarTextColor = "#a3a29e"
-  const sidebarTextColorHover = "#d4d4d4"
+  const sidebarTextColor = "var(--muted-foreground)"
+  const sidebarTextColorHover = "var(--sidebar-text)"
 
   return (
-    <aside
-      className={cn(
-        "flex flex-col h-full transition-all duration-300 ease-in-out relative",
-        isOpen ? "w-[260px]" : "w-[60px]"
+    <>
+      {/* Mobile backdrop */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden" 
+          onClick={onToggle}
+        />
       )}
-      style={{ backgroundColor: "#2b2a27" }}
+      <aside
+      className={cn(
+        "flex flex-col h-full transition-all duration-300 ease-in-out bg-sidebar-bg shrink-0",
+        "max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-50 md:relative",
+        isOpen ? "w-[260px] max-md:translate-x-0" : "w-[60px] max-md:-translate-x-full"
+      )}
     >
       {/* Top section */}
       <div className="flex items-center justify-between p-3 flex-shrink-0">
         {isOpen ? (
           <>
-            <span className="text-lg font-medium" style={{ color: "#d4d4d0" }}>AEOlyzer</span>
+            <span className="text-lg font-medium text-sidebar-text">AEOlyzer</span>
             <button
               onClick={onToggle}
-              className="p-1.5 rounded-md transition-colors"
-              style={{ color: "#6b6b66" }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#252422"
-                e.currentTarget.style.color = "#a3a29e"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent"
-                e.currentTarget.style.color = "#6b6b66"
-              }}
-            >
+              className="p-1.5 rounded-md transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-muted-foreground"
+>
               <SidebarToggleIcon isOpen={true} />
             </button>
           </>
         ) : (
           <button
             onClick={onToggle}
-            className="p-1.5 rounded-md transition-colors mx-auto"
-            style={{ color: "#6b6b66" }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#252422"
-              e.currentTarget.style.color = "#a3a29e"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "transparent"
-              e.currentTarget.style.color = "#6b6b66"
-            }}
-          >
+            className="p-1.5 rounded-md transition-colors mx-auto text-sidebar-muted hover:bg-sidebar-hover hover:text-muted-foreground"
+>
             <SidebarToggleIcon isOpen={false} />
           </button>
         )}
@@ -139,19 +129,10 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         <button
           onClick={onNewChat}
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <Plus size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">New chat</span>}
         </button>
@@ -159,19 +140,10 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {/* Search */}
         <button
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <Search size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">Search</span>}
         </button>
@@ -179,45 +151,27 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {/* Customize */}
         <button
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <Settings2 size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">Customize</span>}
         </button>
       </nav>
 
       {/* Scrollable section */}
-      <div className="flex-1 overflow-y-auto px-2 mt-1" style={{ scrollbarWidth: "thin", scrollbarColor: "#4a4945 transparent" }}>
+      <div className="flex-1 overflow-y-auto px-2 mt-1" style={{ scrollbarWidth: "thin", scrollbarColor: "var(--border) transparent" }}>
         {/* Divider */}
-        <div className="my-1.5 border-t border-[#3a3936]" />
+        <div className="my-1.5 border-t border-[var(--border)]" />
 
         {/* Chats */}
         <button
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <MessageSquare size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">Chats</span>}
         </button>
@@ -225,19 +179,10 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {/* Projects */}
         <button
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <FolderOpen size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">Projects</span>}
         </button>
@@ -245,19 +190,10 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {/* Artifacts */}
         <button
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <Grid2X2 size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">Artifacts</span>}
         </button>
@@ -265,19 +201,10 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {/* Code */}
         <button
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors",
+            "flex items-center w-full rounded-lg transition-colors text-sidebar-muted hover:text-sidebar-text hover:bg-sidebar-hover",
             isOpen ? "gap-3 px-3 py-1.5" : "justify-center p-2"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-            e.currentTarget.style.color = sidebarTextColorHover
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-            e.currentTarget.style.color = sidebarTextColor
-          }}
-        >
+>
           <Code size={18} strokeWidth={1.5} />
           {isOpen && <span className="text-sm">Code</span>}
         </button>
@@ -286,27 +213,19 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {isOpen && (
           <>
             <div className="mt-3 mb-1.5 px-3">
-              <span className="text-xs" style={{ color: "#6b6b66" }}>Recents</span>
+              <span className="text-xs text-sidebar-muted">Recents</span>
             </div>
             <div className="pb-4">
               {recentChats.map((chat, index) => (
                 <button
                   key={index}
-                  onMouseEnter={() => setHoveredChat(index)}
-                  onMouseLeave={() => setHoveredChat(null)}
                   className={cn(
-                    "flex items-center justify-between w-full px-3 py-1 rounded-lg transition-colors text-left group",
-                    currentChatTitle === chat ? "bg-[#252422]" : ""
+                    "flex items-center justify-between w-full px-3 py-1 rounded-lg transition-colors text-left group text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text",
+                    currentChatTitle === chat ? "bg-muted text-foreground" : ""
                   )}
-                  style={{ 
-                    color: sidebarTextColor,
-                    backgroundColor: hoveredChat === index && currentChatTitle !== chat ? "#252422" : undefined
-                  }}
                 >
                   <span className="text-sm truncate flex-1">{chat}</span>
-                  {hoveredChat === index && (
-                    <MoreHorizontal size={14} style={{ color: "#6b6b66" }} className="flex-shrink-0 ml-2" />
-                  )}
+                  <MoreHorizontal size={14} className="text-sidebar-muted flex-shrink-0 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               ))}
             </div>
@@ -315,36 +234,28 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
       </div>
 
       {/* User section - fixed at bottom */}
-      <div className="flex-shrink-0 p-2 border-t border-[#3a3936] relative">
+      <div className="flex-shrink-0 p-2 border-t border-[var(--border)] relative">
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
           className={cn(
-            "flex items-center w-full rounded-lg transition-colors p-2",
+            "flex items-center w-full rounded-lg transition-colors p-2 text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text",
             isOpen ? "gap-3" : "justify-center"
           )}
-          style={{ color: sidebarTextColor }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#252422"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "transparent"
-          }}
-        >
+>
           <div 
-            className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0"
-            style={{ backgroundColor: "#4a4945", color: "#ececec" }}
+            className="w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0 bg-border text-foreground"
           >
             M
           </div>
           {isOpen && (
             <>
               <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-medium truncate" style={{ color: "#ececec" }}>Muhammad</p>
-                <p className="text-xs" style={{ color: "#6b6b66" }}>Free plan</p>
+                <p className="text-sm font-medium truncate text-foreground">Muhammad</p>
+                <p className="text-xs text-sidebar-muted">Free plan</p>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <Download size={16} style={{ color: "#6b6b66" }} />
-                <ChevronDown size={14} style={{ color: "#6b6b66" }} />
+                <Download size={16} className="text-sidebar-muted" />
+                <ChevronDown size={14} className="text-sidebar-muted" />
               </div>
             </>
           )}
@@ -354,10 +265,10 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         {showUserMenu && isOpen && (
           <div 
             className="absolute bottom-full left-2 right-2 mb-2 rounded-xl shadow-xl overflow-hidden z-50"
-            style={{ backgroundColor: "#2b2a27", border: "1px solid #3a3936" }}
+            style={{ backgroundColor: "var(--background)", border: "1px solid var(--border)" }}
           >
-            <div className="px-4 py-3 border-b" style={{ borderColor: "#3a3936" }}>
-              <p className="text-xs" style={{ color: "#6b6b66" }}>muhammed.beig@gmail.com</p>
+            <div className="px-4 py-3 border-b border-border">
+              <p className="text-xs text-sidebar-muted">muhammed.beig@gmail.com</p>
             </div>
             
             <div className="py-1">
@@ -366,88 +277,64 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
                   setShowUserMenu(false)
                   onOpenSettings()
                 }}
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <Settings size={16} strokeWidth={1.5} />
                 <span>Settings</span>
-                <span className="ml-auto text-xs" style={{ color: "#6b6b66" }}>Shift+Ctrl+,</span>
+                <span className="ml-auto text-xs text-sidebar-muted">Shift+Ctrl+,</span>
               </button>
               
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <Globe size={16} strokeWidth={1.5} />
                 <span>Language</span>
-                <ChevronDown size={14} className="-rotate-90 ml-auto" style={{ color: "#6b6b66" }} />
+                <ChevronDown size={14} className="-rotate-90 ml-auto text-sidebar-muted" />
               </button>
               
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <HelpCircle size={16} strokeWidth={1.5} />
                 <span>Get help</span>
               </button>
             </div>
 
-            <div className="py-1 border-t" style={{ borderColor: "#3a3936" }}>
+            <div className="py-1 border-t border-border">
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <Sparkles size={16} strokeWidth={1.5} />
                 <span>Upgrade plan</span>
               </button>
               
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <Download size={16} strokeWidth={1.5} />
                 <span>Get apps and extensions</span>
               </button>
               
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <Gift size={16} strokeWidth={1.5} />
                 <span>Gift AEOlyzer</span>
               </button>
               
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <BookOpen size={16} strokeWidth={1.5} />
                 <span>Learn more</span>
-                <ChevronDown size={14} className="-rotate-90 ml-auto" style={{ color: "#6b6b66" }} />
+                <ChevronDown size={14} className="-rotate-90 ml-auto text-sidebar-muted" />
               </button>
             </div>
 
-            <div className="py-1 border-t" style={{ borderColor: "#3a3936" }}>
+            <div className="py-1 border-t border-border">
               <button
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors"
-                style={{ color: "#a3a29e" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#252422"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
-              >
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm transition-colors text-muted-foreground hover:bg-sidebar-hover"
+>
                 <LogOut size={16} strokeWidth={1.5} />
                 <span>Log out</span>
               </button>
@@ -456,5 +343,6 @@ export function AeolyzerSidebar({ isOpen, onToggle, onNewChat, currentChatTitle,
         )}
       </div>
     </aside>
+    </>
   )
 }

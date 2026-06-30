@@ -51,10 +51,9 @@ export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
     return (
       <div className="flex justify-end mb-6 animate-fade-in-up">
         <div 
-          className="max-w-[80%] px-4 py-3 rounded-2xl"
-          style={{ backgroundColor: "#393836" }}
+          className="max-w-[80%] px-4 py-3 rounded-2xl bg-card"
         >
-          <p className="text-[15px] leading-relaxed" style={{ color: "#ececec" }}>
+          <p className="text-[15px] leading-relaxed text-foreground">
             {message.content}
           </p>
         </div>
@@ -68,7 +67,7 @@ export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
       {message.isStreaming && displayedContent.length === 0 && (
         <div className="flex items-center gap-3 mb-4">
           <AeolyzerLogoAnimated size={28} />
-          <span className="text-sm" style={{ color: "#a3a29e" }}>Thinking...</span>
+          <span className="text-sm text-muted-foreground">Thinking...</span>
         </div>
       )}
 
@@ -80,7 +79,7 @@ export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
         
         {/* Typing cursor */}
         {message.isStreaming && !isComplete && displayedContent.length > 0 && (
-          <span className="inline-block w-2 h-5 ml-0.5 bg-[#e07b53] animate-pulse" />
+          <span className="inline-block w-2 h-5 ml-0.5 bg-[var(--accent)] animate-pulse" />
         )}
       </div>
 
@@ -88,26 +87,22 @@ export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
       {isComplete && displayedContent.length > 0 && (
         <div className="flex items-center gap-1 mt-4">
           <button 
-            className="p-2 rounded-lg transition-colors hover:bg-[#252422]"
-            style={{ color: "#a3a29e" }}
+            className="p-2 rounded-lg transition-colors hover:bg-muted text-muted-foreground"
           >
             <Copy size={16} />
           </button>
           <button 
-            className="p-2 rounded-lg transition-colors hover:bg-[#252422]"
-            style={{ color: "#a3a29e" }}
+            className="p-2 rounded-lg transition-colors hover:bg-muted text-muted-foreground"
           >
             <ThumbsUp size={16} />
           </button>
           <button 
-            className="p-2 rounded-lg transition-colors hover:bg-[#252422]"
-            style={{ color: "#a3a29e" }}
+            className="p-2 rounded-lg transition-colors hover:bg-muted text-muted-foreground"
           >
             <ThumbsDown size={16} />
           </button>
           <button 
-            className="p-2 rounded-lg transition-colors hover:bg-[#252422]"
-            style={{ color: "#a3a29e" }}
+            className="p-2 rounded-lg transition-colors hover:bg-muted text-muted-foreground"
           >
             <RotateCcw size={16} />
           </button>
@@ -128,8 +123,7 @@ function renderFormattedContent(content: string) {
       return (
         <h3 
           key={pIndex} 
-          className="text-lg font-semibold mt-6 mb-3 first:mt-0"
-          style={{ color: "#ececec" }}
+          className="text-lg font-semibold mt-6 mb-3 first:mt-0 text-foreground"
         >
           {headerText}
         </h3>
@@ -146,8 +140,7 @@ function renderFormattedContent(content: string) {
               return (
                 <h4 
                   key={i}
-                  className="text-base font-semibold mb-2"
-                  style={{ color: "#ececec" }}
+                  className="text-base font-semibold mb-2 text-foreground"
                 >
                   {part}
                 </h4>
@@ -156,8 +149,7 @@ function renderFormattedContent(content: string) {
             return part && (
               <p 
                 key={i}
-                className="text-[15px] leading-relaxed mb-3"
-                style={{ color: "#ececec" }}
+                className="text-[15px] leading-relaxed mb-3 text-foreground"
               >
                 {part}
               </p>
@@ -178,8 +170,7 @@ function renderFormattedContent(content: string) {
     return (
       <p 
         key={pIndex}
-        className="text-[15px] leading-relaxed mb-3 last:mb-0"
-        style={{ color: "#ececec" }}
+        className="text-[15px] leading-relaxed mb-3 last:mb-0 text-foreground"
       >
         {formattedParagraph}
       </p>

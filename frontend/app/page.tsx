@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, useCallback, useEffect } from "react"
+import { useTheme } from "next-themes"
+import { Menu, Plus } from "lucide-react"
 import { AeolyzerSidebar } from "@/components/aeolyzer-sidebar"
 import { AeolyzerChatArea } from "@/components/aeolyzer-chat-area"
 import { AeolyzerChatInput } from "@/components/aeolyzer-chat-input"
 import { AeolyzerSettings } from "@/components/aeolyzer-settings"
 
-type Theme = "light" | "auto" | "dark"
+type Theme = "light" | "system" | "dark"
 
 interface Message {
   id: string
@@ -78,44 +80,13 @@ Keep in mind that context matters significantly here. What works in one situatio
 Is there anything specific you'd like me to focus on?`
 ]
 
-// Theme colors
-const themeColors = {
-  dark: {
-    background: "#2b2a27",
-    card: "#393836",
-    border: "#4a4945",
-    text: "#ececec",
-    textMuted: "#a3a29e",
-  },
-  light: {
-    background: "#ffffff",
-    card: "#f7f7f7",
-    border: "#e5e5e5",
-    text: "#1a1a1a",
-    textMuted: "#6b7280",
-  },
-  auto: {
-    background: "#2b2a27",
-    card: "#393836",
-    border: "#4a4945",
-    text: "#ececec",
-    textMuted: "#a3a29e",
-  }
-}
-
 export default function AeolyzerChatbot() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [messages, setMessages] = useState<Message[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [chatTitle, setChatTitle] = useState<string | undefined>()
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const [theme, setTheme] = useState<Theme>("dark")
-
-  // Apply theme to body
-  useEffect(() => {
-    const colors = themeColors[theme]
-    document.body.style.backgroundColor = colors.background
-  }, [theme])
+  const { theme, setTheme } = useTheme()
 
   const handleNewChat = useCallback(() => {
     setMessages([])
@@ -172,12 +143,9 @@ export default function AeolyzerChatbot() {
     }, streamingTime)
   }, [chatTitle])
 
-  const colors = themeColors[theme]
-
   return (
     <div 
-      className="flex h-screen overflow-hidden"
-      style={{ backgroundColor: colors.background }}
+      className="flex h-screen overflow-hidden bg-background"
     >
       {/* Sidebar */}
       <AeolyzerSidebar 
@@ -189,10 +157,28 @@ export default function AeolyzerChatbot() {
       />
 
       {/* Vertical divider */}
-      <div className="w-px" style={{ backgroundColor: colors.border }} />
+      <div className="w-px bg-border" />
 
+      
       {/* Main content */}
-      <main className="flex-1 flex flex-col min-w-0 min-h-0">
+      <main className="flex-1 flex flex-col min-w-0 min-h-0 relative">
+        {/* Mobile Header */}
+        <div className="md:hidden flex items-center justify-between p-3 border-b border-border bg-background flex-shrink-0 z-10">
+          <button 
+            onClick={() => setSidebarOpen(true)}
+            className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"
+          >
+            <Menu size={20} strokeWidth={1.5} />
+          </button>
+          <span className="text-sm font-medium text-foreground">AEOlyzer</span>
+          <button 
+            onClick={handleNewChat}
+            className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"
+          >
+            <Plus size={20} strokeWidth={1.5} />
+          </button>
+        </div>
+
         {/* Chat area or welcome screen */}
         <AeolyzerChatArea 
           messages={messages} 
@@ -204,8 +190,7 @@ export default function AeolyzerChatbot() {
         {/* Input area - only shown when there are messages */}
         {messages.length > 0 && (
           <div 
-            className="flex-shrink-0 px-4 pb-4 pt-2"
-            style={{ backgroundColor: colors.background }}
+            className="flex-shrink-0 px-4 pb-4 pt-2 bg-background"
           >
             <AeolyzerChatInput 
               onSend={handleSendMessage}
@@ -220,8 +205,8 @@ export default function AeolyzerChatbot() {
       <AeolyzerSettings 
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
-        theme={theme}
-        onThemeChange={setTheme}
+        theme={(theme as Theme) || "system"}
+        onThemeChange={(t) => setTheme(t)}
       />
     </div>
   )

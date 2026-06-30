@@ -753,8 +753,15 @@ stderr may be summarized into sanitized health events only
 Responsibilities:
 
 ```text
-send MCP messages over remote Streamable HTTP
-support SSE only when connector manifest allows it
+send MCP messages over MCP Streamable HTTP
+implement MCP protocol version 2025-11-25 for production connectors
+perform initialize and notifications/initialized before business calls
+attach MCP-Protocol-Version after successful initialization
+store and replay MCP-Session-Id only for the verified endpoint and tenant
+support application/json responses and text/event-stream server event streams
+support GET server event streams only when connector manifest allows it
+send Last-Event-ID when resuming an interrupted stream
+close stateful sessions with DELETE when a session ID was issued
 validate mTLS identity
 validate server certificate pin or workload identity
 attach JIT credential only to the approved endpoint
@@ -776,6 +783,35 @@ no cookies persisted by Layer 7
 no browser session reuse
 no OAuth refresh flow inside Layer 7
 ```
+
+Protocol compatibility:
+
+```text
+production baseline: MCP 2025-11-25
+migration-only compatibility: 2025-06-18 and 2025-03-26 when a connector registry entry explicitly allows them
+legacy HTTP+SSE 2024-11-05: disabled unless security review and connector-specific migration plan approve it
+unknown or future protocol version: fail closed until registry and tests are updated
+```
+
+### 8.3.1 A2A transport mount with Google ADK
+
+Layer 7 owns the network mount for external A2A access. Layer 5 owns the public Agent Card contract and disclosure filtering. Layer 2 owns policy. Layer 3 owns workflow routing.
+
+Required implementation:
+
+```text
+use google.golang.org/adk/server/adka2a/v2 for ADK-to-A2A execution
+use github.com/a2aproject/a2a-go/v2/a2asrv for the A2A HTTP handlers
+serve /.well-known/agent-card.json through the official static Agent Card handler
+serve the A2A JSON-RPC endpoint through the official JSON-RPC handler
+authenticate non-card A2A calls before execution
+pass only authenticated, bounded, text/data parts into the ADK invocation
+route natural-language content through Layer 2 before any workflow routing
+reject A2A requests that require tool execution unless they pass the required Layer 2 -> Layer 3 -> Layer 6 path
+emit sanitized transport facts to Layer 8 without raw prompts, bearer tokens, traces, tool inventories, or MCP endpoints
+```
+
+OpenAPI is not required for A2A. If the REST frontend API later publishes OpenAPI, that artifact belongs to the ordinary HTTP API surface and must not be used as the A2A protocol contract.
 
 ### 8.4 `handshake_validator.go`
 

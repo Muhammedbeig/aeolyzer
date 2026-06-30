@@ -44,22 +44,11 @@ export function AeolyzerWelcome({
       {/* Centered content wrapper for mobile */}
       <div className="flex-1 sm:flex-none flex flex-col items-center justify-center w-full">
         {/* Greeting */}
-        <div className={cn("flex flex-col sm:flex-row items-center gap-4 mb-4", title && "sm:flex-col")} style={{ minHeight: "64px" }}>
-          <AeolyzerLogo size={title ? 42 : 52} />
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-4" style={{ minHeight: "64px" }}>
+          <AeolyzerLogo size={52} />
           {mounted && (
             <h1 
-              className={cn(
-                "font-light text-foreground/80 text-center",
-                title && "font-medium text-foreground tracking-tight"
-              )}
-              style={title ? {
-                fontSize: "2.25rem",
-                lineHeight: "1.2"
-              } : { 
-                fontFamily: "var(--font-display), 'Rokkitt', Georgia, serif",
-                fontSize: "3rem",
-                lineHeight: "1.1"
-              }}
+              className="text-center font-outfit tracking-tight font-light text-foreground/80 text-5xl leading-tight"
             >
               {title || (greeting ? `${greeting}, ${userName}` : "")}
             </h1>

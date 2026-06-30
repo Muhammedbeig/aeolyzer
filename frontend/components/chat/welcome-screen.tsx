@@ -32,15 +32,6 @@ export function AeolyzerWelcome({ userName = "Muhammad", onSend, isGenerating }:
       
       {/* Centered content wrapper for mobile */}
       <div className="flex-1 sm:flex-none flex flex-col items-center justify-center w-full">
-        {/* Free plan badge */}
-        <div className="mb-6">
-          <span 
-            className="text-sm px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground"
-          >
-            Free plan · <span className="font-semibold cursor-pointer hover:underline text-[#9f3a15] dark:text-accent">Upgrade</span>
-          </span>
-        </div>
-
         {/* Greeting */}
         <div className="flex items-center gap-4 mb-4" style={{ minHeight: "64px" }}>
           <AeolyzerLogo size={52} />

@@ -68,12 +68,12 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
       <form onSubmit={handleSubmit} className="mt-2 sm:mt-0">
         <div 
           className={cn(
-            "relative rounded-xl transition-all bg-card border",
-            isFocused ? "border-accent shadow-sm" : "border-muted-foreground/20 shadow-sm"
+            "relative rounded-[26px] transition-all bg-card border shadow-sm",
+            isFocused ? "border-accent/70 shadow-md" : "border-border/60"
           )}
         >
-          {/* Input area - taller */}
-          <div className="px-4 pt-4 sm:pt-5 pb-3 sm:pb-4">
+          {/* Input area */}
+          <div className="relative w-full">
             <textarea
               ref={textareaRef}
               value={message}
@@ -84,49 +84,57 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
               placeholder={placeholder}
               disabled={isGenerating}
               className={cn(
-                "w-full bg-transparent resize-none outline-none text-[15px] leading-7 text-foreground caret-foreground",
-                "placeholder:font-light placeholder:tracking-wide min-h-[24px] sm:min-h-[32px] max-h-[200px]"
+                "w-full px-5 py-4 bg-transparent rounded-t-[26px] outline-none",
+                "text-[15px] leading-relaxed text-foreground caret-foreground",
+                "placeholder:text-muted-foreground placeholder:font-normal",
+                "min-h-[60px] max-h-[200px] resize-none"
               )}
               rows={1}
             />
           </div>
 
           {/* Bottom toolbar */}
-          <div className="flex items-center justify-between px-2 sm:px-3 pb-2 sm:pb-3">
-            {/* Left side - Add button */}
-            <button
-              type="button"
-              className="p-2 rounded-md transition-colors hover:bg-muted text-muted-foreground"
-              aria-label="Add attachment"
-            >
-              <Plus size={20} strokeWidth={1.5} />
-            </button>
+          <div className="flex items-center justify-between px-3 pb-3 mt-1">
+            {/* Left side toolbar buttons */}
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                className="w-8 h-8 rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted flex items-center justify-center transition-colors cursor-pointer shadow-sm"
+                aria-label="Add attachment"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                </svg>
+              </button>
+
+              <button 
+                type="button" 
+                className="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground text-[12px] font-medium transition-colors cursor-pointer shadow-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+                  <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path>
+                </svg>
+                <span>Shortcuts</span>
+              </button>
+            </div>
 
             {/* Right side - Send button */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
-                type={message.trim() ? "submit" : "button"}
+                type="submit"
+                disabled={!message.trim() || isGenerating}
                 className={cn(
-                  "p-2 rounded-md transition-colors",
+                  "w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all",
                   message.trim() 
-                    ? "bg-foreground text-background hover:bg-foreground/90" 
-                    : "hover:bg-muted text-muted-foreground"
+                    ? "bg-foreground text-background hover:bg-foreground/90 cursor-pointer shadow-sm hover:shadow-md" 
+                    : "bg-muted text-muted-foreground/50 cursor-not-allowed"
                 )}
-                aria-label={message.trim() ? "Send message" : "Voice input"}
+                aria-label="Send message"
               >
-                {message.trim() ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                  </svg>
-                ) : (
-                  <div className="flex items-center gap-0.5">
-                    <div className="w-0.5 h-3 rounded-full bg-current" />
-                    <div className="w-0.5 h-4 rounded-full bg-current" />
-                    <div className="w-0.5 h-2 rounded-full bg-current" />
-                    <div className="w-0.5 h-5 rounded-full bg-current" />
-                    <div className="w-0.5 h-3 rounded-full bg-current" />
-                  </div>
-                )}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ease-out">
+                  <path d="m5 12 7-7 7 7"></path>
+                  <path d="M12 19V5"></path>
+                </svg>
               </button>
             </div>
           </div>

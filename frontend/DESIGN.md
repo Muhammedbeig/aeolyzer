@@ -42,8 +42,9 @@ AEOlyzer is a modern AI chatbot interface inspired by Claude, featuring a sophis
 - **Text (Sidebar)**: `#2b2a27` - Charcoal for sidebar brand name
 
 ### Border & Divider
-- **Borders**: `#4a4945` - Subtle grey for input borders and dividers
-- **Scrollbar**: `#4a4945` - Matches border color for consistency
+- **Ultra-thin Minimal Borders**: Instead of heavy default borders or drop shadows, containers and interactive elements should rely entirely on a razor-thin, highly transparent wash of grey for a perfectly flat, clean UI.
+- **Border Utility**: Use `border-[0.5px] border-black/10 dark:border-white/10` (and `hover:border-black/20 dark:hover:border-white/20` when interactive) for elements like textareas, chips, pills, sidebars, and generic component bounds. Do not use `shadow-*` classes.
+- **Scrollbar**: `#4a4945` - Matches generic divider colors for consistency.
 
 ---
 

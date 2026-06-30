@@ -187,7 +187,7 @@ export default function AeolyzerChatbot() {
       {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0 min-h-0 relative">
         {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between p-3 border-b border-border bg-background flex-shrink-0 z-10">
+        <div className="md:hidden flex items-center justify-between p-3 border-b-[0.5px] border-black/10 dark:border-white/10 bg-background flex-shrink-0 z-10">
           <button 
             onClick={() => setSidebarOpen(true)}
             className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"

@@ -33,7 +33,7 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
       {/* Primary Actions */}
       <div className="px-3 py-2 space-y-0.5">
         <button onClick={onNewChat} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group transition-colors" aria-label="New chat">
-          <div className="w-5 h-5 rounded-full border border-sidebar-muted flex items-center justify-center group-hover:border-sidebar-text transition-colors">
+          <div className="w-5 h-5 rounded-full border-[0.5px] border-black/10 dark:border-white/10 flex items-center justify-center group-hover:border-black/20 dark:group-hover:border-white/20 transition-colors">
             <Plus size={14} />
           </div>
           <span className="truncate text-[15px]">New chat</span>
@@ -56,7 +56,7 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
                       <MoreHorizontal size={14} />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-40 bg-popover border-border">
+                  <DropdownMenuContent align="start" className="w-40 bg-popover border-[0.5px] border-black/10 dark:border-white/10">
                     <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStarToggle(chat); }} className="gap-2 cursor-pointer">
                       <Star size={14} className="fill-muted-foreground text-muted-foreground" />
                       Unstar
@@ -87,7 +87,7 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
                     <MoreHorizontal size={14} />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-40 bg-popover border-border">
+                <DropdownMenuContent align="start" className="w-40 bg-popover border-[0.5px] border-black/10 dark:border-white/10">
                   <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStarToggle(chat); }} className="gap-2 cursor-pointer">
                     <Star size={14} className="text-muted-foreground" />
                     Star

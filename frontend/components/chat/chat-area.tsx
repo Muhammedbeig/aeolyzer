@@ -43,7 +43,7 @@ export function AeolyzerChatArea({ messages, isGenerating, chatTitle, onSend }: 
     <div className="flex-1 flex flex-col min-h-0 bg-background">
       {/* Header with chat title */}
       {chatTitle && (
-        <div className="flex items-center justify-between px-6 py-3 border-b flex-shrink-0 border-border">
+        <div className="flex items-center justify-between px-6 py-3 border-b-[0.5px] flex-shrink-0 border-black/10 dark:border-white/10">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-foreground">{chatTitle}</span>
             <ChevronDown size={14} className="text-muted-foreground" />

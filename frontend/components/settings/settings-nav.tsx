@@ -20,7 +20,7 @@ const TAB_ICONS: Record<string, React.ElementType> = {
 
 export function SettingsNav({ activeTab, onTabChange, onClose }: SettingsNavProps) {
   return (
-    <div className="md:w-[260px] flex-shrink-0 flex flex-col border-b md:border-b-0 md:border-r border-border">
+    <div className="md:w-[260px] flex-shrink-0 flex flex-col border-b-[0.5px] md:border-b-0 md:border-r-[0.5px] border-black/10 dark:border-white/10">
       <div className="flex flex-col p-4 md:pb-2 md:pt-4">
         {/* Mobile Header */}
         <div className="flex items-center justify-between md:hidden">

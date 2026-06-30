@@ -77,8 +77,10 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
       <form onSubmit={handleSubmit} className="mt-2 sm:mt-0">
         <div 
           className={cn(
-            "relative rounded-[26px] transition-all bg-card border shadow-sm",
-            isFocused ? "border-accent/70 shadow-md" : "border-border/60"
+            "relative rounded-[26px] transition-all bg-white dark:bg-card border-[0.5px]",
+            isFocused 
+              ? "border-black/20 dark:border-white/20" 
+              : "border-black/10 dark:border-white/10"
           )}
         >
           {/* Input area */}
@@ -94,8 +96,8 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
               disabled={isGenerating}
               className={cn(
                 "w-full px-5 py-4 bg-transparent rounded-t-[26px] outline-none",
-                "text-[15px] leading-relaxed text-foreground caret-foreground",
-                "placeholder:text-muted-foreground placeholder:font-normal",
+                "text-[15px] leading-relaxed text-plum-800 dark:text-foreground caret-plum-900 dark:caret-foreground",
+                "placeholder:text-[#9CA3AF] dark:placeholder:text-muted-foreground placeholder:font-normal",
                 "min-h-[60px] max-h-[200px] resize-none"
               )}
               rows={1}
@@ -103,12 +105,12 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
           </div>
 
           {/* Bottom toolbar */}
-          <div className="flex items-center justify-between px-3 pb-3 mt-1">
+          <div className="flex items-center justify-between px-2.5 pb-2.5 pt-0">
             {/* Left side toolbar buttons */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1">
               <button
                 type="button"
-                className="w-8 h-8 rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted flex items-center justify-center transition-colors cursor-pointer shadow-sm"
+                className="w-8 h-8 rounded-lg border border-sand-200 dark:border-border bg-white dark:bg-card text-plum-500 dark:text-muted-foreground hover:text-plum-700 dark:hover:text-foreground hover:bg-sand-50 dark:hover:bg-muted flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Add attachment"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -118,7 +120,7 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
 
               <button 
                 type="button" 
-                className="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground text-[12px] font-medium transition-colors cursor-pointer shadow-sm"
+                className="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg border border-sand-200 dark:border-border bg-white dark:bg-card text-plum-500 dark:text-muted-foreground hover:bg-sand-50 dark:hover:bg-muted hover:text-plum-700 dark:hover:text-foreground text-[12px] font-medium transition-colors cursor-pointer"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
                   <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path>
@@ -135,8 +137,8 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
                 className={cn(
                   "w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all",
                   message.trim() 
-                    ? "bg-foreground text-background hover:bg-foreground/90 cursor-pointer shadow-sm hover:shadow-md" 
-                    : "bg-muted text-muted-foreground/50 cursor-not-allowed"
+                    ? "bg-accent dark:bg-accent text-white hover:bg-accent/90 cursor-pointer shadow-sm hover:shadow-md" 
+                    : "bg-sand-200 dark:bg-muted text-plum-400 dark:text-muted-foreground/50 cursor-default"
                 )}
                 aria-label="Send message"
               >
@@ -152,13 +154,13 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
 
       {/* Format options for Content Agent */}
       {showContentOptions && (
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-4 mb-4">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 mb-4">
           {contentOptions.map((option, index) => {
             const Icon = option.icon
             return (
               <button
                 key={index}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium whitespace-nowrap border-[0.5px] transition-all duration-150 cursor-pointer bg-muted/40 border-border text-foreground hover:bg-accent/10 hover:text-accent hover:border-accent/40 shadow-sm"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium whitespace-nowrap border-[0.5px] transition-all duration-150 cursor-pointer bg-white dark:bg-card border-black/10 dark:border-white/10 text-plum-500 dark:text-foreground hover:bg-sand-50 dark:hover:bg-accent/10 hover:text-plum-700 dark:hover:text-accent hover:border-black/20 dark:hover:border-white/20"
               >
                 <Icon className="w-3.5 h-3.5" />
                 {option.label}
@@ -175,7 +177,7 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
             <button
               key={index}
               onClick={() => onSend(action.prompt)}
-              className="flex flex-col items-start justify-between p-3 sm:p-4 h-24 sm:h-28 rounded-xl bg-card border border-border/50 hover:border-muted-foreground/30 transition-all text-left group cursor-pointer shadow-sm hover:shadow-md"
+              className="flex flex-col items-start justify-between p-3 sm:p-4 h-24 sm:h-28 rounded-xl bg-white dark:bg-card border-[0.5px] border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all text-left group cursor-pointer"
               title={action.prompt}
             >
               <action.icon size={20} strokeWidth={1.5} className="text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />

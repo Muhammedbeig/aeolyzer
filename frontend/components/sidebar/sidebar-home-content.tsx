@@ -18,7 +18,7 @@ export function SidebarHomeContent() {
               <BarChart2 size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />
               <span className="truncate text-[15px]">LLM Analytics</span>
             </div>
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-[#a53b15] dark:text-accent font-medium border border-accent/20">Beta</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-accent/10 text-[#a53b15] dark:text-accent font-medium border-[0.5px] border-black/10 dark:border-white/10">Beta</span>
           </button>
           <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group" aria-label="Traffic">
             <Activity size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />

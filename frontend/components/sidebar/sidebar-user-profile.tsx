@@ -9,7 +9,7 @@ interface SidebarUserProfileProps {
 export function SidebarUserProfile({ isOpen, onOpenSettings }: SidebarUserProfileProps) {
   return (
     <div className={cn(
-      "p-3 border-t border-border/10 mt-auto flex-shrink-0",
+      "p-3 border-t-[0.5px] border-black/10 dark:border-white/10 mt-auto flex-shrink-0",
       !isOpen && "hidden md:flex justify-center"
     )}>
       <div className="flex items-center gap-3">

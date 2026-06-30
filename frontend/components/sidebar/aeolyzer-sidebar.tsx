@@ -33,9 +33,9 @@ export function AeolyzerSidebar({
       )}
       <aside 
         className={cn(
-          "flex flex-col bg-sidebar-bg border-r border-[var(--border)] transition-all duration-300 ease-in-out h-full relative z-50",
+          "flex flex-col bg-sidebar-bg border-r-[0.5px] border-black/10 dark:border-white/10 transition-all duration-300 ease-in-out h-full relative z-50",
           "max-md:fixed max-md:inset-y-0 max-md:left-0",
-          isOpen ? "w-[260px] max-md:translate-x-0" : "w-[0px] border-r-0 md:w-[60px] md:border-r max-md:-translate-x-full"
+          isOpen ? "w-[260px] max-md:translate-x-0" : "w-[0px] border-r-0 md:w-[60px] md:border-r-[0.5px] max-md:-translate-x-full"
         )}
       >
         <SidebarHeader 

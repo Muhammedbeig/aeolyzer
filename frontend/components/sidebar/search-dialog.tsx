@@ -23,7 +23,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
         <Command className="bg-transparent [&_[cmdk-group-heading]]:text-sidebar-muted w-full flex flex-col">
           <CommandInput 
             placeholder="Search chats and projects" 
-            className="border-b border-border/50 text-sidebar-text"
+            className="border-b-[0.5px] border-black/10 dark:border-white/10 text-sidebar-text"
           />
           <CommandList className="max-h-[60vh] overflow-y-auto">
             <CommandEmpty className="py-6 text-center text-sm text-sidebar-muted">No results found.</CommandEmpty>

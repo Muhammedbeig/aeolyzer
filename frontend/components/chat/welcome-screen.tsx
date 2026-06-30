@@ -3,14 +3,25 @@
 import { useState, useEffect } from "react"
 import { AeolyzerLogo } from "@/components/ui/aeolyzer-logo"
 import { AeolyzerChatInput } from "./chat-input"
+import { cn } from "@/lib/utils"
 
 interface WelcomeProps {
   userName?: string
   onSend: (message: string) => void
   isGenerating: boolean
+  title?: string
+  placeholder?: string
+  showContentOptions?: boolean
 }
 
-export function AeolyzerWelcome({ userName = "Muhammad", onSend, isGenerating }: WelcomeProps) {
+export function AeolyzerWelcome({ 
+  userName = "Muhammad", 
+  onSend, 
+  isGenerating,
+  title,
+  placeholder = "How can I help you today?",
+  showContentOptions
+}: WelcomeProps) {
   const [greeting, setGreeting] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
 
@@ -33,18 +44,24 @@ export function AeolyzerWelcome({ userName = "Muhammad", onSend, isGenerating }:
       {/* Centered content wrapper for mobile */}
       <div className="flex-1 sm:flex-none flex flex-col items-center justify-center w-full">
         {/* Greeting */}
-        <div className="flex items-center gap-4 mb-4" style={{ minHeight: "64px" }}>
-          <AeolyzerLogo size={52} />
-          {mounted && greeting && (
+        <div className={cn("flex flex-col sm:flex-row items-center gap-4 mb-4", title && "sm:flex-col")} style={{ minHeight: "64px" }}>
+          <AeolyzerLogo size={title ? 42 : 52} />
+          {mounted && (
             <h1 
-              className="font-light text-foreground/80"
-              style={{ 
+              className={cn(
+                "font-light text-foreground/80 text-center",
+                title && "font-medium text-foreground tracking-tight"
+              )}
+              style={title ? {
+                fontSize: "2.25rem",
+                lineHeight: "1.2"
+              } : { 
                 fontFamily: "var(--font-display), 'Rokkitt', Georgia, serif",
                 fontSize: "3rem",
                 lineHeight: "1.1"
               }}
             >
-              {greeting}, {userName}
+              {title || (greeting ? `${greeting}, ${userName}` : "")}
             </h1>
           )}
         </div>
@@ -55,8 +72,9 @@ export function AeolyzerWelcome({ userName = "Muhammad", onSend, isGenerating }:
         <AeolyzerChatInput 
           onSend={onSend}
           isGenerating={isGenerating}
-          placeholder="How can I help you today?"
-          showQuickActions={true}
+          placeholder={placeholder}
+          showQuickActions={!showContentOptions}
+          showContentOptions={showContentOptions}
         />
       </div>
     </div>

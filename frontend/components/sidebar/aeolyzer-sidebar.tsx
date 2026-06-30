@@ -54,7 +54,7 @@ export function AeolyzerSidebar({
             onTabChange={onTabChange} 
           />
 
-          {isOpen && activeTab === 'Agent' && (
+          {isOpen && (activeTab === 'Agent' || activeTab === 'Content') && (
             <SidebarAgentContent 
               onNewChat={onNewChat} 
               currentChatTitle={currentChatTitle} 

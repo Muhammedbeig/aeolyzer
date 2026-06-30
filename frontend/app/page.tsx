@@ -83,7 +83,8 @@ Is there anything specific you'd like me to focus on?`
 
 export default function AeolyzerChatbot() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [activeTab, setActiveTab] = useState("Home")
+  const [activeSidebarTab, setActiveSidebarTab] = useState("Home")
+  const [activeView, setActiveView] = useState("Agent")
   const [messages, setMessages] = useState<Message[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
   const [chatTitle, setChatTitle] = useState<string | undefined>()
@@ -97,11 +98,23 @@ export default function AeolyzerChatbot() {
     }
   }, [])
 
+  const handleTabChange = useCallback((tab: string) => {
+    setActiveSidebarTab(tab)
+    // Only update the main view if it's Agent or Content
+    if (tab === "Agent" || tab === "Content") {
+      setActiveView(tab)
+    }
+  }, [])
+
   const handleNewChat = useCallback(() => {
     setMessages([])
     setChatTitle(undefined)
     setIsGenerating(false)
-  }, [])
+    // If they click new chat while on Home sidebar, it's fine. It resets the Agent view.
+    if (activeView !== "Content") {
+      setActiveView("Agent")
+    }
+  }, [activeView])
 
   const handleSendMessage = useCallback(async (content: string) => {
     // Add user message
@@ -162,8 +175,8 @@ export default function AeolyzerChatbot() {
         onToggle={() => setSidebarOpen(!sidebarOpen)}
         onNewChat={handleNewChat}
         currentChatTitle={chatTitle}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
+        activeTab={activeSidebarTab}
+        onTabChange={handleTabChange}
         onOpenSettings={() => setSettingsOpen(true)}
       />
 
@@ -193,9 +206,19 @@ export default function AeolyzerChatbot() {
         </div>
 
         {/* Chat area or welcome screen */}
-        {activeTab === 'Home' ? (
+        {activeView === 'Content' ? (
           <div className="flex-1 flex flex-col bg-background overflow-y-auto">
-            <AeolyzerWelcome onSend={(msg) => { handleSendMessage(msg); setActiveTab('Agent'); }} isGenerating={isGenerating} />
+            <AeolyzerWelcome 
+              title="What can I help you create?"
+              placeholder="Describe what you want to write..."
+              showContentOptions={true}
+              onSend={(msg) => { handleSendMessage(msg); setActiveView('Agent'); }} 
+              isGenerating={isGenerating} 
+            />
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="flex-1 flex flex-col bg-background overflow-y-auto">
+            <AeolyzerWelcome onSend={(msg) => { handleSendMessage(msg); setActiveView('Agent'); }} isGenerating={isGenerating} />
           </div>
         ) : (
           <>

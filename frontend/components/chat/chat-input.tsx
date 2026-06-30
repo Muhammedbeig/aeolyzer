@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Plus, PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkles, Eye, LayoutTemplate, Users, Target } from "lucide-react"
+import { Plus, PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkles, Eye, LayoutTemplate, Users, Target, Linkedin, Youtube, Rocket } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface ChatInputProps {
@@ -9,6 +9,7 @@ interface ChatInputProps {
   isGenerating: boolean
   placeholder?: string
   showQuickActions?: boolean
+  showContentOptions?: boolean
 }
 
 const PROMPT_SUGGESTIONS = [
@@ -25,9 +26,17 @@ const PROMPT_SUGGESTIONS = [
   { icon: Target, label: "Find content gaps", prompt: "Identify content gaps on my website compared to my top competitors. What topics are they covering that I am missing? Suggest 5 new article ideas to fill these gaps." },
 ]
 
-export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can I help you today?", showQuickActions = false }: ChatInputProps) {
+export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can I help you today?", showQuickActions = false, showContentOptions = false }: ChatInputProps) {
   const [message, setMessage] = useState("")
   const [suggestions, setSuggestions] = useState<typeof PROMPT_SUGGESTIONS>([])
+  
+  const contentOptions = [
+    { label: "Article", icon: FileText },
+    { label: "Blog Post", icon: PenLine },
+    { label: "LinkedIn", icon: Linkedin },
+    { label: "YouTube Desc", icon: Youtube },
+    { label: "Product Desc", icon: Rocket }
+  ]
   
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -140,6 +149,24 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
           </div>
         </div>
       </form>
+
+      {/* Format options for Content Agent */}
+      {showContentOptions && (
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-4 mb-4">
+          {contentOptions.map((option, index) => {
+            const Icon = option.icon
+            return (
+              <button
+                key={index}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium whitespace-nowrap border-[0.5px] transition-all duration-150 cursor-pointer bg-muted/40 border-border text-foreground hover:bg-accent/10 hover:text-accent hover:border-accent/40 shadow-sm"
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {/* Quick action pills */}
       {showQuickActions && (

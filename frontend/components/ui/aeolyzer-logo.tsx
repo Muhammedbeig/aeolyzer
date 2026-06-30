@@ -8,69 +8,61 @@ interface AeolyzerLogoProps {
   animate?: boolean
 }
 
-// Claude-style sunburst logo
+// Agentic Cursor Logo
 export function AeolyzerLogo({ className, size = 32, animate = false }: AeolyzerLogoProps) {
-  const rayCount = 8
-  const rays = Array.from({ length: rayCount }, (_, i) => {
-    const angle = (i * 360) / rayCount
-    return angle
-  })
-
   return (
     <svg
       viewBox="0 0 32 32"
       width={size}
       height={size}
-      className={cn(animate && "animate-spin", className)}
-      style={{ animationDuration: "3s" }}
+      className={cn(animate && "animate-pulse", className)}
+      style={animate ? { animationDuration: "2s" } : undefined}
       fill="none"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      {rays.map((angle, i) => (
-        <line
-          key={i}
-          x1="16"
-          y1="16"
-          x2="16"
-          y2={i % 2 === 0 ? "4" : "6"}
-          stroke="var(--accent)"
-          strokeWidth={i % 2 === 0 ? "2.5" : "2"}
-          strokeLinecap="round"
-          transform={`rotate(${angle} 16 16)`}
-        />
-      ))}
+      {/* AI Agent Cursor */}
+      <path
+        d="M 6 6 L 11 26 L 14.5 16.5 L 24 13 Z"
+        fill="var(--accent)"
+        fillOpacity="0.2"
+        stroke="var(--accent)"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      {/* AI Spark */}
+      <path
+        d="M 25 3 C 25 6 27 8 30 8 C 27 8 25 10 25 13 C 25 10 23 8 20 8 C 23 8 25 6 25 3 Z"
+        fill="var(--accent)"
+      />
     </svg>
   )
 }
 
 export function AeolyzerLogoAnimated({ className, size = 32 }: { className?: string; size?: number }) {
-  const rayCount = 8
-  const rays = Array.from({ length: rayCount }, (_, i) => {
-    const angle = (i * 360) / rayCount
-    return angle
-  })
-
   return (
     <svg
       viewBox="0 0 32 32"
       width={size}
       height={size}
-      className={cn("animate-spin", className)}
-      style={{ animationDuration: "2s" }}
+      className={cn("animate-pulse", className)}
+      style={{ animationDuration: "1.5s" }}
       fill="none"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      {rays.map((angle, i) => (
-        <line
-          key={i}
-          x1="16"
-          y1="16"
-          x2="16"
-          y2={i % 2 === 0 ? "4" : "6"}
-          stroke="var(--accent)"
-          strokeWidth={i % 2 === 0 ? "2.5" : "2"}
-          strokeLinecap="round"
-          transform={`rotate(${angle} 16 16)`}
-        />
-      ))}
+      <path
+        d="M 6 6 L 11 26 L 14.5 16.5 L 24 13 Z"
+        fill="var(--accent)"
+        fillOpacity="0.2"
+        stroke="var(--accent)"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <path
+        d="M 25 3 C 25 6 27 8 30 8 C 27 8 25 10 25 13 C 25 10 23 8 20 8 C 23 8 25 6 25 3 Z"
+        fill="var(--accent)"
+      />
     </svg>
   )
 }

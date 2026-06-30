@@ -88,8 +88,8 @@ export function AeolyzerSidebar({
             />
           )}
 
-          {displayOpen && activeTab === 'Home' && (
-            <SidebarHomeContent />
+          {activeTab === 'Home' && (
+            <SidebarHomeContent isOpen={displayOpen} />
           )}
         </div>
 

@@ -1,6 +1,43 @@
 import { LineChart, BarChart2, Activity, Terminal, Search, Zap, Layout, ActivitySquare, AlertCircle } from "lucide-react"
 
-export function SidebarHomeContent() {
+interface SidebarHomeContentProps {
+  isOpen: boolean
+}
+
+export function SidebarHomeContent({ isOpen }: SidebarHomeContentProps) {
+  if (!isOpen) {
+    return (
+      <div className="px-3 py-2 space-y-2 flex flex-col items-center">
+        {/* Analytics Icons */}
+        <button className="p-2 w-full flex justify-center rounded-lg transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group" title="AEO Insights">
+          <LineChart size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />
+        </button>
+        <button className="p-2 w-full flex justify-center rounded-lg transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group" title="Traffic">
+          <Activity size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />
+        </button>
+        
+        {/* Divider */}
+        <div className="w-8 h-[1px] bg-black/10 dark:bg-white/10 my-1" />
+
+        {/* Prompts Icons */}
+        <button className="p-2 w-full flex justify-center rounded-lg transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group" title="Your Prompts">
+          <Terminal size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />
+        </button>
+
+        {/* Divider */}
+        <div className="w-8 h-[1px] bg-black/10 dark:bg-white/10 my-1" />
+
+        {/* Actions Icons */}
+        <button className="p-2 w-full flex justify-center rounded-lg transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group" title="Site Health">
+          <ActivitySquare size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />
+        </button>
+        <button className="p-2 w-full flex justify-center rounded-lg transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text group" title="Issues">
+          <AlertCircle size={20} strokeWidth={1.5} className="flex-shrink-0 group-hover:text-sidebar-text" />
+        </button>
+      </div>
+    )
+  }
+
   return (
     <>
       {/* Analytics Section */}

@@ -8,6 +8,7 @@ import { AeolyzerChatArea } from "@/components/chat/chat-area"
 import { AeolyzerWelcome } from "@/components/chat/welcome-screen"
 import { AeolyzerChatInput } from "@/components/chat/chat-input"
 import { AeolyzerSettings } from "@/components/settings/aeolyzer-settings"
+import { AeolyzerKnowledgeBase } from "@/components/knowledge/knowledge-base"
 import type { ConversationSummary } from "@/components/chat/types"
 import { useConversations } from "@/hooks/use-conversations"
 
@@ -17,6 +18,7 @@ export default function AeolyzerChatbot() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [activeSidebarTab, setActiveSidebarTab] = useState("Home")
+  const [activeKnowledgeSection, setActiveKnowledgeSection] = useState("profile")
   const [activeView, setActiveView] = useState("Agent")
   const [settingsOpen, setSettingsOpen] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -31,10 +33,17 @@ export default function AeolyzerChatbot() {
       } else if (tab === "Content") {
         conversations.setAgent("content")
         setActiveView(tab)
+      } else if (tab === "Home") {
+        setActiveView("Home")
       }
     },
     [conversations],
   )
+
+  const handleKnowledgeSectionSelect = useCallback((section: string) => {
+    setActiveKnowledgeSection(section)
+    setActiveView("Knowledge")
+  }, [])
 
   const handleNewChat = useCallback(() => {
     conversations.beginNewConversation()
@@ -75,6 +84,8 @@ export default function AeolyzerChatbot() {
         }}
         activeTab={activeSidebarTab}
         onTabChange={handleTabChange}
+        activeKnowledgeSection={activeKnowledgeSection}
+        onKnowledgeSectionChange={handleKnowledgeSectionSelect}
         onOpenSettings={() => setSettingsOpen(true)}
       />
 
@@ -97,7 +108,11 @@ export default function AeolyzerChatbot() {
           </button>
         </div>
 
-        {activeView === "Content" && conversations.messages.length === 0 ? (
+        {activeView === "Knowledge" ? (
+          <div className="flex-1 flex flex-col bg-background overflow-y-auto">
+            <AeolyzerKnowledgeBase activeSection={activeKnowledgeSection} />
+          </div>
+        ) : activeView === "Content" && conversations.messages.length === 0 ? (
           <div className="flex-1 flex flex-col bg-background overflow-y-auto">
             <AeolyzerWelcome
               title="What can I help you create?"

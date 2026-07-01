@@ -17,6 +17,8 @@ interface AeolyzerSidebarProps {
   onMobileClose?: () => void
   activeTab: string
   onTabChange: (tab: string) => void
+  activeKnowledgeSection: string
+  onKnowledgeSectionChange: (section: string) => void
   onNewChat: () => void
   conversations: ConversationSummary[]
   allConversations: ConversationSummary[]
@@ -33,6 +35,8 @@ export function AeolyzerSidebar({
   onMobileClose,
   activeTab, 
   onTabChange,
+  activeKnowledgeSection,
+  onKnowledgeSectionChange,
   onNewChat,
   conversations,
   allConversations,
@@ -100,7 +104,11 @@ export function AeolyzerSidebar({
           )}
 
           {activeTab === 'Home' && (
-            <SidebarHomeContent isOpen={displayOpen} />
+            <SidebarHomeContent 
+              isOpen={displayOpen} 
+              activeSection={activeKnowledgeSection}
+              onSectionChange={onKnowledgeSectionChange}
+            />
           )}
         </div>
 

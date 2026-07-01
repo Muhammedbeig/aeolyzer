@@ -2345,3 +2345,35 @@ Layer 3 must not expose workflow IDs, profile IDs, route IDs, exact tool names, 
 ## 17. One-Line Architecture Summary
 
 Layer 3 v2 converts Layer 2 validated SEO/AEO and content-agent intents into safe workflow plans, profile routes, DAG nodes, approval gates, and handoff contracts while leaving sanitization, authorization, execution, skill loading, memory persistence, rendering, connection, observation, and recovery to their owning layers.
+
+---
+
+## 18. Persistent Conversation Orchestration Addendum
+
+Layer 3 owns explicit selection and sequencing of the two conversational agents. It does not infer the agent from raw prompt content.
+
+```text
+agent=audit   -> Audit Agent runner and audit-only session namespace
+agent=content -> Content Agent runner and content-only session namespace
+```
+
+Send sequence:
+
+```text
+receive Layer 2 validated message and Layer 6 validated files
+claim the idempotency key through Layer 7
+verify the tenant-bound conversation through Layer 7
+store each attachment through Layer 7
+construct one ADK user Content value containing text plus inline file parts
+attach tenant-scoped attachment references to the invocation context
+invoke the selected Google ADK runner
+accept only displayable non-thought response parts
+apply the Layer 2 outbound response guard
+read the persisted turn through Layer 7
+produce the Layer 5 response contract
+complete the idempotency record
+```
+
+The Audit and Content runners must use different application namespaces even when a guest user ID is the same. Listing, resuming, starring, searching, and deleting a conversation must always carry the explicit agent enum so a session cannot cross namespaces accidentally.
+
+The runner must include bounded prior contents supplied by the Layer 7 ADK session service. It must not maintain a second in-memory transcript as the source of truth.

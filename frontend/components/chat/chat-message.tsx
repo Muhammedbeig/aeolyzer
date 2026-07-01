@@ -4,16 +4,10 @@ import { useState, useEffect } from "react"
 import { Copy, ThumbsUp, ThumbsDown, RotateCcw } from "lucide-react"
 import { AeolyzerLogoAnimated } from "@/components/ui/aeolyzer-logo"
 import { cn } from "@/lib/utils"
-
-interface Message {
-  id: string
-  role: "user" | "assistant"
-  content: string
-  isStreaming?: boolean
-}
+import type { ChatMessage } from "./types"
 
 interface AeolyzerMessageProps {
-  message: Message
+  message: ChatMessage
 }
 
 export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
@@ -21,9 +15,14 @@ export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
   const [isComplete, setIsComplete] = useState(false)
 
   useEffect(() => {
+    let active = true
     if (message.role === "assistant" && message.isStreaming) {
-      setDisplayedContent("")
-      setIsComplete(false)
+      queueMicrotask(() => {
+        if (active) {
+          setDisplayedContent("")
+          setIsComplete(false)
+        }
+      })
       let currentIndex = 0
       const content = message.content
       
@@ -40,21 +39,35 @@ export function AeolyzerMessage({ message }: AeolyzerMessageProps) {
         }
       }, 15) // Fast typing speed like Claude
 
-      return () => clearInterval(interval)
+      return () => {
+        active = false
+        clearInterval(interval)
+      }
     } else {
-      setDisplayedContent(message.content)
-      setIsComplete(true)
+      queueMicrotask(() => {
+        if (active) {
+          setDisplayedContent(message.content)
+          setIsComplete(true)
+        }
+      })
+    }
+    return () => {
+      active = false
     }
   }, [message.content, message.isStreaming, message.role])
 
   if (message.role === "user") {
+    const displayContent =
+      message.content ||
+      message.attachments?.map((attachment) => attachment.name).join(", ") ||
+      ""
     return (
       <div className="flex justify-end mb-6 animate-fade-in-up">
         <div 
           className="max-w-[80%] px-4 py-3 rounded-2xl bg-card"
         >
           <p className="text-[15px] leading-relaxed text-foreground">
-            {message.content}
+            {displayContent}
           </p>
         </div>
       </div>

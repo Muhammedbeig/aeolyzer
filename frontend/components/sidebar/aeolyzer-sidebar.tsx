@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { cn } from "@/lib/utils"
-import { SidebarProps } from "./types"
+import type { ConversationSummary } from "@/components/chat/types"
 import { SidebarHeader } from "./sidebar-header"
 import { SidebarTabs } from "./sidebar-tabs"
 import { SidebarAgentContent } from "./sidebar-agent-content"
@@ -17,20 +17,28 @@ interface AeolyzerSidebarProps {
   onMobileClose?: () => void
   activeTab: string
   onTabChange: (tab: string) => void
-  onNewChat?: () => void
-  currentChatTitle?: string
-  onOpenSettings?: () => void
+  onNewChat: () => void
+  conversations: ConversationSummary[]
+  allConversations: ConversationSummary[]
+  activeConversationID?: string
+  onSelectConversation: (conversation: ConversationSummary) => void
+  onToggleStar: (conversation: ConversationSummary) => void
+  onOpenSettings: () => void
 }
 
 export function AeolyzerSidebar({ 
   isOpen, 
-  isMobileOpen,
+  isMobileOpen = false,
   onToggle, 
   onMobileClose,
   activeTab, 
   onTabChange,
   onNewChat,
-  currentChatTitle,
+  conversations,
+  allConversations,
+  activeConversationID,
+  onSelectConversation,
+  onToggleStar,
   onOpenSettings
 }: AeolyzerSidebarProps) {
   const [searchOpen, setSearchOpen] = useState(false)
@@ -83,8 +91,11 @@ export function AeolyzerSidebar({
 
           {displayOpen && (activeTab === 'Agent' || activeTab === 'Content') && (
             <SidebarAgentContent 
-              onNewChat={onNewChat} 
-              currentChatTitle={currentChatTitle} 
+              onNewChat={onNewChat}
+              conversations={conversations}
+              activeConversationID={activeConversationID}
+              onSelectConversation={onSelectConversation}
+              onToggleStar={onToggleStar}
             />
           )}
 
@@ -102,6 +113,8 @@ export function AeolyzerSidebar({
       <SearchDialog 
         open={searchOpen} 
         onOpenChange={setSearchOpen} 
+        conversations={allConversations}
+        onSelectConversation={onSelectConversation}
       />
     </>
   )

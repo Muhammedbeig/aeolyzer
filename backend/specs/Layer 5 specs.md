@@ -2065,3 +2065,39 @@ Layer 5 must not expose exact internal tool inventory, workflow IDs, DAG details
 ## 22. One-Line Architecture Summary
 
 Layer 5 v2 is the production-grade presentation and extension boundary that transforms trusted workflow results into safe A2UI frames, approval cards, user interaction events, and A2A application envelopes, while leaving intake, routing, skills, execution, data access, persistence, telemetry, evaluation, and recovery to their owning layers.
+
+---
+
+## 23. Conversation Presentation Contracts Addendum
+
+Layer 5 exposes presentation-safe conversation objects only:
+
+```go
+type ConversationSummary struct {
+    ID        string    `json:"id"`
+    Agent     ChatAgent `json:"agent"`
+    Title     string    `json:"title"`
+    Starred   bool      `json:"starred"`
+    CreatedAt time.Time `json:"created_at"`
+    UpdatedAt time.Time `json:"updated_at"`
+}
+
+type ChatAttachment struct {
+    ID          string `json:"id"`
+    Name        string `json:"name"`
+    ContentType string `json:"content_type"`
+    Size        int64  `json:"size"`
+}
+
+type ChatMessage struct {
+    ID          string           `json:"id"`
+    Role        string           `json:"role"`
+    Content     string           `json:"content"`
+    Attachments []ChatAttachment `json:"attachments,omitempty"`
+    CreatedAt   time.Time        `json:"created_at"`
+}
+```
+
+Allowed roles are `user` and `assistant`. Internal ADK author names, invocation IDs, branch names, attachment hashes, storage references, tool calls, thought parts, signatures, and model metadata must not enter this contract.
+
+The frontend must consume these contracts through a typed client, use `credentials: include`, keep Audit and Content history state isolated, and send files as multipart form data. Connecting these contracts must not introduce a second styling system or duplicate visual implementations for the two agents.

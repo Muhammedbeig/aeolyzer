@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 
 interface WelcomeProps {
   userName?: string
-  onSend: (message: string) => void
+  onSend: (message: string, files?: File[]) => void
   isGenerating: boolean
   title?: string
   placeholder?: string
@@ -27,15 +27,19 @@ export function AeolyzerWelcome({
 
   // Set greeting on client side only to avoid hydration mismatch
   useEffect(() => {
-    setMounted(true)
     const hour = new Date().getHours()
+    let nextGreeting: string
     if (hour < 12) {
-      setGreeting("Good morning")
+      nextGreeting = "Good morning"
     } else if (hour < 18) {
-      setGreeting("Good afternoon")
+      nextGreeting = "Good afternoon"
     } else {
-      setGreeting("Good evening")
+      nextGreeting = "Good evening"
     }
+    queueMicrotask(() => {
+      setMounted(true)
+      setGreeting(nextGreeting)
+    })
   }, [])
 
   return (
@@ -44,7 +48,7 @@ export function AeolyzerWelcome({
       {/* Centered content wrapper for mobile */}
       <div className="flex-1 sm:flex-none flex flex-col items-center justify-center w-full">
         {/* Greeting */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mb-4" style={{ minHeight: "64px" }}>
+        <div className="flex min-h-16 flex-col items-center gap-4 mb-4 sm:flex-row">
           <AeolyzerLogo size={52} />
           {mounted && (
             <h1 

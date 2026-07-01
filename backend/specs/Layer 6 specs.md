@@ -2326,3 +2326,39 @@ a production deployment system
 ```text
 Layer 6 is the zero-trust execution cell: it accepts only authorized actions, strips ambient authority, runs them in ephemeral constrained sandboxes, enforces filesystem/network/credential limits, emits sanitized runtime facts, and executes stateful recovery when Layer 8 tells it to freeze.
 ```
+
+---
+
+## 29. Chat Attachment Processing Addendum
+
+Layer 6 validates uploaded bytes before Layer 7 persistence or model use.
+
+Default budgets:
+
+```yaml
+chat_attachments:
+  file_max_bytes: 10485760
+  request_total_max_bytes: 20971520
+  attachment_count_max: 5
+  image_pixel_max: 25000000
+  gif_frame_marker_max: 200
+  pdf_page_marker_max: 100
+```
+
+The processor must:
+
+```text
+sanitize the filename and reject paths, absolute names, control characters, and names over 255 characters
+ignore the client-declared MIME type
+detect content from file bytes
+decode PNG, JPEG, and GIF dimensions before acceptance
+reject invalid dimensions and image pixel bombs
+require PDF header and trailer markers
+reject PDFs containing active JavaScript, launch actions, embedded files, or XFA markers
+require valid UTF-8 and no NUL bytes for text-like files
+validate JSON syntax when the filename declares JSON
+calculate SHA-256 over the accepted bytes
+return an immutable bounded byte copy and typed metadata
+```
+
+Multipart parsing must stream into bounded memory and must not call helpers that spill uploads into an implicit host temporary directory. Unsupported formats fail closed.

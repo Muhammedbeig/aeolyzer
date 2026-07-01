@@ -3,6 +3,13 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.describe('AeolyzerSidebar', () => {
   test.beforeEach(async ({ page }) => {
+    await page.route('http://localhost:8080/**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ conversations: [] }),
+      });
+    });
     await page.goto('/');
     await page.waitForLoadState('networkidle');
   });

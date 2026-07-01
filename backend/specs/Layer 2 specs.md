@@ -1314,3 +1314,38 @@ Layer 2 must not expose workflow IDs, profile IDs, route IDs, exact tool names, 
 ## 20. One-Line Architecture Summary
 
 Layer 2 v2 is the fail-closed intake and policy gate that converts raw SEO/AEO and content-agent requests into sanitized intent decisions, validated modes, trusted context, approved-action metadata, and authorized tool payloads while leaving workflow planning, skill loading, execution, rendering, MCP/data access, telemetry, evaluation, memory persistence, and recovery to their owning layers.
+
+---
+
+## 21. Secure Chat and Attachment Intake Addendum
+
+Layer 2 owns validation of conversation input before it can reach either agent.
+
+Required request limits:
+
+```yaml
+chat_intake:
+  text_max_runes: 12000
+  attachment_count_max: 5
+  idempotency_key_min_chars: 16
+  idempotency_key_max_chars: 128
+  require_text_or_attachment: true
+```
+
+Required behavior:
+
+```text
+validate the explicit agent enum
+reject unknown multipart fields
+reject duplicate agent or text fields
+reject invalid UTF-8
+scan chat text for prompt injection
+scan text, Markdown, CSV, HTML, source, and JSON attachments in bounded overlapping chunks
+pass only validated bytes to Layer 6 file processing
+require the allowed browser origin
+bind anonymous guest history to a signed HttpOnly SameSite cookie
+never treat the guest cookie as tool authorization
+never place raw message or attachment content in telemetry
+```
+
+Tests must cover empty input, text-only input, attachment-only input, excessive text, excessive attachment count, direct prompt injection, attachment-borne prompt injection, invalid agent values, malformed multipart bodies, tampered guest cookies, and disallowed origins.

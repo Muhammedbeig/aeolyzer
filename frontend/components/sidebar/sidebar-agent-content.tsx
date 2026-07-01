@@ -1,32 +1,30 @@
-import { useState } from "react"
 import { Plus, MoreHorizontal, Star } from "lucide-react"
 import { cn } from "@/lib/utils"
+import type { ConversationSummary } from "@/components/chat/types"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { RECENT_CHATS } from "./constants"
 
 interface SidebarAgentContentProps {
   onNewChat: () => void
-  currentChatTitle?: string
+  conversations: ConversationSummary[]
+  activeConversationID?: string
+  onSelectConversation: (conversation: ConversationSummary) => void
+  onToggleStar: (conversation: ConversationSummary) => void
 }
 
-export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgentContentProps) {
-  const [recents, setRecents] = useState<string[]>(RECENT_CHATS)
-  const [starred, setStarred] = useState<string[]>(["Core software engineering princ..."])
-
-  const handleStarToggle = (chat: string) => {
-    if (starred.includes(chat)) {
-      setStarred(starred.filter(c => c !== chat))
-      setRecents([chat, ...recents])
-    } else {
-      setStarred([...starred, chat])
-      setRecents(recents.filter(c => c !== chat))
-    }
-  }
+export function SidebarAgentContent({
+  onNewChat,
+  conversations,
+  activeConversationID,
+  onSelectConversation,
+  onToggleStar,
+}: SidebarAgentContentProps) {
+  const starred = conversations.filter((conversation) => conversation.starred)
+  const recents = conversations.filter((conversation) => !conversation.starred)
 
   return (
     <>
@@ -47,9 +45,16 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
             <h3 className="text-xs font-medium text-sidebar-muted">Starred</h3>
           </div>
           <div className="space-y-0.5">
-            {starred.map((chat, index) => (
-              <div key={`starred-${index}`} className="flex items-center justify-between w-full px-3 py-2 rounded-lg group transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text cursor-pointer">
-                <span className="truncate text-sm pr-2 text-left">{chat}</span>
+            {starred.map((conversation) => (
+              <div
+                key={conversation.id}
+                onClick={() => onSelectConversation(conversation)}
+                className={cn(
+                  "flex items-center justify-between w-full px-3 py-2 rounded-lg group transition-colors text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text cursor-pointer",
+                  conversation.id === activeConversationID && "bg-sidebar-hover text-sidebar-text",
+                )}
+              >
+                <span className="truncate text-sm pr-2 text-left">{conversation.title}</span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10" aria-label="More options">
@@ -57,7 +62,7 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-40 bg-popover border-[0.5px] border-black/10 dark:border-white/10">
-                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStarToggle(chat); }} className="gap-2 cursor-pointer">
+                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onToggleStar(conversation); }} className="gap-2 cursor-pointer">
                       <Star size={14} className="fill-muted-foreground text-muted-foreground" />
                       Unstar
                     </DropdownMenuItem>
@@ -78,9 +83,16 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
           </button>
         </div>
         <div className="space-y-0.5">
-          {recents.slice(0, 8).map((chat, index) => (
-            <div key={`recent-${index}`} className={cn("flex items-center justify-between w-full px-3 py-2 rounded-lg group transition-colors cursor-pointer", chat === currentChatTitle ? "bg-sidebar-hover text-sidebar-text" : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text")}>
-              <span className="truncate text-sm pr-2 text-left">{chat}</span>
+          {recents.slice(0, 8).map((conversation) => (
+            <div
+              key={conversation.id}
+              onClick={() => onSelectConversation(conversation)}
+              className={cn(
+                "flex items-center justify-between w-full px-3 py-2 rounded-lg group transition-colors cursor-pointer",
+                conversation.id === activeConversationID ? "bg-sidebar-hover text-sidebar-text" : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-text",
+              )}
+            >
+              <span className="truncate text-sm pr-2 text-left">{conversation.title}</span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10" aria-label="More options">
@@ -88,7 +100,7 @@ export function SidebarAgentContent({ onNewChat, currentChatTitle }: SidebarAgen
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-40 bg-popover border-[0.5px] border-black/10 dark:border-white/10">
-                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleStarToggle(chat); }} className="gap-2 cursor-pointer">
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onToggleStar(conversation); }} className="gap-2 cursor-pointer">
                     <Star size={14} className="text-muted-foreground" />
                     Star
                   </DropdownMenuItem>

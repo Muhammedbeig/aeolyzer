@@ -2398,3 +2398,64 @@ events emitted
 ```
 
 That is the production boundary.
+
+---
+
+## 32. Encrypted ADK Conversation Data Plane
+
+Layer 7 implements Google ADK's `session.Service` contract over MariaDB. The stock plaintext event schema is not sufficient for this security profile.
+
+Required tables:
+
+```text
+aeolyzer_sessions
+aeolyzer_events
+aeolyzer_attachments
+aeolyzer_message_requests
+```
+
+Every primary lookup and foreign key must include:
+
+```text
+app_name
+user_id
+session_id
+```
+
+Storage requirements:
+
+```text
+AES-256-GCM application encryption
+fresh random nonce per encrypted value
+authenticated additional data binding record kind, app, user, session, and object ID
+encrypted session state
+encrypted event body
+encrypted conversation title
+encrypted attachment filename
+encrypted attachment bytes
+SHA-256 attachment integrity verification after decryption
+monotonic per-session event sequence allocated under a row lock
+unique event IDs for deduplication
+hashed idempotency keys with encrypted completed responses
+foreign-key cascade deletion
+30-day routine conversation retention by default
+TLS required for non-loopback database transport
+```
+
+Attachment persistence and ADK hydration:
+
+```text
+store the validated attachment as a separate encrypted record
+append only its internal attachment ID inside the encrypted event
+never store inline attachment bytes in the event record
+when ADK resumes, authorize by app, user, and session
+decrypt and hash-verify the attachment
+restore it as genai.Part.InlineData
+remove internal attachment metadata before returning the session to ADK
+hydrate newest attachments first within a 30 MiB context budget
+replace over-budget older attachments with a safe omission marker
+```
+
+ADK model history is limited to the 40 most recent events. UI history is independently bounded to 100 events and must read attachment metadata without decrypting attachment bodies.
+
+Integration tests must use a real MariaDB instance and prove append ordering, encrypted-at-rest bytes, automatic attachment rehydration, metadata removal, idempotent response replay, deletion cascade, and cross-tenant denial.

@@ -4,19 +4,13 @@ import { useRef, useEffect } from "react"
 import { AeolyzerMessage, AeolyzerThinkingIndicator } from "./chat-message"
 import { AeolyzerWelcome } from "./welcome-screen"
 import { ChevronDown } from "lucide-react"
-
-interface Message {
-  id: string
-  role: "user" | "assistant"
-  content: string
-  isStreaming?: boolean
-}
+import type { ChatMessage } from "./types"
 
 interface ChatAreaProps {
-  messages: Message[]
+  messages: ChatMessage[]
   isGenerating: boolean
   chatTitle?: string
-  onSend: (message: string) => void
+  onSend: (message: string, files?: File[]) => void
 }
 
 export function AeolyzerChatArea({ messages, isGenerating, chatTitle, onSend }: ChatAreaProps) {
@@ -59,8 +53,7 @@ export function AeolyzerChatArea({ messages, isGenerating, chatTitle, onSend }: 
       {/* Messages area - scrollable */}
       <div 
         ref={containerRef}
-        className="flex-1 overflow-y-auto px-4 py-6"
-        style={{ scrollbarWidth: "thin", scrollbarColor: "var(--border) transparent" }}
+        className="custom-scrollbar flex-1 overflow-y-auto px-4 py-6"
       >
         <div className="max-w-3xl mx-auto">
           {messages.map((message) => (

@@ -1,4 +1,6 @@
 import { MessageSquare } from "lucide-react"
+import { formatDistanceToNow } from "date-fns"
+import type { ConversationSummary } from "@/components/chat/types"
 import {
   Command,
   CommandEmpty,
@@ -8,14 +10,20 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { SEARCH_RESULTS } from "./constants"
 
 interface SearchDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  conversations: ConversationSummary[]
+  onSelectConversation: (conversation: ConversationSummary) => void
 }
 
-export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
+export function SearchDialog({
+  open,
+  onOpenChange,
+  conversations,
+  onSelectConversation,
+}: SearchDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-hidden p-0 shadow-xl border-border bg-sidebar-bg sm:max-w-[600px] gap-0">
@@ -28,18 +36,24 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
           <CommandList className="max-h-[60vh] overflow-y-auto">
             <CommandEmpty className="py-6 text-center text-sm text-sidebar-muted">No results found.</CommandEmpty>
             <CommandGroup className="p-2 text-sidebar-text">
-              {SEARCH_RESULTS.map((item, i) => (
+              {conversations.map((conversation) => (
                 <CommandItem 
-                  key={i} 
-                  onSelect={() => onOpenChange(false)}
+                  key={`${conversation.agent}-${conversation.id}`}
+                  value={conversation.title}
+                  onSelect={() => {
+                    onSelectConversation(conversation)
+                    onOpenChange(false)
+                  }}
                   className="flex items-center justify-between px-3 py-3 cursor-pointer group rounded-lg data-[selected=true]:bg-sidebar-hover data-[selected=true]:text-sidebar-text text-sidebar-muted transition-colors"
                 >
                   <div className="flex items-center gap-3 truncate">
                     <MessageSquare size={16} strokeWidth={1.5} className="flex-shrink-0" />
-                    <span className="truncate text-[15px]">{item.title}</span>
+                    <span className="truncate text-[15px]">{conversation.title}</span>
                   </div>
                   <div className="flex items-center flex-shrink-0 text-[13px] text-sidebar-muted pl-4">
-                    <span className="block group-data-[selected=true]:hidden">{item.time}</span>
+                    <span className="block group-data-[selected=true]:hidden">
+                      {formatDistanceToNow(new Date(conversation.updated_at), { addSuffix: true })}
+                    </span>
                     <span className="hidden group-data-[selected=true]:block font-medium">Enter</span>
                   </div>
                 </CommandItem>

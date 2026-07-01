@@ -2350,3 +2350,40 @@ Layer 8 must not expose raw traces, raw AgBOM, hidden chain-of-thought, exact in
 ## 32. One-Line Architecture Summary
 
 Layer 8 v2 is the production-grade glass-box observability, SecOps, evaluation, governance, and continuous-improvement layer that records redacted traces, tracks AgBOM, scores safety and quality, detects drift and trust decay, runs trajectory/output/pass^k evaluations, mines failures, and publishes decisions or recommendations while leaving intake, routing, skills, rendering, execution, MCP/data access, memory persistence, and runtime quarantine execution to their owning layers.
+
+---
+
+## 33. Conversation and Attachment Telemetry Addendum
+
+Conversation telemetry is metadata-only.
+
+Allowed feature events:
+
+```text
+conversation_create
+conversation_update
+conversation_delete
+message_send
+```
+
+Allowed fields are a random trace ID, event type, coarse outcome, and timestamp. Future tenant or session correlation must use non-reversible scoped hashes.
+
+The feature must never emit:
+
+```text
+message text
+conversation title
+attachment name
+attachment bytes
+attachment MIME payload
+model response text
+ADK event body
+ADK invocation or branch internals
+database DSN
+cookie value
+idempotency key
+encryption key
+raw tenant or guest identifier
+```
+
+Evaluation fixtures for attachment and multi-turn behavior must be synthetic and stored separately from live conversation data.

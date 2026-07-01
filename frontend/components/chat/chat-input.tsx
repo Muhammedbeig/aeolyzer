@@ -5,7 +5,7 @@ import { Plus, PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkle
 import { cn } from "@/lib/utils"
 
 interface ChatInputProps {
-  onSend: (message: string) => void
+  onSend: (message: string, files?: File[]) => void
   isGenerating: boolean
   placeholder?: string
   showQuickActions?: boolean
@@ -28,7 +28,8 @@ const PROMPT_SUGGESTIONS = [
 
 export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can I help you today?", showQuickActions = false, showContentOptions = false }: ChatInputProps) {
   const [message, setMessage] = useState("")
-  const [suggestions, setSuggestions] = useState<typeof PROMPT_SUGGESTIONS>([])
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const suggestions = PROMPT_SUGGESTIONS.slice(0, 4)
   
   const contentOptions = [
     { label: "Article", icon: FileText },
@@ -40,12 +41,7 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
   
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  useEffect(() => {
-    // Select 4 random suggestions on mount
-    const shuffled = [...PROMPT_SUGGESTIONS].sort(() => 0.5 - Math.random())
-    setSuggestions(shuffled.slice(0, 4))
-  }, [])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -56,14 +52,25 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (message.trim() && !isGenerating) {
-      onSend(message.trim())
+    if ((message.trim() || selectedFiles.length > 0) && !isGenerating) {
+      onSend(message.trim(), selectedFiles)
       setMessage("")
+      setSelectedFiles([])
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
+      }
       if (textareaRef.current) {
         textareaRef.current.style.height = "24px"
       }
     }
   }
+
+  const handleFilesSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? [])
+    setSelectedFiles((current) => [...current, ...files].slice(0, 5))
+  }
+
+  const canSend = Boolean(message.trim() || selectedFiles.length > 0)
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -110,13 +117,25 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
             <div className="flex items-center gap-1">
               <button
                 type="button"
-                className="w-8 h-8 rounded-lg border border-sand-200 dark:border-border bg-white dark:bg-card text-plum-500 dark:text-muted-foreground hover:text-plum-700 dark:hover:text-foreground hover:bg-sand-50 dark:hover:bg-muted flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="Add attachment"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isGenerating}
+                className="w-8 h-8 rounded-lg border border-sand-200 dark:border-border bg-white dark:bg-card text-plum-500 dark:text-muted-foreground hover:text-plum-700 dark:hover:text-foreground hover:bg-sand-50 dark:hover:bg-muted flex items-center justify-center transition-colors cursor-pointer disabled:pointer-events-none disabled:opacity-50"
+                aria-label={selectedFiles.length > 0 ? `Add attachment, ${selectedFiles.length} selected` : "Add attachment"}
+                title={selectedFiles.length > 0 ? selectedFiles.map((file) => file.name).join(", ") : "Add attachment"}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                   <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
                 </svg>
               </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".pdf,.png,.jpg,.jpeg,.gif,.txt,.md,.markdown,.csv,.json,.html,.htm,.css,.js,.ts,.tsx,.jsx,.go,.py,.java,.rs,.xml,.yaml,.yml"
+                onChange={handleFilesSelected}
+                className="sr-only"
+                aria-label="Choose attachments"
+              />
 
               <button 
                 type="button" 
@@ -133,10 +152,10 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 type="submit"
-                disabled={!message.trim() || isGenerating}
+                disabled={!canSend || isGenerating}
                 className={cn(
                   "w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all",
-                  message.trim() 
+                  canSend
                     ? "bg-accent dark:bg-accent text-white hover:bg-accent/90 cursor-pointer shadow-sm hover:shadow-md" 
                     : "bg-sand-200 dark:bg-muted text-plum-400 dark:text-muted-foreground/50 cursor-default"
                 )}

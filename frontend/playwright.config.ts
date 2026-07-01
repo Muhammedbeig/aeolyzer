@@ -9,6 +9,9 @@ export default defineConfig({
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3000',
+    contextOptions: {
+      reducedMotion: 'reduce',
+    },
     trace: 'on-first-retry',
     deviceScaleFactor: 1,
     screenshot: 'only-on-failure',

@@ -56,6 +56,14 @@ func main() {
 	// Bounding the channel to 500 limits memory footprint during sudden telemetry bursts.
 	// Dropping events on overflow is preferred over OOM cascading failures.
 	events := observability.NewSink(500)
+	startupContext, cancelStartup := context.WithTimeout(context.Background(), 20*time.Second)
+	chat, err := newChatRuntime(startupContext, logger, events, frontendOrigin)
+	cancelStartup()
+	if err != nil {
+		logger.Error("chat startup failed", "error", err)
+		os.Exit(1)
+	}
+	defer chat.store.Close()
 	handler := httpapi.NewHandler(
 		intakeService,
 		orchestrator,
@@ -73,6 +81,8 @@ func main() {
 	a2aRoutes := a2aServer.Routes()
 	routes.Handle(a2atransport.WellKnownAgentCardPath(), a2aRoutes)
 	routes.Handle("/a2a", a2aRoutes)
+	routes.Handle("/v1/conversations", chat.handler)
+	routes.Handle("/v1/conversations/", chat.handler)
 	routes.Handle("/", handler.Routes())
 
 	server := &http.Server{
@@ -80,8 +90,8 @@ func main() {
 		Handler: routes,
 		// Aggressive connection timeouts mitigate Slowloris attacks and socket descriptor exhaustion.
 		ReadHeaderTimeout: 5 * time.Second,
-		ReadTimeout:       10 * time.Second,
-		WriteTimeout:      15 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      75 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
 

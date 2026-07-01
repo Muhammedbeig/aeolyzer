@@ -4,14 +4,17 @@ import { useState, useEffect } from "react"
 import { AeolyzerLogo } from "@/components/ui/aeolyzer-logo"
 import { AeolyzerChatInput } from "./chat-input"
 import { cn } from "@/lib/utils"
+import type { ContentType } from "./types"
 
 interface WelcomeProps {
   userName?: string
-  onSend: (message: string, files?: File[]) => void
+  onSend: (message: string, files?: File[], contentType?: ContentType) => void
   isGenerating: boolean
   title?: string
   placeholder?: string
   showContentOptions?: boolean
+  contentType?: ContentType
+  onContentTypeChange?: (contentType: ContentType) => void
 }
 
 export function AeolyzerWelcome({ 
@@ -20,7 +23,9 @@ export function AeolyzerWelcome({
   isGenerating,
   title,
   placeholder = "How can I help you today?",
-  showContentOptions
+  showContentOptions,
+  contentType,
+  onContentTypeChange,
 }: WelcomeProps) {
   const [greeting, setGreeting] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
@@ -68,6 +73,8 @@ export function AeolyzerWelcome({
           placeholder={placeholder}
           showQuickActions={!showContentOptions}
           showContentOptions={showContentOptions}
+          contentType={contentType}
+          onContentTypeChange={onContentTypeChange}
         />
       </div>
     </div>

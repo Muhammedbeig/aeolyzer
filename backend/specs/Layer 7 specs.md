@@ -2459,3 +2459,48 @@ replace over-budget older attachments with a safe omission marker
 ADK model history is limited to the 40 most recent events. UI history is independently bounded to 100 events and must read attachment metadata without decrypting attachment bodies.
 
 Integration tests must use a real MariaDB instance and prove append ordering, encrypted-at-rest bytes, automatic attachment rehydration, metadata removal, idempotent response replay, deletion cascade, and cross-tenant denial.
+
+---
+
+## 33. Encrypted Tenant Knowledge Data Plane
+
+Layer 7 persists structured tenant knowledge in:
+
+```text
+aeolyzer_knowledge
+```
+
+Required key and metadata columns:
+
+```text
+user_id
+section
+version
+body_ciphertext
+summary_ciphertext
+created_at
+updated_at
+```
+
+The primary key is `(user_id, section)`. The guest or authenticated tenant identifier must be present in every read and write predicate.
+
+Storage rules:
+
+```text
+encrypt body and summary separately with AES-256-GCM
+use a fresh nonce for every encrypted value
+bind record kind, fixed knowledge namespace, user ID, section, and version as authenticated additional data
+store no plaintext body, tone instruction, memory fact, competitor URL, or agent summary
+limit decrypted body to 64 KiB
+limit each decrypted summary to 16 KiB
+verify UTF-8 and authenticated decryption before returning data
+use compare-and-swap version updates
+return conflict when an insert races or an expected version is stale
+return an empty version-zero document for an absent section
+```
+
+Layer 7 returns raw decrypted bodies only to the explicit tenant-bound presentation read path. Agent context retrieval reads `summary_ciphertext` only, joins summaries deterministically by section, and caps the combined context at 16000 runes. It must never decrypt the raw body to construct model context.
+
+The content type is stored as non-sensitive conversation metadata in `aeolyzer_sessions`. It remains tenant-, application-, and session-bound through the existing composite conversation key.
+
+Real MariaDB integration tests must prove encrypted body and summary storage, successful authenticated decryption, version conflict behavior, bounded context assembly, content-type persistence, and cross-tenant empty reads.

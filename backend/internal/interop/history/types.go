@@ -33,12 +33,20 @@ func DefaultConfig() Config {
 }
 
 type Conversation struct {
-	AppName   string
-	UserID    string
-	ID        string
-	Title     string
-	Starred   bool
-	CreatedAt time.Time
+	AppName     string
+	UserID      string
+	ID          string
+	ContentType string
+	Title       string
+	Starred     bool
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
+type KnowledgeRecord struct {
+	Section   string
+	Version   uint64
+	Body      []byte
 	UpdatedAt time.Time
 }
 

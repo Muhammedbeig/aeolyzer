@@ -14,12 +14,13 @@ func (a ChatAgent) Valid() bool {
 }
 
 type ConversationSummary struct {
-	ID        string    `json:"id"`
-	Agent     ChatAgent `json:"agent"`
-	Title     string    `json:"title"`
-	Starred   bool      `json:"starred"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID          string      `json:"id"`
+	Agent       ChatAgent   `json:"agent"`
+	ContentType ContentType `json:"content_type,omitempty"`
+	Title       string      `json:"title"`
+	Starred     bool        `json:"starred"`
+	CreatedAt   time.Time   `json:"created_at"`
+	UpdatedAt   time.Time   `json:"updated_at"`
 }
 
 type ChatAttachment struct {

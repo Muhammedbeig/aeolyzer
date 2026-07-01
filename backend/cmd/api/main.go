@@ -39,6 +39,10 @@ import (
 
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	if err := loadLocalEnvironment(); err != nil {
+		logger.Error("environment loading failed", "error", err)
+		os.Exit(1)
+	}
 	if err := validateStartupContracts(); err != nil {
 		logger.Error("startup contract validation failed", "error", err)
 		os.Exit(1)
@@ -83,6 +87,7 @@ func main() {
 	routes.Handle("/a2a", a2aRoutes)
 	routes.Handle("/v1/conversations", chat.handler)
 	routes.Handle("/v1/conversations/", chat.handler)
+	routes.Handle("/v1/knowledge/", chat.handler)
 	routes.Handle("/", handler.Routes())
 
 	server := &http.Server{

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"aeolyzer/internal/extensions"
+	"aeolyzer/internal/intake"
 	"aeolyzer/internal/intake/contracts"
 	"aeolyzer/internal/intake/middleware"
 	"aeolyzer/internal/interop/history"
@@ -50,10 +51,11 @@ func (r ADKChatRunner) Run(
 }
 
 type ConversationHistory interface {
-	CreateConversation(context.Context, string, string) (history.Conversation, error)
+	CreateConversation(context.Context, string, string, string) (history.Conversation, error)
 	GetConversation(context.Context, string, string, string) (history.Conversation, error)
 	ListConversations(context.Context, string, string) ([]history.Conversation, error)
 	UpdateConversation(context.Context, string, string, string, *string, *bool) (history.Conversation, error)
+	UpdateConversationContentType(context.Context, string, string, string, string) error
 	ListMessages(context.Context, string, string, string) ([]history.StoredMessage, error)
 	Delete(context.Context, *session.DeleteRequest) error
 	SaveAttachment(context.Context, string, string, string, history.AttachmentInput) (history.AttachmentRef, error)
@@ -62,9 +64,16 @@ type ConversationHistory interface {
 	FailMessageRequest(context.Context, string, string, string, string) error
 }
 
+type KnowledgeRepository interface {
+	GetKnowledge(context.Context, string, string) (history.KnowledgeRecord, error)
+	UpdateKnowledge(context.Context, string, string, uint64, []byte, string) (history.KnowledgeRecord, error)
+	AgentKnowledgeContext(context.Context, string) (string, error)
+}
+
 type ChatService struct {
-	history ConversationHistory
-	runners map[extensions.ChatAgent]ChatRunner
+	history   ConversationHistory
+	knowledge KnowledgeRepository
+	runners   map[extensions.ChatAgent]ChatRunner
 }
 
 type SendChatMessageInput struct {
@@ -73,22 +82,28 @@ type SendChatMessageInput struct {
 	ConversationID string
 	Text           string
 	Files          []attachments.File
+	ContentType    extensions.ContentType
 	IdempotencyKey string
 }
 
 func NewChatService(
 	conversationHistory ConversationHistory,
+	knowledgeRepository KnowledgeRepository,
 	auditRunner ChatRunner,
 	contentRunner ChatRunner,
 ) (*ChatService, error) {
 	if conversationHistory == nil {
 		return nil, errors.New("conversation history is nil")
 	}
+	if knowledgeRepository == nil {
+		return nil, errors.New("knowledge repository is nil")
+	}
 	if auditRunner == nil || contentRunner == nil {
 		return nil, errors.New("both chat runners are required")
 	}
 	return &ChatService{
-		history: conversationHistory,
+		history:   conversationHistory,
+		knowledge: knowledgeRepository,
 		runners: map[extensions.ChatAgent]ChatRunner{
 			extensions.ChatAgentAudit:   auditRunner,
 			extensions.ChatAgentContent: contentRunner,
@@ -100,12 +115,22 @@ func (s *ChatService) CreateConversation(
 	ctx context.Context,
 	userID string,
 	chatAgent extensions.ChatAgent,
+	contentType extensions.ContentType,
 ) (extensions.ConversationSummary, error) {
 	appName, err := appNameForAgent(chatAgent)
 	if err != nil {
 		return extensions.ConversationSummary{}, err
 	}
-	conversation, err := s.history.CreateConversation(ctx, appName, userID)
+	contentType, err = intake.NormalizeChatContentType(string(chatAgent), contentType)
+	if err != nil {
+		return extensions.ConversationSummary{}, err
+	}
+	conversation, err := s.history.CreateConversation(
+		ctx,
+		appName,
+		userID,
+		string(contentType),
+	)
 	if err != nil {
 		return extensions.ConversationSummary{}, err
 	}
@@ -200,6 +225,10 @@ func (s *ChatService) SendMessage(
 	if err != nil {
 		return extensions.SendMessageResponse{}, err
 	}
+	input.ContentType, err = intake.NormalizeChatContentType(string(input.Agent), input.ContentType)
+	if err != nil {
+		return extensions.SendMessageResponse{}, err
+	}
 	claim, err := s.history.ClaimMessageRequest(
 		ctx,
 		appName,
@@ -262,6 +291,22 @@ func (s *ChatService) runMessage(
 	if err != nil {
 		return extensions.SendMessageResponse{}, err
 	}
+	if conversation.ContentType != string(input.ContentType) {
+		if err := s.history.UpdateConversationContentType(
+			ctx,
+			appName,
+			input.UserID,
+			input.ConversationID,
+			string(input.ContentType),
+		); err != nil {
+			return extensions.SendMessageResponse{}, err
+		}
+		conversation.ContentType = string(input.ContentType)
+	}
+	knowledgeContext, err := s.knowledge.AgentKnowledgeContext(ctx, input.UserID)
+	if err != nil {
+		return extensions.SendMessageResponse{}, err
+	}
 	refs := make([]history.AttachmentRef, 0, len(input.Files))
 	parts := make([]*genai.Part, 0, len(input.Files)+1)
 	if strings.TrimSpace(input.Text) != "" {
@@ -288,6 +333,7 @@ func (s *ChatService) runMessage(
 	}
 	content := &genai.Content{Role: genai.RoleUser, Parts: parts}
 	runContext := history.WithAttachmentRefs(ctx, refs)
+	runContext = withAgentModelContext(runContext, knowledgeContext, input.ContentType)
 	var replyText string
 	for event, runErr := range s.runners[input.Agent].Run(
 		runContext,
@@ -373,12 +419,13 @@ func conversationSummary(
 	chatAgent extensions.ChatAgent,
 ) extensions.ConversationSummary {
 	return extensions.ConversationSummary{
-		ID:        conversation.ID,
-		Agent:     chatAgent,
-		Title:     conversation.Title,
-		Starred:   conversation.Starred,
-		CreatedAt: conversation.CreatedAt,
-		UpdatedAt: conversation.UpdatedAt,
+		ID:          conversation.ID,
+		Agent:       chatAgent,
+		ContentType: extensions.ContentType(conversation.ContentType),
+		Title:       conversation.Title,
+		Starred:     conversation.Starred,
+		CreatedAt:   conversation.CreatedAt,
+		UpdatedAt:   conversation.UpdatedAt,
 	}
 }
 

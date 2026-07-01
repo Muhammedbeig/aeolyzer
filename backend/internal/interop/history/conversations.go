@@ -15,6 +15,7 @@ func (s *Store) CreateConversation(
 	ctx context.Context,
 	appName string,
 	userID string,
+	contentType string,
 ) (Conversation, error) {
 	response, err := s.Create(ctx, &session.CreateRequest{
 		AppName: appName,
@@ -23,15 +24,23 @@ func (s *Store) CreateConversation(
 	if err != nil {
 		return Conversation{}, err
 	}
-	now := response.Session.LastUpdateTime()
-	return Conversation{
-		AppName:   appName,
-		UserID:    userID,
-		ID:        response.Session.ID(),
-		Title:     "New chat",
-		CreatedAt: now,
-		UpdatedAt: now,
-	}, nil
+	if contentType != "" {
+		if err := s.UpdateConversationContentType(
+			ctx,
+			appName,
+			userID,
+			response.Session.ID(),
+			contentType,
+		); err != nil {
+			_ = s.Delete(ctx, &session.DeleteRequest{
+				AppName:   appName,
+				UserID:    userID,
+				SessionID: response.Session.ID(),
+			})
+			return Conversation{}, err
+		}
+	}
+	return s.GetConversation(ctx, appName, userID, response.Session.ID())
 }
 
 func (s *Store) GetConversation(
@@ -44,18 +53,19 @@ func (s *Store) GetConversation(
 		return Conversation{}, err
 	}
 	var titleCiphertext []byte
+	var contentType string
 	var starred bool
 	var createdAt time.Time
 	var updatedAt time.Time
 	err := s.db.QueryRowContext(
 		ctx,
-		`SELECT title_ciphertext, starred, created_at, updated_at
+		`SELECT title_ciphertext, content_type, starred, created_at, updated_at
 		   FROM aeolyzer_sessions
 		  WHERE app_name = ? AND user_id = ? AND session_id = ?`,
 		appName,
 		userID,
 		sessionID,
-	).Scan(&titleCiphertext, &starred, &createdAt, &updatedAt)
+	).Scan(&titleCiphertext, &contentType, &starred, &createdAt, &updatedAt)
 	if errors.Is(err, sql.ErrNoRows) {
 		return Conversation{}, ErrNotFound
 	}
@@ -67,13 +77,14 @@ func (s *Store) GetConversation(
 		return Conversation{}, err
 	}
 	return Conversation{
-		AppName:   appName,
-		UserID:    userID,
-		ID:        sessionID,
-		Title:     title,
-		Starred:   starred,
-		CreatedAt: createdAt.UTC(),
-		UpdatedAt: updatedAt.UTC(),
+		AppName:     appName,
+		UserID:      userID,
+		ID:          sessionID,
+		ContentType: contentType,
+		Title:       title,
+		Starred:     starred,
+		CreatedAt:   createdAt.UTC(),
+		UpdatedAt:   updatedAt.UTC(),
 	}, nil
 }
 
@@ -87,7 +98,7 @@ func (s *Store) ListConversations(
 	}
 	rows, err := s.db.QueryContext(
 		ctx,
-		`SELECT session_id, title_ciphertext, starred, created_at, updated_at
+		`SELECT session_id, title_ciphertext, content_type, starred, created_at, updated_at
 		   FROM aeolyzer_sessions
 		  WHERE app_name = ? AND user_id = ?
 		  ORDER BY starred DESC, updated_at DESC
@@ -109,6 +120,7 @@ func (s *Store) ListConversations(
 		if err := rows.Scan(
 			&conversation.ID,
 			&titleCiphertext,
+			&conversation.ContentType,
 			&conversation.Starred,
 			&conversation.CreatedAt,
 			&conversation.UpdatedAt,
@@ -127,6 +139,40 @@ func (s *Store) ListConversations(
 		return nil, fmt.Errorf("iterate conversation metadata: %w", err)
 	}
 	return conversations, nil
+}
+
+func (s *Store) UpdateConversationContentType(
+	ctx context.Context,
+	appName string,
+	userID string,
+	sessionID string,
+	contentType string,
+) error {
+	if err := validateIdentity(appName, userID, sessionID, contentType); err != nil {
+		return err
+	}
+	result, err := s.db.ExecContext(
+		ctx,
+		`UPDATE aeolyzer_sessions
+		    SET content_type = ?, updated_at = ?
+		  WHERE app_name = ? AND user_id = ? AND session_id = ?`,
+		contentType,
+		s.now().UTC().Truncate(time.Microsecond),
+		appName,
+		userID,
+		sessionID,
+	)
+	if err != nil {
+		return fmt.Errorf("update conversation content type: %w", err)
+	}
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("read content type update count: %w", err)
+	}
+	if affected == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 func (s *Store) UpdateConversation(

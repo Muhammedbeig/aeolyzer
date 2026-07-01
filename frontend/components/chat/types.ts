@@ -1,8 +1,16 @@
 export type ChatAgent = "audit" | "content"
 
+export type ContentType =
+  | "article"
+  | "blog_post"
+  | "linkedin_post"
+  | "youtube_description"
+  | "product_description"
+
 export interface ConversationSummary {
   id: string
   agent: ChatAgent
+  content_type?: ContentType
   title: string
   starred: boolean
   created_at: string

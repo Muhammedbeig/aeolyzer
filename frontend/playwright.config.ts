@@ -11,6 +11,7 @@ export default defineConfig({
     baseURL: 'http://localhost:3000',
     contextOptions: {
       reducedMotion: 'reduce',
+      timezoneId: 'UTC',
     },
     trace: 'on-first-retry',
     deviceScaleFactor: 1,

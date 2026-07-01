@@ -1,5 +1,6 @@
 import type {
   ChatAgent,
+  ContentType,
   ConversationPage,
   ConversationSummary,
   MessagePage,
@@ -31,11 +32,15 @@ export class AeolyzerAPIError extends Error {
 
 export async function createConversation(
   agent: ChatAgent,
+  contentType?: ContentType,
 ): Promise<ConversationSummary> {
-  return request<ConversationSummary>("/v1/conversations", {
+  return aeolyzerRequest<ConversationSummary>("/v1/conversations", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ agent }),
+    body: JSON.stringify({
+      agent,
+      ...(agent === "content" ? { content_type: contentType ?? "article" } : {}),
+    }),
   })
 }
 
@@ -43,7 +48,7 @@ export async function listConversations(
   agent: ChatAgent,
   signal?: AbortSignal,
 ): Promise<ConversationSummary[]> {
-  const page = await request<ConversationPage>(
+  const page = await aeolyzerRequest<ConversationPage>(
     `/v1/conversations?agent=${encodeURIComponent(agent)}`,
     { signal },
   )
@@ -55,7 +60,7 @@ export async function listMessages(
   conversationID: string,
   signal?: AbortSignal,
 ) {
-  const page = await request<MessagePage>(
+  const page = await aeolyzerRequest<MessagePage>(
     `/v1/conversations/${encodeURIComponent(conversationID)}/messages?agent=${encodeURIComponent(agent)}`,
     { signal },
   )
@@ -67,16 +72,20 @@ export async function sendMessage(
   conversationID: string,
   text: string,
   files: File[],
+  contentType?: ContentType,
 ): Promise<SendMessageResponse> {
   const body = new FormData()
   body.append("agent", agent)
   if (text) {
     body.append("text", text)
   }
+  if (agent === "content") {
+    body.append("content_type", contentType ?? "article")
+  }
   for (const file of files) {
     body.append("attachments", file)
   }
-  return request<SendMessageResponse>(
+  return aeolyzerRequest<SendMessageResponse>(
     `/v1/conversations/${encodeURIComponent(conversationID)}/messages`,
     {
       method: "POST",
@@ -91,7 +100,7 @@ export async function updateConversation(
   conversationID: string,
   update: { title?: string; starred?: boolean },
 ): Promise<ConversationSummary> {
-  return request<ConversationSummary>(
+  return aeolyzerRequest<ConversationSummary>(
     `/v1/conversations/${encodeURIComponent(conversationID)}`,
     {
       method: "PATCH",
@@ -101,7 +110,10 @@ export async function updateConversation(
   )
 }
 
-async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
+export async function aeolyzerRequest<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
     credentials: "include",

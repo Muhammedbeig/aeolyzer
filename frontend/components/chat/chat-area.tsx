@@ -4,13 +4,13 @@ import { useRef, useEffect } from "react"
 import { AeolyzerMessage, AeolyzerThinkingIndicator } from "./chat-message"
 import { AeolyzerWelcome } from "./welcome-screen"
 import { ChevronDown } from "lucide-react"
-import type { ChatMessage } from "./types"
+import type { ChatMessage, ContentType } from "./types"
 
 interface ChatAreaProps {
   messages: ChatMessage[]
   isGenerating: boolean
   chatTitle?: string
-  onSend: (message: string, files?: File[]) => void
+  onSend: (message: string, files?: File[], contentType?: ContentType) => void
 }
 
 export function AeolyzerChatArea({ messages, isGenerating, chatTitle, onSend }: ChatAreaProps) {

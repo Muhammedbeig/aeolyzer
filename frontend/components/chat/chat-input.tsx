@@ -1,16 +1,25 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Plus, PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkles, Eye, LayoutTemplate, Users, Target, Linkedin, Youtube, Rocket } from "lucide-react"
+import { PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkles, Eye, LayoutTemplate, Users, Target } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { AttachmentPreviewList } from "./attachment-preview-list"
+import { ContentTypeSelector } from "./content-type-selector"
+import type { ContentType } from "./types"
 
 interface ChatInputProps {
-  onSend: (message: string, files?: File[]) => void
+  onSend: (message: string, files?: File[], contentType?: ContentType) => void
   isGenerating: boolean
   placeholder?: string
   showQuickActions?: boolean
   showContentOptions?: boolean
+  contentType?: ContentType
+  onContentTypeChange?: (contentType: ContentType) => void
 }
+
+const MAX_ATTACHMENTS = 5
+const MAX_ATTACHMENT_BYTES = 10 << 20
+const MAX_TOTAL_ATTACHMENT_BYTES = 20 << 20
 
 const PROMPT_SUGGESTIONS = [
   { icon: Search, label: "Optimize Meta tags", prompt: "Review the meta titles and descriptions for my key pages. Suggest optimized versions that improve click-through rates (CTR) and include relevant keywords without keyword stuffing." },
@@ -26,20 +35,19 @@ const PROMPT_SUGGESTIONS = [
   { icon: Target, label: "Find content gaps", prompt: "Identify content gaps on my website compared to my top competitors. What topics are they covering that I am missing? Suggest 5 new article ideas to fill these gaps." },
 ]
 
-export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can I help you today?", showQuickActions = false, showContentOptions = false }: ChatInputProps) {
+export function AeolyzerChatInput({
+  onSend,
+  isGenerating,
+  placeholder = "How can I help you today?",
+  showQuickActions = false,
+  showContentOptions = false,
+  contentType = "article",
+  onContentTypeChange,
+}: ChatInputProps) {
   const [message, setMessage] = useState("")
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [attachmentError, setAttachmentError] = useState<string>()
   const suggestions = PROMPT_SUGGESTIONS.slice(0, 4)
-  
-  const contentOptions = [
-    { label: "Article", icon: FileText },
-    { label: "Blog Post", icon: PenLine },
-    { label: "LinkedIn", icon: Linkedin },
-    { label: "YouTube Desc", icon: Youtube },
-    { label: "Product Desc", icon: Rocket }
-  ]
-  
-  const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -53,9 +61,10 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if ((message.trim() || selectedFiles.length > 0) && !isGenerating) {
-      onSend(message.trim(), selectedFiles)
+      onSend(message.trim(), selectedFiles, showContentOptions ? contentType : undefined)
       setMessage("")
       setSelectedFiles([])
+      setAttachmentError(undefined)
       if (fileInputRef.current) {
         fileInputRef.current.value = ""
       }
@@ -67,7 +76,33 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
 
   const handleFilesSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? [])
-    setSelectedFiles((current) => [...current, ...files].slice(0, 5))
+    const available = MAX_ATTACHMENTS - selectedFiles.length
+    const accepted = files.slice(0, Math.max(available, 0))
+    const candidate = [...selectedFiles, ...accepted]
+    const oversized = accepted.some((file) => file.size > MAX_ATTACHMENT_BYTES)
+    const totalBytes = candidate.reduce((total, file) => total + file.size, 0)
+    if (oversized) {
+      setAttachmentError("Each attachment must be 10 MB or smaller.")
+      event.currentTarget.value = ""
+      return
+    }
+    if (totalBytes > MAX_TOTAL_ATTACHMENT_BYTES) {
+      setAttachmentError("Attachments can total no more than 20 MB.")
+      event.currentTarget.value = ""
+      return
+    }
+    setSelectedFiles(candidate)
+    setAttachmentError(
+      files.length > available ? "You can attach up to 5 files." : undefined,
+    )
+    event.currentTarget.value = ""
+  }
+
+  const removeFile = (index: number) => {
+    setSelectedFiles((current) =>
+      current.filter((_, fileIndex) => fileIndex !== index),
+    )
+    setAttachmentError(undefined)
   }
 
   const canSend = Boolean(message.trim() || selectedFiles.length > 0)
@@ -80,25 +115,24 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex flex-col-reverse sm:flex-col">
+    <div
+      className="w-full max-w-3xl mx-auto flex flex-col-reverse sm:flex-col"
+      data-testid="chat-input"
+    >
       <form onSubmit={handleSubmit} className="mt-2 sm:mt-0">
-        <div 
-          className={cn(
-            "relative rounded-[26px] transition-all bg-white dark:bg-card border-[0.5px]",
-            isFocused 
-              ? "border-black/20 dark:border-white/20" 
-              : "border-black/10 dark:border-white/10"
-          )}
-        >
-          {/* Input area */}
+        <div className="relative rounded-[26px] bg-white transition-colors focus-within:outline focus-within:outline-1 focus-within:outline-accent/40 dark:bg-card">
+          <AttachmentPreviewList
+            files={selectedFiles}
+            disabled={isGenerating}
+            onRemove={removeFile}
+          />
+
           <div className="relative w-full">
             <textarea
               ref={textareaRef}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
               placeholder={placeholder}
               disabled={isGenerating}
               className={cn(
@@ -111,9 +145,7 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
             />
           </div>
 
-          {/* Bottom toolbar */}
           <div className="flex items-center justify-between px-2.5 pb-2.5 pt-0">
-            {/* Left side toolbar buttons */}
             <div className="flex items-center gap-1">
               <button
                 type="button"
@@ -148,7 +180,6 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
               </button>
             </div>
 
-            {/* Right side - Send button */}
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 type="submit"
@@ -156,7 +187,7 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
                 className={cn(
                   "w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all",
                   canSend
-                    ? "bg-accent dark:bg-accent text-white hover:bg-accent/90 cursor-pointer shadow-sm hover:shadow-md" 
+                    ? "bg-accent dark:bg-accent text-plum-900 hover:bg-accent/90 cursor-pointer shadow-sm hover:shadow-md"
                     : "bg-sand-200 dark:bg-muted text-plum-400 dark:text-muted-foreground/50 cursor-default"
                 )}
                 aria-label="Send message"
@@ -168,28 +199,22 @@ export function AeolyzerChatInput({ onSend, isGenerating, placeholder = "How can
               </button>
             </div>
           </div>
+          {attachmentError && (
+            <p className="px-4 pb-3 text-xs text-destructive" role="alert">
+              {attachmentError}
+            </p>
+          )}
         </div>
       </form>
 
-      {/* Format options for Content Agent */}
       {showContentOptions && (
-        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 mb-4">
-          {contentOptions.map((option, index) => {
-            const Icon = option.icon
-            return (
-              <button
-                key={index}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-medium whitespace-nowrap border-[0.5px] transition-all duration-150 cursor-pointer bg-white dark:bg-card border-black/10 dark:border-white/10 text-plum-500 dark:text-foreground hover:bg-sand-50 dark:hover:bg-accent/10 hover:text-plum-700 dark:hover:text-accent hover:border-black/20 dark:hover:border-white/20"
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {option.label}
-              </button>
-            )
-          })}
-        </div>
+        <ContentTypeSelector
+          value={contentType}
+          disabled={isGenerating}
+          onChange={(value) => onContentTypeChange?.(value)}
+        />
       )}
 
-      {/* Quick action pills */}
       {showQuickActions && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-0 sm:mt-4 px-1 sm:px-0">
           {suggestions.map((action, index) => (

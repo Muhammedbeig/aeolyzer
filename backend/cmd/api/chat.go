@@ -63,6 +63,9 @@ func newChatRuntime(
 		Model:           llm,
 		Instruction:     auditAgentInstruction,
 		IncludeContents: llmagent.IncludeContentsDefault,
+		BeforeModelCallbacks: []llmagent.BeforeModelCallback{
+			orchestrator.InjectAgentModelContext,
+		},
 		AfterModelCallbacks: []llmagent.AfterModelCallback{
 			middleware.GuardModelResponse,
 		},
@@ -81,6 +84,9 @@ func newChatRuntime(
 		Model:           llm,
 		Instruction:     contentAgentInstruction,
 		IncludeContents: llmagent.IncludeContentsDefault,
+		BeforeModelCallbacks: []llmagent.BeforeModelCallback{
+			orchestrator.InjectAgentModelContext,
+		},
 		AfterModelCallbacks: []llmagent.AfterModelCallback{
 			middleware.GuardModelResponse,
 		},
@@ -112,6 +118,7 @@ func newChatRuntime(
 		return nil, fmt.Errorf("create content runner: %w", err)
 	}
 	service, err := orchestrator.NewChatService(
+		store,
 		store,
 		orchestrator.ADKChatRunner{Runner: auditRunner},
 		orchestrator.ADKChatRunner{Runner: contentRunner},

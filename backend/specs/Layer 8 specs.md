@@ -2387,3 +2387,33 @@ raw tenant or guest identifier
 ```
 
 Evaluation fixtures for attachment and multi-turn behavior must be synthetic and stored separately from live conversation data.
+
+---
+
+## 34. Knowledge Feature Telemetry Addendum
+
+Knowledge reads emit no routine feature event. A mutation may emit:
+
+```text
+knowledge_update
+```
+
+The event contains only a random trace ID, event type, coarse success/failure outcome, and timestamp.
+
+It must never contain:
+
+```text
+knowledge section body
+agent context summary
+profile name or description
+E-E-A-T guideline
+competitor URL
+topic value
+tone value or instruction
+memory fact
+tenant or guest identifier
+knowledge version
+database ciphertext
+```
+
+Content-type selection and attachment-preview interactions remain presentation metadata and are not recorded by Layer 8 in this implementation.

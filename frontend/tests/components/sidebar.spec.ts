@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { openHydratedApp } from '../helpers/open-hydrated-app';
 
 test.describe('AeolyzerSidebar', () => {
   test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-07-01T04:00:00Z'));
     await page.route('http://localhost:8080/**', async (route) => {
       await route.fulfill({
         status: 200,
@@ -10,8 +12,7 @@ test.describe('AeolyzerSidebar', () => {
         body: JSON.stringify({ conversations: [] }),
       });
     });
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await openHydratedApp(page);
   });
 
   test('renders correctly in default state', async ({ page }) => {
@@ -27,13 +28,13 @@ test.describe('AeolyzerSidebar', () => {
 
   test('renders correctly on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/');
+    await openHydratedApp(page);
     await expect(page).toHaveScreenshot('sidebar-mobile-closed.png');
   });
 
   test('renders correctly on mobile when open', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/');
+    await openHydratedApp(page);
     // Click the mobile hamburger menu in the mobile header
     await page.locator('.md\\:hidden > button[aria-label="Open sidebar"]').click();
     // Wait for animation
@@ -43,7 +44,7 @@ test.describe('AeolyzerSidebar', () => {
 
   test('no horizontal overflow on mobile', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/');
+    await openHydratedApp(page);
     const scrollWidth = await page.evaluate(() => document.body.scrollWidth);
     const clientWidth = await page.evaluate(() => document.body.clientWidth);
     expect(scrollWidth).toBeLessThanOrEqual(clientWidth);

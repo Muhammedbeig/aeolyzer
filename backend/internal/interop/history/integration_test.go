@@ -33,15 +33,23 @@ func TestMariaDBSessionLifecycle(t *testing.T) {
 	suffix := strings.ReplaceAll(uuid.NewString()[:8], "-", "")
 	appName := "testapp-" + suffix
 	userID := "testuser-" + suffix
-	created, err := store.CreateConversation(ctx, appName, userID)
+	created, err := store.CreateConversation(ctx, appName, userID, "article")
 	if err != nil {
 		t.Fatal(err)
+	}
+	if created.ContentType != "article" {
+		t.Fatalf("CreateConversation() content type = %q, want article", created.ContentType)
 	}
 	defer store.Delete(context.Background(), &session.DeleteRequest{
 		AppName:   appName,
 		UserID:    userID,
 		SessionID: created.ID,
 	})
+	defer store.db.ExecContext(
+		context.Background(),
+		`DELETE FROM aeolyzer_knowledge WHERE user_id = ?`,
+		userID,
+	)
 
 	getResponse, err := store.Get(ctx, &session.GetRequest{
 		AppName:   appName,
@@ -150,5 +158,107 @@ func TestMariaDBSessionLifecycle(t *testing.T) {
 	_, err = store.GetConversation(ctx, appName, "different-user", created.ID)
 	if !errors.Is(err, ErrNotFound) {
 		t.Fatalf("cross-tenant GetConversation() error = %v, want %v", err, ErrNotFound)
+	}
+
+	knowledgeBody := []byte(`{"profile":{"name":"AEOlyzer"}}`)
+	knowledgeSummary := "Brand profile\n- Name: AEOlyzer"
+	knowledgeRecord, err := store.UpdateKnowledge(
+		ctx,
+		userID,
+		"profile",
+		0,
+		knowledgeBody,
+		knowledgeSummary,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if knowledgeRecord.Version != 1 {
+		t.Fatalf("UpdateKnowledge() version = %d, want 1", knowledgeRecord.Version)
+	}
+	_, err = store.UpdateKnowledge(
+		ctx,
+		userID,
+		"profile",
+		0,
+		knowledgeBody,
+		knowledgeSummary,
+	)
+	if !errors.Is(err, ErrConflict) {
+		t.Fatalf("stale UpdateKnowledge() error = %v, want %v", err, ErrConflict)
+	}
+	loadedKnowledge, err := store.GetKnowledge(ctx, userID, "profile")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(loadedKnowledge.Body, knowledgeBody) {
+		t.Fatalf("GetKnowledge() body = %q, want %q", loadedKnowledge.Body, knowledgeBody)
+	}
+	agentContext, err := store.AgentKnowledgeContext(ctx, userID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if agentContext != knowledgeSummary {
+		t.Fatalf("AgentKnowledgeContext() = %q, want %q", agentContext, knowledgeSummary)
+	}
+	for _, section := range []string{"competitors", "eeat", "memory", "tone", "topics"} {
+		if _, err := store.UpdateKnowledge(
+			ctx,
+			userID,
+			section,
+			0,
+			[]byte(`{}`),
+			strings.Repeat(section, 1_000),
+		); err != nil {
+			t.Fatal(err)
+		}
+	}
+	boundedContext, err := store.AgentKnowledgeContext(ctx, userID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := len([]rune(boundedContext)); got != maxAgentContextRunes {
+		t.Fatalf(
+			"AgentKnowledgeContext() rune count = %d, want %d",
+			got,
+			maxAgentContextRunes,
+		)
+	}
+	var storedKnowledgeBody []byte
+	var storedKnowledgeSummary []byte
+	if err := store.db.QueryRowContext(
+		ctx,
+		`SELECT body_ciphertext, summary_ciphertext
+		   FROM aeolyzer_knowledge
+		  WHERE user_id = ? AND section = ?`,
+		userID,
+		"profile",
+	).Scan(&storedKnowledgeBody, &storedKnowledgeSummary); err != nil {
+		t.Fatal(err)
+	}
+	if bytes.Contains(storedKnowledgeBody, knowledgeBody) ||
+		bytes.Contains(storedKnowledgeSummary, []byte(knowledgeSummary)) {
+		t.Fatal("knowledge plaintext was present in database storage")
+	}
+	otherTenantKnowledge, err := store.GetKnowledge(ctx, "different-user", "profile")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if otherTenantKnowledge.Version != 0 || len(otherTenantKnowledge.Body) != 0 {
+		t.Fatalf("cross-tenant GetKnowledge() returned %#v", otherTenantKnowledge)
+	}
+	if _, err := store.db.ExecContext(
+		ctx,
+		`UPDATE aeolyzer_knowledge
+		    SET body_ciphertext = ?
+		  WHERE user_id = ? AND section = ?`,
+		[]byte("tampered"),
+		userID,
+		"profile",
+	); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.GetKnowledge(ctx, userID, "profile"); err == nil {
+		t.Fatal("GetKnowledge() accepted tampered ciphertext")
 	}
 }

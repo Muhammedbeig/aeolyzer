@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import type {
   ChatAgent,
   ChatMessage,
+  ContentType,
   ConversationSummary,
 } from "@/components/chat/types"
 import {
@@ -39,6 +40,7 @@ const EMPTY_LOADING: AgentState<boolean> = {
 
 export function useConversations(initialAgent: ChatAgent = "audit") {
   const [agent, setAgent] = useState<ChatAgent>(initialAgent)
+  const [contentType, setContentType] = useState<ContentType>("article")
   const [conversations, setConversations] =
     useState<AgentState<ConversationSummary[]>>(EMPTY_CONVERSATIONS)
   const [messages, setMessages] =
@@ -77,6 +79,9 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
     setActiveIDs((current) => ({ ...current, [agent]: undefined }))
     setMessages((current) => ({ ...current, [agent]: [] }))
     setIsGenerating((current) => ({ ...current, [agent]: false }))
+    if (agent === "content") {
+      setContentType("article")
+    }
   }, [agent])
 
   const selectConversation = useCallback(
@@ -87,6 +92,9 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
         [conversation.agent]: conversation.id,
       }))
       setMessages((current) => ({ ...current, [conversation.agent]: [] }))
+      if (conversation.agent === "content") {
+        setContentType(conversation.content_type ?? "article")
+      }
       try {
         const items = await listMessages(conversation.agent, conversation.id)
         setMessages((current) => ({
@@ -106,7 +114,11 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
   )
 
   const submitMessage = useCallback(
-    async (text: string, files: File[] = []) => {
+    async (
+      text: string,
+      files: File[] = [],
+      requestedContentType?: ContentType,
+    ) => {
       if (isGenerating[agent]) {
         return
       }
@@ -130,9 +142,13 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
       setIsGenerating((current) => ({ ...current, [agent]: true }))
 
       try {
+        const activeContentType =
+          agent === "content"
+            ? requestedContentType ?? contentType
+            : undefined
         let conversationID = activeIDs[agent]
         if (!conversationID) {
-          const created = await createConversation(agent)
+          const created = await createConversation(agent, activeContentType)
           conversationID = created.id
           setActiveIDs((current) => ({ ...current, [agent]: created.id }))
           setConversations((current) => ({
@@ -145,6 +161,7 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
           conversationID,
           text,
           files,
+          activeContentType,
         )
         setMessages((current) => {
           const withoutPending = current[agent].filter(
@@ -178,7 +195,7 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
         setIsGenerating((current) => ({ ...current, [agent]: false }))
       }
     },
-    [activeIDs, agent, isGenerating],
+    [activeIDs, agent, contentType, isGenerating],
   )
 
   const toggleStar = useCallback(
@@ -214,6 +231,8 @@ export function useConversations(initialAgent: ChatAgent = "audit") {
   return {
     agent,
     setAgent,
+    contentType,
+    setContentType,
     conversations,
     allConversations: [
       ...conversations.audit,

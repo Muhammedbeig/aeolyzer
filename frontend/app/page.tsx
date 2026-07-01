@@ -9,7 +9,10 @@ import { AeolyzerWelcome } from "@/components/chat/welcome-screen"
 import { AeolyzerChatInput } from "@/components/chat/chat-input"
 import { AeolyzerSettings } from "@/components/settings/aeolyzer-settings"
 import { AeolyzerKnowledgeBase } from "@/components/knowledge/knowledge-base"
-import type { ConversationSummary } from "@/components/chat/types"
+import type {
+  ContentType,
+  ConversationSummary,
+} from "@/components/chat/types"
 import { useConversations } from "@/hooks/use-conversations"
 
 type Theme = "light" | "system" | "dark"
@@ -61,8 +64,12 @@ export default function AeolyzerChatbot() {
   )
 
   const handleSendMessage = useCallback(
-    (content: string, files: File[] = []) => {
-      void conversations.submitMessage(content, files)
+    (
+      content: string,
+      files: File[] = [],
+      contentType?: ContentType,
+    ) => {
+      void conversations.submitMessage(content, files, contentType)
     },
     [conversations],
   )
@@ -118,6 +125,8 @@ export default function AeolyzerChatbot() {
               title="What can I help you create?"
               placeholder="Describe what you want to write..."
               showContentOptions
+              contentType={conversations.contentType}
+              onContentTypeChange={conversations.setContentType}
               onSend={handleSendMessage}
               isGenerating={conversations.isGenerating}
             />
@@ -143,6 +152,9 @@ export default function AeolyzerChatbot() {
                 onSend={handleSendMessage}
                 isGenerating={conversations.isGenerating}
                 placeholder="Reply..."
+                showContentOptions={activeView === "Content"}
+                contentType={conversations.contentType}
+                onContentTypeChange={conversations.setContentType}
               />
             </div>
           </>

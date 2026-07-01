@@ -2101,3 +2101,42 @@ type ChatMessage struct {
 Allowed roles are `user` and `assistant`. Internal ADK author names, invocation IDs, branch names, attachment hashes, storage references, tool calls, thought parts, signatures, and model metadata must not enter this contract.
 
 The frontend must consume these contracts through a typed client, use `credentials: include`, keep Audit and Content history state isolated, and send files as multipart form data. Connecting these contracts must not introduce a second styling system or duplicate visual implementations for the two agents.
+
+---
+
+## 24. Knowledge Base and Content-Type Presentation Addendum
+
+Layer 5 exposes one presentation-safe knowledge document at a time:
+
+```go
+type KnowledgeDocument struct {
+    Section     KnowledgeSection       `json:"section"`
+    Version     uint64                 `json:"version"`
+    Profile     *KnowledgeProfile      `json:"profile,omitempty"`
+    EEAT        *KnowledgeEEAT         `json:"eeat,omitempty"`
+    Competitors *KnowledgeCompetitors  `json:"competitors,omitempty"`
+    Topics      *KnowledgeTopics       `json:"topics,omitempty"`
+    Tone        *KnowledgeTone         `json:"tone,omitempty"`
+    Memory      *KnowledgeMemory       `json:"memory,omitempty"`
+    UpdatedAt   *time.Time             `json:"updated_at,omitempty"`
+}
+```
+
+Exactly one section payload is present. The frontend reads and writes through:
+
+```text
+GET /v1/knowledge/{section}
+PUT /v1/knowledge/{section}
+```
+
+The `PUT` body contains the last-read `version`, `approved=true`, and exactly one matching section payload. Existing Save/Add/Remove controls are the explicit user decision surface. Layer 5 renders loading, empty, saving, conflict, and safe error states; it does not perform persistence or silently retry version conflicts.
+
+`ConversationSummary` adds:
+
+```go
+ContentType ContentType `json:"content_type,omitempty"`
+```
+
+Allowed presentation values are `article`, `blog_post`, `linkedin_post`, `youtube_description`, and `product_description`. The Content composer sends the selected value in both conversation creation JSON and message multipart data. Audit requests omit it.
+
+Attachment selection remains inside the existing Tailwind composer. Selected files render as bounded horizontal preview cards: browser-local image thumbnails for images, type/name/size cards for other files, and an accessible remove control. Preview rendering must stay inside the browser and must not send preview bytes through a remote image optimizer. The composer retains all existing actions and colors. Its resting container and textarea have no visible border; keyboard focus remains visible through the owning focus state.

@@ -1349,3 +1349,67 @@ never place raw message or attachment content in telemetry
 ```
 
 Tests must cover empty input, text-only input, attachment-only input, excessive text, excessive attachment count, direct prompt injection, attachment-borne prompt injection, invalid agent values, malformed multipart bodies, tampered guest cookies, and disallowed origins.
+
+---
+
+## 22. Knowledge Base and Content-Type Intake Addendum
+
+Layer 2 validates every knowledge-base mutation before Layer 3 can coordinate persistence.
+
+Allowed knowledge sections:
+
+```text
+profile
+eeat
+competitors
+topics
+tone
+memory
+```
+
+Mutation requirements:
+
+```text
+require a structured approved=true decision produced by the section's explicit Save/Add/Remove action
+require the optimistic-lock version supplied by the last successful read
+require exactly one payload matching the path section
+reject unknown JSON fields
+reject invalid UTF-8 and disallowed control characters
+reject prompt-injection patterns and protected metadata
+reject duplicate list values after case-insensitive normalization
+normalize competitor values to HTTP/HTTPS origins with no embedded credentials
+limit an encrypted section body to 64 KiB before Layer 7 persistence
+produce a separate bounded agent-context summary of at most 4000 runes
+never treat free-text chat approval as a knowledge mutation approval
+```
+
+Section limits:
+
+```yaml
+knowledge_intake:
+  profile_name_max_runes: 120
+  profile_description_max_runes: 4000
+  eeat_guideline_count_max: 20
+  eeat_guideline_max_runes: 500
+  competitor_count_max: 20
+  competitor_url_max_bytes: 2048
+  topic_count_max: 30
+  topic_max_runes: 200
+  memory_fact_count_max: 50
+  memory_fact_max_runes: 500
+  tone_instruction_max_runes: 4000
+```
+
+Allowed content-type enum:
+
+```text
+article
+blog_post
+linkedin_post
+youtube_description
+product_description
+```
+
+For `agent=content`, an omitted content type normalizes to `article`. Layer 2 rejects unknown content types and rejects any content type supplied with `agent=audit`.
+
+Tests must cover explicit approval, missing approval, mismatched section payloads, stored prompt injection, protected metadata, count and length boundaries, URL normalization, unknown content types, content defaults, and audit-agent content-type rejection.

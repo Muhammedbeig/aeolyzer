@@ -27,12 +27,14 @@ const (
 )
 
 type ChatAPI interface {
-	CreateConversation(context.Context, string, extensions.ChatAgent) (extensions.ConversationSummary, error)
+	CreateConversation(context.Context, string, extensions.ChatAgent, extensions.ContentType) (extensions.ConversationSummary, error)
 	ListConversations(context.Context, string, extensions.ChatAgent) ([]extensions.ConversationSummary, error)
 	ListMessages(context.Context, string, extensions.ChatAgent, string) ([]extensions.ChatMessage, error)
 	UpdateConversation(context.Context, string, extensions.ChatAgent, string, *string, *bool) (extensions.ConversationSummary, error)
 	DeleteConversation(context.Context, string, extensions.ChatAgent, string) error
 	SendMessage(context.Context, orchestrator.SendChatMessageInput) (extensions.SendMessageResponse, error)
+	GetKnowledge(context.Context, string, extensions.KnowledgeSection) (extensions.KnowledgeDocument, error)
+	UpdateKnowledge(context.Context, string, intake.ValidatedKnowledgeUpdate) (extensions.KnowledgeDocument, error)
 }
 
 type ChatHandler struct {
@@ -46,13 +48,25 @@ type ChatHandler struct {
 }
 
 type createConversationRequest struct {
-	Agent extensions.ChatAgent `json:"agent"`
+	Agent       extensions.ChatAgent   `json:"agent"`
+	ContentType extensions.ContentType `json:"content_type,omitempty"`
 }
 
 type updateConversationRequest struct {
 	Agent   extensions.ChatAgent `json:"agent"`
 	Title   *string              `json:"title,omitempty"`
 	Starred *bool                `json:"starred,omitempty"`
+}
+
+type updateKnowledgeRequest struct {
+	Version     uint64                           `json:"version"`
+	Approved    bool                             `json:"approved"`
+	Profile     *extensions.KnowledgeProfile     `json:"profile,omitempty"`
+	EEAT        *extensions.KnowledgeEEAT        `json:"eeat,omitempty"`
+	Competitors *extensions.KnowledgeCompetitors `json:"competitors,omitempty"`
+	Topics      *extensions.KnowledgeTopics      `json:"topics,omitempty"`
+	Tone        *extensions.KnowledgeTone        `json:"tone,omitempty"`
+	Memory      *extensions.KnowledgeMemory      `json:"memory,omitempty"`
 }
 
 type guestContextKey struct{}
@@ -93,6 +107,8 @@ func (h *ChatHandler) Routes() http.Handler {
 	mux.HandleFunc("POST /v1/conversations/{conversationID}/messages", h.sendMessage)
 	mux.HandleFunc("PATCH /v1/conversations/{conversationID}", h.updateConversation)
 	mux.HandleFunc("DELETE /v1/conversations/{conversationID}", h.deleteConversation)
+	mux.HandleFunc("GET /v1/knowledge/{section}", h.getKnowledge)
+	mux.HandleFunc("PUT /v1/knowledge/{section}", h.updateKnowledge)
 	return h.withMiddleware(mux)
 }
 
@@ -102,7 +118,17 @@ func (h *ChatHandler) createConversation(response http.ResponseWriter, request *
 		writeError(response, http.StatusBadRequest, "invalid_request", "Choose a valid agent and try again.")
 		return
 	}
-	conversation, err := h.chat.CreateConversation(request.Context(), guestID(request), input.Agent)
+	contentType, err := intake.NormalizeChatContentType(string(input.Agent), input.ContentType)
+	if err != nil {
+		writeError(response, http.StatusBadRequest, "invalid_request", "Choose a valid content type and try again.")
+		return
+	}
+	conversation, err := h.chat.CreateConversation(
+		request.Context(),
+		guestID(request),
+		input.Agent,
+		contentType,
+	)
 	if err != nil {
 		h.handleError(response, request, err, "conversation_create")
 		return
@@ -189,6 +215,58 @@ func (h *ChatHandler) deleteConversation(response http.ResponseWriter, request *
 	response.WriteHeader(http.StatusNoContent)
 }
 
+func (h *ChatHandler) getKnowledge(response http.ResponseWriter, request *http.Request) {
+	section := extensions.KnowledgeSection(request.PathValue("section"))
+	if !section.Valid() {
+		writeError(response, http.StatusBadRequest, "invalid_section", "Choose a valid knowledge section.")
+		return
+	}
+	document, err := h.chat.GetKnowledge(request.Context(), guestID(request), section)
+	if err != nil {
+		h.handleError(response, request, err, "knowledge_read")
+		return
+	}
+	writeJSON(response, http.StatusOK, document)
+}
+
+func (h *ChatHandler) updateKnowledge(response http.ResponseWriter, request *http.Request) {
+	section := extensions.KnowledgeSection(request.PathValue("section"))
+	if !section.Valid() {
+		writeError(response, http.StatusBadRequest, "invalid_section", "Choose a valid knowledge section.")
+		return
+	}
+	var input updateKnowledgeRequest
+	if err := decodeJSON(response, request, &input); err != nil {
+		writeError(response, http.StatusBadRequest, "invalid_knowledge", "Check these settings and try again.")
+		return
+	}
+	update, err := intake.ValidateKnowledgeUpdate(extensions.KnowledgeDocument{
+		Section:     section,
+		Version:     input.Version,
+		Profile:     input.Profile,
+		EEAT:        input.EEAT,
+		Competitors: input.Competitors,
+		Topics:      input.Topics,
+		Tone:        input.Tone,
+		Memory:      input.Memory,
+	}, input.Approved)
+	if err != nil {
+		writeError(response, http.StatusBadRequest, "invalid_knowledge", "Check these settings and approve the change.")
+		return
+	}
+	document, err := h.chat.UpdateKnowledge(request.Context(), guestID(request), update)
+	if errors.Is(err, history.ErrConflict) {
+		writeError(response, http.StatusConflict, "conflict", "These settings changed. Refresh and try again.")
+		return
+	}
+	if err != nil {
+		h.handleError(response, request, err, "knowledge_update")
+		return
+	}
+	h.record("knowledge_update", "succeeded")
+	writeJSON(response, http.StatusOK, document)
+}
+
 func (h *ChatHandler) sendMessage(response http.ResponseWriter, request *http.Request) {
 	input, err := h.readMessage(response, request)
 	if err != nil {
@@ -223,9 +301,10 @@ func (h *ChatHandler) readMessage(
 	var input orchestrator.SendChatMessageInput
 	var agentSeen bool
 	var textSeen bool
+	var contentTypeSeen bool
 	var totalFileBytes int64
 	for partCount := 0; ; partCount++ {
-		if partCount > intake.MaxChatAttachments+2 {
+		if partCount > intake.MaxChatAttachments+3 {
 			return orchestrator.SendChatMessageInput{}, errors.New("too many multipart fields")
 		}
 		part, err := reader.NextPart()
@@ -258,6 +337,17 @@ func (h *ChatHandler) readMessage(
 			}
 			input.Text = value
 			textSeen = true
+		case "content_type":
+			if contentTypeSeen || part.FileName() != "" {
+				_ = part.Close()
+				return orchestrator.SendChatMessageInput{}, errors.New("invalid content type field")
+			}
+			value, err := readPart(part, 80)
+			if err != nil {
+				return orchestrator.SendChatMessageInput{}, err
+			}
+			input.ContentType = extensions.ContentType(value)
+			contentTypeSeen = true
 		case "attachments":
 			if part.FileName() == "" || len(input.Files) >= intake.MaxChatAttachments {
 				_ = part.Close()
@@ -286,6 +376,10 @@ func (h *ChatHandler) readMessage(
 	}
 	if !agentSeen || !input.Agent.Valid() {
 		return orchestrator.SendChatMessageInput{}, errors.New("invalid agent")
+	}
+	input.ContentType, err = intake.NormalizeChatContentType(string(input.Agent), input.ContentType)
+	if err != nil {
+		return orchestrator.SendChatMessageInput{}, err
 	}
 	if err := intake.ValidateChatMessage(input.Text, len(input.Files)); err != nil {
 		return orchestrator.SendChatMessageInput{}, err
@@ -336,7 +430,7 @@ func (h *ChatHandler) withMiddleware(next http.Handler) http.Handler {
 			response.Header().Set("Access-Control-Allow-Origin", origin)
 			response.Header().Set("Access-Control-Allow-Credentials", "true")
 			response.Header().Set("Access-Control-Allow-Headers", "Content-Type, Idempotency-Key")
-			response.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
+			response.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 			response.Header().Set("Vary", "Origin")
 		}
 		if request.Method == http.MethodOptions {

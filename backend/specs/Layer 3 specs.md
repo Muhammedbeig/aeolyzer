@@ -2377,3 +2377,44 @@ complete the idempotency record
 The Audit and Content runners must use different application namespaces even when a guest user ID is the same. Listing, resuming, starring, searching, and deleting a conversation must always carry the explicit agent enum so a session cannot cross namespaces accidentally.
 
 The runner must include bounded prior contents supplied by the Layer 7 ADK session service. It must not maintain a second in-memory transcript as the source of truth.
+
+---
+
+## 19. Knowledge Base and Content-Type Orchestration Addendum
+
+Knowledge update sequence:
+
+```text
+receive the Layer 2 validated knowledge document, approval, context summary, and expected version
+encode the normalized presentation document without persistence metadata
+request an optimistic encrypted write from Layer 7
+map the returned version and timestamp into the Layer 5 document contract
+never persist a raw knowledge, memory, or tone body in Layer 3 state
+```
+
+Agent invocation sequence:
+
+```text
+request bounded tenant knowledge summaries from Layer 7
+bind the selected content type to the content conversation
+attach summaries and content type to the current Go invocation context only
+use a Google ADK before-model callback to append that context to the model system instruction
+label factual values as claims to verify and preferences as lower-priority guidance
+never add knowledge summaries or content-type control text to the user Content parts
+never write injected knowledge summaries into the conversation transcript
+invoke Audit or Content through its already-isolated ADK runner
+```
+
+The callback receives no raw knowledge document body. Layer 7 returns only summaries produced after Layer 2 validation. Failure to retrieve or decrypt the summaries fails closed before model invocation.
+
+Content type is persisted as conversation metadata so a resumed Content conversation restores its active format. A message may switch among the allowed enum values; Layer 3 must request the metadata update before invoking the Content Agent. Audit conversations always carry an empty content type.
+
+Tests must prove:
+
+```text
+the model instruction contains the selected allowed content type
+the model instruction contains only the bounded knowledge summary
+the user transcript does not contain injected context
+knowledge version conflicts are returned without overwriting
+Audit and Content conversation namespaces remain isolated
+```

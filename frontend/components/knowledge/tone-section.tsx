@@ -89,7 +89,7 @@ export function ToneSection({
           <button
             type="submit"
             disabled={saving}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-plum-900 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
+            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 active:scale-95 disabled:pointer-events-none disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save Tone Settings"}
           </button>

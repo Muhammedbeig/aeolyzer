@@ -1,8 +1,14 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkles, Eye, LayoutTemplate, Users, Target } from "lucide-react"
+import { PenLine, Search, FileText, Activity, ListTodo, LineChart, Sparkles, Eye, LayoutTemplate, Users, Target, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { AttachmentPreviewList } from "./attachment-preview-list"
 import { ContentTypeSelector } from "./content-type-selector"
 import type { ContentType } from "./types"
@@ -120,7 +126,7 @@ export function AeolyzerChatInput({
       data-testid="chat-input"
     >
       <form onSubmit={handleSubmit} className="mt-2 sm:mt-0">
-        <div className="relative rounded-[26px] bg-white transition-colors focus-within:outline focus-within:outline-1 focus-within:outline-accent/40 dark:bg-card">
+        <div className="relative rounded-[26px] bg-white shadow-sm hover:shadow-md transition-all duration-300 focus-within:outline focus-within:outline-1 focus-within:outline-accent/40 dark:bg-card dark:shadow-black/20">
           <AttachmentPreviewList
             files={selectedFiles}
             disabled={isGenerating}
@@ -147,18 +153,36 @@ export function AeolyzerChatInput({
 
           <div className="flex items-center justify-between px-2.5 pb-2.5 pt-0">
             <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isGenerating}
-                className="w-8 h-8 rounded-lg border border-sand-200 dark:border-border bg-white dark:bg-card text-plum-500 dark:text-muted-foreground hover:text-plum-700 dark:hover:text-foreground hover:bg-sand-50 dark:hover:bg-muted flex items-center justify-center transition-colors cursor-pointer disabled:pointer-events-none disabled:opacity-50"
-                aria-label={selectedFiles.length > 0 ? `Add attachment, ${selectedFiles.length} selected` : "Add attachment"}
-                title={selectedFiles.length > 0 ? selectedFiles.map((file) => file.name).join(", ") : "Add attachment"}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                  <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                </svg>
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    disabled={isGenerating}
+                    className="w-8 h-8 rounded-lg bg-transparent text-plum-500 dark:text-muted-foreground hover:text-plum-700 dark:hover:text-foreground hover:bg-sand-50 dark:hover:bg-muted flex items-center justify-center transition-colors cursor-pointer disabled:pointer-events-none disabled:opacity-50"
+                  >
+                    <Plus className="w-5 h-5" strokeWidth={2} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48 bg-white dark:bg-card border border-black/10 dark:border-white/10 rounded-xl shadow-lg p-1">
+                  <DropdownMenuItem 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-lg hover:bg-sand-50 dark:hover:bg-muted focus:bg-sand-50 dark:focus:bg-muted focus:text-plum-900 dark:focus:text-foreground outline-none text-[13px] font-medium transition-colors group"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-muted-foreground group-focus:text-plum-900 dark:group-focus:text-foreground transition-colors">
+                      <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                    </svg>
+                    Add Attachment
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2 px-3 py-2 cursor-pointer rounded-lg hover:bg-sand-50 dark:hover:bg-muted focus:bg-sand-50 dark:focus:bg-muted focus:text-plum-900 dark:focus:text-foreground outline-none text-[13px] font-medium transition-colors group"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-muted-foreground group-focus:text-plum-900 dark:group-focus:text-foreground transition-colors">
+                      <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path>
+                    </svg>
+                    Shortcuts
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -168,16 +192,6 @@ export function AeolyzerChatInput({
                 className="sr-only"
                 aria-label="Choose attachments"
               />
-
-              <button 
-                type="button" 
-                className="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg border border-sand-200 dark:border-border bg-white dark:bg-card text-plum-500 dark:text-muted-foreground hover:bg-sand-50 dark:hover:bg-muted hover:text-plum-700 dark:hover:text-foreground text-[12px] font-medium transition-colors cursor-pointer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-                  <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"></path>
-                </svg>
-                <span>Shortcuts</span>
-              </button>
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -187,7 +201,7 @@ export function AeolyzerChatInput({
                 className={cn(
                   "w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all",
                   canSend
-                    ? "bg-accent dark:bg-accent text-plum-900 hover:bg-accent/90 cursor-pointer shadow-sm hover:shadow-md"
+                    ? "bg-accent dark:bg-accent text-white hover:bg-accent/90 cursor-pointer shadow-sm hover:shadow-md"
                     : "bg-sand-200 dark:bg-muted text-plum-400 dark:text-muted-foreground/50 cursor-default"
                 )}
                 aria-label="Send message"
@@ -221,7 +235,7 @@ export function AeolyzerChatInput({
             <button
               key={index}
               onClick={() => onSend(action.prompt)}
-              className="flex flex-col items-start justify-between p-3 sm:p-4 h-24 sm:h-28 rounded-xl bg-white dark:bg-card border-[0.5px] border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all text-left group cursor-pointer"
+              className="flex flex-col items-start justify-between p-3 sm:p-4 h-24 sm:h-28 rounded-xl bg-white dark:bg-card shadow-sm hover:shadow-md transition-[box-shadow] duration-200 text-left group cursor-pointer"
               title={action.prompt}
             >
               <action.icon size={20} strokeWidth={1.5} className="text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
